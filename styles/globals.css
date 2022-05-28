@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.resources_item {
+  @apply flex w-28  rounded-xl bg-slate-800 p-3  text-center text-sm text-white;
+}

@@ -1,14 +1,9 @@
-import Image from "next/image";
-import Link from "next/link";
-import {useRouter} from "next/router";
 import React from "react";
-import {MenuItemModel} from "../../types/MenuItemModel";
 import Menu from "./Menu";
 
 function NavbarMobile() {
-  const router = useRouter();
   return (
-    <div className="supports-backdrop-blur:bg-white/60 navbar  min-h-16 sticky top-0 z-40 w-full flex-none border-b-2 border-base-300/50 bg-base-100 bg-white/95 backdrop-blur transition-colors duration-500 dark:bg-transparent lg:z-50">
+    <div className="supports-backdrop-blur:bg-white/60 navbar sticky top-0 z-40 w-full flex-none border-b-2 border-base-300/50 bg-base-100 backdrop-blur transition-colors duration-500 dark:bg-transparent lg:z-50">
       <div className="navbar-start">
         <div className="dropdown">
           <label tabIndex={0} className="btn btn-ghost btn-circle">
@@ -29,7 +24,7 @@ function NavbarMobile() {
           </label>
           <ul
             tabIndex={0}
-            className="dropdown-content menu rounded-box menu-compact mt-3 w-52 border-2 border-base-300/50 bg-base-100 p-2 shadow"
+            className="dropdown-content menu rounded-box menu-compact mt-3 w-52 border-2 border-base-300/50 bg-slate-900/95 p-2 shadow "
           >
             <div className="space-y-4 p-3 text-gray-300 xl:space-y-0 xl:p-0">
               <div className="mt-2 space-y-14 px-4  xl:hidden ">

@@ -1,14 +1,14 @@
 import Image from "next/image";
-import React, {ReactSVG} from "react";
+import React, { ReactSVG } from "react";
 import ResourcesImg from "../../public/assets/Resources.png";
 import StatisticImg from "../../public/assets/Statistic.png";
 import VillageImg from "../../public/assets/Village.png";
 import InventoryImg from "../../public/assets/Inventory.png";
 import BackgroundImage from "../../public/assets/Ozadje_menu.png";
 import Link from "next/link";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import NavbarMobile from "./NavbarMobile";
-import {MenuItemModel} from "../../types/MenuItemModel";
+import { MenuItemModel } from "../../types/MenuItemModel";
 import Menu from "./Menu";
 
 function NavbarDem() {

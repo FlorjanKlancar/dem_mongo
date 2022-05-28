@@ -1,18 +1,12 @@
 import React from "react";
-import {
-  HomeIcon,
-  ScaleIcon,
-  UserGroupIcon,
-  HandIcon,
-} from "@heroicons/react/outline";
 import Link from "next/link";
-import {useRouter} from "next/router";
+import { useRouter } from "next/router";
 import ResourcesImg from "../../public/assets/Resources.png";
 import StatisticImg from "../../public/assets/Statistic.png";
 import VillageImg from "../../public/assets/Village.png";
 import InventoryImg from "../../public/assets/Inventory.png";
 import BackgroundImage from "../../public/assets/Ozadje_menu.png";
-import {MenuItemModel} from "../../types/MenuItemModel";
+import { MenuItemModel } from "../../types/MenuItemModel";
 import Image from "next/image";
 
 function Menu() {
