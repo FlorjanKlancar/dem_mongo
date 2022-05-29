@@ -1,8 +1,7 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 
 const authInitialState = {
-  idToken: "",
-  localId: "",
+  token: "",
 };
 
 const authSlice = createSlice({
@@ -10,14 +9,12 @@ const authSlice = createSlice({
   initialState: () => authInitialState,
   reducers: {
     logIn(state, action) {
-      state.idToken = action.payload.token;
-      state.localId = action.payload.localId;
-      localStorage.setItem("token", action.payload.token);
+      state.token = action.payload.token;
+      sessionStorage.setItem("Token", action.payload.token);
     },
     logOut(state) {
-      state.idToken = "";
-      state.localId = "";
-      localStorage.removeItem("token");
+      state.token = "";
+      sessionStorage.removeItem("Token");
     },
   },
 });

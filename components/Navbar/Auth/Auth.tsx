@@ -1,25 +1,24 @@
 import Head from "next/head";
-import { app, auth } from "../../../firebase/clientApp";
-import { useEffect } from "react";
-import {
-  signInWithEmailAndPassword,
-  GoogleAuthProvider,
-  signInWithPopup,
-} from "firebase/auth";
-import { useState } from "react";
-import { useRouter } from "next/router";
+import {auth} from "../../../firebase/clientApp";
+import {useEffect} from "react";
+import {signInWithEmailAndPassword} from "firebase/auth";
+import {useState} from "react";
+import {useRouter} from "next/router";
+import {useDispatch, useSelector} from "react-redux";
+import {authActions} from "../../../store/auth-slice";
+import {RootState} from "../../../types/storeModel";
 export default function Register() {
-  const googleProvider = new GoogleAuthProvider();
-
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const signUp = () => {
+  const dispatch = useDispatch();
+  const token = useSelector((state: RootState) => state.auth.token);
+
+  const signIn = () => {
     signInWithEmailAndPassword(auth, email, password)
-      .then((response) => {
-        console.log(response.user);
-        sessionStorage.setItem("Token", response.user.accessToken);
+      .then((response: any) => {
+        dispatch(authActions.logIn({token: response.user.accessToken}));
         router.push("/resources");
       })
       .catch((err) => {
@@ -27,21 +26,15 @@ export default function Register() {
       });
   };
 
-  const signUpWithGoogle = () => {
-    signInWithPopup(auth, googleProvider).then((response) => {
-      sessionStorage.setItem("Token", response.user.accessToken);
-      console.log(response.user);
-      router.push("/home");
-    });
-  };
-
   useEffect(() => {
     let token = sessionStorage.getItem("Token");
 
-    if (token) {
+    dispatch(authActions.logIn({token}));
+
+    /* if (token) {
       router.push("/resources");
-    }
-  }, []);
+    } */
+  }, [token]);
 
   return (
     <div>
@@ -67,10 +60,7 @@ export default function Register() {
           type="password"
         />
 
-        <button onClick={signUp}>Sign In</button>
-        <hr />
-        <button onClick={signUpWithGoogle}>Sign Up with Google</button>
-        <hr />
+        <button onClick={signIn}>Sign In</button>
       </main>
     </div>
   );

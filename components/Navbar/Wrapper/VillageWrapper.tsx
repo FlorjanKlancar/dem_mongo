@@ -1,5 +1,4 @@
-import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 import {
   HandIcon,
   LightningBoltIcon,
@@ -7,7 +6,8 @@ import {
   DatabaseIcon,
   StarIcon,
 } from "@heroicons/react/outline";
-import { newVillage } from "../../../utils/VillageDummyData";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../types/storeModel";
 
 type VillageWrapperProps = {
   children: React.ReactNode;
@@ -15,32 +15,29 @@ type VillageWrapperProps = {
 
 const resourcesMaxStorage = 1000;
 
-function VillageWrapper({ children }: VillageWrapperProps) {
-  const [resourcesState, setResourcesState] = useState({
-    wood: newVillage.resourcesStorage.woodAmount,
-    clay: newVillage.resourcesStorage.clayAmount,
-    iron: newVillage.resourcesStorage.ironAmount,
-    wheat: newVillage.resourcesStorage.wheatAmount,
-  });
+function VillageWrapper({children}: VillageWrapperProps) {
+  const resourcesRedux = useSelector(
+    (state: RootState) => state.village.resourcesStorage
+  );
 
   const resources = [
     {
       icon: <HandIcon className="mt-0.5 h-5 w-5" />,
-      amount: resourcesState.wood,
+      amount: Math.floor(resourcesRedux.woodAmount),
     },
     {
       icon: <LightningBoltIcon className="mt-0.5 h-5 w-5" />,
-      amount: resourcesState.clay,
+      amount: Math.floor(resourcesRedux.clayAmount),
     },
     {
       icon: <ScaleIcon className="mt-0.5 h-5 w-5" />,
-      amount: resourcesState.iron,
+      amount: Math.floor(resourcesRedux.ironAmount),
     },
   ];
 
   const wheat = {
     icon: <StarIcon className="mt-0.5 h-5 w-5" />,
-    amount: resourcesState.wheat,
+    amount: Math.floor(resourcesRedux.wheatAmount),
   };
 
   return (
