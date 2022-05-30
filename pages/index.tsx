@@ -3,7 +3,7 @@ import React, {useEffect} from "react";
 import {useAuthState} from "react-firebase-hooks/auth";
 import {auth} from "../firebase/clientApp";
 
-function index() {
+function MainPage() {
   const [user]: any = useAuthState(auth);
 
   console.log("user", user);
@@ -22,4 +22,4 @@ function index() {
   return <div>hello world</div>;
 }
 
-export default index;
+export default MainPage;
