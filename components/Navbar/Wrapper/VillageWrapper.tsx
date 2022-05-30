@@ -6,8 +6,8 @@ import {
   DatabaseIcon,
   StarIcon,
 } from "@heroicons/react/outline";
-import {useSelector} from "react-redux";
-import {RootState} from "../../../types/storeModel";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../types/storeModel";
 
 type VillageWrapperProps = {
   children: React.ReactNode;
@@ -15,7 +15,7 @@ type VillageWrapperProps = {
 
 const resourcesMaxStorage = 1000;
 
-function VillageWrapper({children}: VillageWrapperProps) {
+function VillageWrapper({ children }: VillageWrapperProps) {
   const resourcesRedux = useSelector(
     (state: RootState) => state.village.resourcesStorage
   );
@@ -42,7 +42,7 @@ function VillageWrapper({children}: VillageWrapperProps) {
 
   return (
     <div className="mt-5 px-6 sm:px-12 md:px-20 ">
-      <div className="mb-16 flex grid-cols-4 flex-col justify-center gap-1 space-y-0.5 sm:grid sm:flex-row sm:space-y-0 lg:flex lg:space-x-1">
+      <div className="mb-8 flex grid-cols-4 flex-col justify-center gap-1 space-y-0.5 sm:grid sm:flex-row sm:space-y-0 lg:flex lg:space-x-1">
         <div className="flex flex-col rounded-xl border-2 border-primary/60 bg-slate-800 p-3 lg:mr-3">
           <div className="flex w-full justify-center space-x-2 text-center text-white lg:w-32">
             <div>

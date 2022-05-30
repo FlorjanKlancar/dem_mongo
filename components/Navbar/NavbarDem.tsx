@@ -1,10 +1,10 @@
 import React from "react";
 import NavbarMobile from "./NavbarMobile";
 import Menu from "./Menu";
-import {useDispatch} from "react-redux";
-import {authActions} from "../../store/auth-slice";
-import {signOut} from "firebase/auth";
-import {auth} from "../../firebase/clientApp";
+import { useDispatch } from "react-redux";
+import { authActions } from "../../store/auth-slice";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase/clientApp";
 
 function NavbarDem() {
   const dispatch = useDispatch();
@@ -20,12 +20,15 @@ function NavbarDem() {
         <NavbarMobile />
       </div>
 
-      <div className="flex flex-col">
+      <div className="flex justify-between px-8 py-4">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full border-2 border-primary bg-slate-800">
+          Hero
+        </div>
         <div className="m-auto mt-5 hidden w-3/4 justify-around rounded-2xl border-2 border-primary/50 bg-slate-800/80 p-3 md:flex lg:w-2/3 2xl:w-2/5">
           <Menu />
         </div>
 
-        <div className="mt-4 flex justify-center">
+        <div className="flex justify-center">
           <button className="btn" onClick={logoutHandler}>
             Logout
           </button>

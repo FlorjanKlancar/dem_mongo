@@ -8,7 +8,7 @@ type WrapperProps = {
 
 function Wrapper({ children }: WrapperProps) {
   return (
-    <div className="absolute top-0 h-screen w-full">
+    <div className="h-full w-full">
       <Image src={BackgroundImage} layout="fill" objectFit="cover" />
       {children}
     </div>
