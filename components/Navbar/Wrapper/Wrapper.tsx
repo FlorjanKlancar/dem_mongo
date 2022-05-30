@@ -6,7 +6,7 @@ type WrapperProps = {
   children: React.ReactNode;
 };
 
-function Wrapper({ children }: WrapperProps) {
+function Wrapper({children}: WrapperProps) {
   return (
     <div className="h-full w-full">
       <Image src={BackgroundImage} layout="fill" objectFit="cover" />

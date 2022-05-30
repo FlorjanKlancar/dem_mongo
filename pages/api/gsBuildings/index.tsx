@@ -1,7 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import type {NextApiRequest, NextApiResponse} from "next";
-import axios from "axios";
-import {firebaseAdmin} from "../../../firebase/serverApp";
+import {adminDb, firebaseAdmin} from "../../../firebase/serverApp";
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,6 +9,11 @@ export default async function handler(
   switch (req.method) {
     default:
     case "POST": {
+      {
+      }
+      break;
+    }
+    case "GET": {
       try {
         if (!req.headers.authorization)
           return res.status(400).send("Token error!");
@@ -18,9 +22,18 @@ export default async function handler(
 
         const token = await firebaseAdmin.auth().verifyIdToken(jwtToken);
 
-        const {uid, email} = token;
-
-        res.status(200).json({uid, email});
+        if (token) {
+          let allBuildings = {};
+          const buildings = await adminDb.collection("gsBuildings").get();
+          if (!buildings.docs.length) {
+            throw new Error("Building not found!");
+          }
+          buildings.docs.forEach(
+            (building) =>
+              (allBuildings = {...allBuildings, [building.id]: building.data()})
+          );
+          return res.status(200).json(allBuildings);
+        }
       } catch (error) {
         console.log("error", error);
       }

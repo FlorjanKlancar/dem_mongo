@@ -1,12 +1,12 @@
 import axios from "axios";
 import Image from "next/image";
-import React, { useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { useSelector } from "react-redux";
-import { auth } from "../../firebase/clientApp";
-import { MAX_LEVEL_RESOURCES } from "../../gsVariables";
-import { resourceField } from "../../types/resourceField";
-import { RootState } from "../../types/storeModel";
+import React, {useState} from "react";
+import {useAuthState} from "react-firebase-hooks/auth";
+import {useSelector} from "react-redux";
+import {auth} from "../../firebase/clientApp";
+import {MAX_LEVEL_RESOURCES} from "../../gsVariables";
+import {resourceField} from "../../types/resourceField";
+import {RootState} from "../../types/storeModel";
 
 import ResourcesMaxLevelModal from "./ResourcesMaxLevelModal";
 import ResourcesModal from "./ResourcesModal";
@@ -16,7 +16,7 @@ function ResourcesField() {
 
   const village = useSelector((state: RootState) => state.village);
 
-  const { gsBuildings } = useSelector((state: RootState) => state.gsBuildings);
+  const {gsBuildings} = useSelector((state: RootState) => state.gsBuildings);
 
   const [clickedResource, setClickedResource] = useState<any>({});
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -49,7 +49,7 @@ function ResourcesField() {
         fieldId: clickedResource.id,
         isBuilding: false,
       },
-      { headers: { Authorization: `Bearer ${user?.accessToken}` } }
+      {headers: {Authorization: `Bearer ${user?.accessToken}`}}
     );
 
     setIsLoading(false);
@@ -113,11 +113,14 @@ function ResourcesField() {
           <label
             htmlFor={`${resource.type !== "village_center" && "my-modal-4"}`}
             key={resource.id}
+            className={`${
+              resource.type === "village_center"
+                ? ""
+                : "rounded-xl border-2 border-slate-500/50"
+            }`}
           >
             <div
-              className={`relative cursor-pointer rounded-xl  border-slate-800/10 hover:border-slate-800/40 ${
-                resource.type === "village_center" ? "" : "border-2"
-              }`}
+              className={`relative cursor-pointer rounded-xl  border-slate-800/10 hover:border-slate-800/40 `}
               onClick={() =>
                 onResourceClickHandler(
                   resource.id,
@@ -127,7 +130,7 @@ function ResourcesField() {
               }
             >
               {resource.imageGrid && (
-                <div className="h-20 w-20 sm:h-28 sm:w-32">
+                <div className="relative h-20 w-20 md:h-28 md:w-32 lg:h-36 lg:w-44">
                   <Image src={resource.imageGrid} layout="fill" />
                 </div>
               )}
