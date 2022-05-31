@@ -51,10 +51,10 @@ function VillageWrapper({ children }: VillageWrapperProps) {
   );
 
   const resourcesMaxStorage =
-    gsBuildings["warehouse"].levels[0][warehouseMaxStorage.level]
+    gsBuildings["warehouse"]?.levels[0][warehouseMaxStorage.level]
       .warehouseResourceLimit;
   const granaryMaxStorage =
-    gsBuildings["granary"].levels[0][granaryLevel.level].granaryResourceLimit;
+    gsBuildings["granary"]?.levels[0][granaryLevel.level].granaryResourceLimit;
 
   const warehouseNextLevel =
     gsBuildings["warehouse"].levels[0][

@@ -31,7 +31,7 @@ function ResourcesTroopsInfo() {
                 }
               })
             ) : (
-              <></>
+              <>No troops yet</>
             )}
           </div>
         ))}

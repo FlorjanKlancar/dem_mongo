@@ -1,3 +1,4 @@
+import axios from "axios";
 import { getApps, getApp, initializeApp } from "firebase/app";
 import {
   GoogleAuthProvider,
@@ -71,20 +72,18 @@ const logInWithEmailAndPassword = async ({
   }
 };
 
-const registerWithEmailAndPassword = async ({
-  email,
-  password,
-}: registrationProps) => {
+const registerWithEmailAndPassword = async (
+  email: string,
+  password: string
+) => {
   try {
     const res = await createUserWithEmailAndPassword(auth, email, password!);
-    const user = res.user;
-    await addDoc(collection(db, "users"), {
-      uid: user.uid,
-      authProvider: "local",
-      email,
+
+    const response = await axios.post(`/api/village/${res.user.uid}`, {
+      userEmail: res.user.email,
     });
   } catch (err: any) {
-    console.error(err);
+    console.error("err from here", err);
     alert(err.message);
   }
 };

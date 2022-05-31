@@ -5,13 +5,17 @@ import { useDispatch } from "react-redux";
 import { authActions } from "../../store/auth-slice";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase/clientApp";
+import { useRouter } from "next/router";
 
 function NavbarDem() {
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const logoutHandler = async () => {
     signOut(auth);
     dispatch(authActions.logOut());
+
+    router.push("/");
   };
 
   return (
