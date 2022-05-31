@@ -1,9 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from "next";
-import { adminDb, firebaseAdmin } from "../../../firebase/serverApp";
-import { getServerTime, updateResourcesToDate } from "../gameFunctions";
-import { getBuildingById } from "../gsBuildings/[id]";
-import { getVillageById } from "../village/[id]";
+import type {NextApiRequest, NextApiResponse} from "next";
+import {adminDb, firebaseAdmin} from "../../../firebase/serverApp";
+import {getServerTime, updateResourcesToDate} from "../gameFunctions";
+import {getBuildingById} from "../gsBuildings/[id]";
+import {getVillageById} from "../village/[id]";
 const schedule = require("node-schedule");
 var dayjs = require("dayjs");
 
@@ -41,9 +41,7 @@ export default async function handler(
                 currentlyBuilding: [],
               });
 
-              return res
-                .status(200)
-                .json({ msg: "Job canceled successfully!" });
+              return res.status(200).json({msg: "Job canceled successfully!"});
             } else {
               if (!villageId || !buildingName || !fieldId) {
                 throw new Error("Parameters are missing!");
@@ -58,7 +56,9 @@ export default async function handler(
 
               if (villageObject) {
                 if (villageObject.currentlyBuilding.length) {
-                  throw new Error("Builders are currently unavailable!");
+                  return res
+                    .status(400)
+                    .send("Builders are currently unavailable!");
                 }
 
                 const getBuildingCurrentLevel = (
@@ -206,7 +206,7 @@ export default async function handler(
                         getBuildingNextLevel.populationAdd,
 
                       ...(isBuilding === true
-                        ? { villageBuildings: updatedObject }
+                        ? {villageBuildings: updatedObject}
                         : {
                             resourceFields: updatedObject,
                             [`${buildingNamePrefix[0]}ProductionPerH`]:
@@ -222,7 +222,7 @@ export default async function handler(
 
               return res
                 .status(200)
-                .json({ msg: "Request for upgrade in progress!" });
+                .json({msg: "Request for upgrade in progress!"});
             }
           }
         } catch (error) {

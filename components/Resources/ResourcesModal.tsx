@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/outline";
 import Image from "next/image";
 import React from "react";
-import { BASE_PRODUCTION_NUMBER } from "../../gsVariables";
+import {BASE_PRODUCTION_NUMBER} from "../../gsVariables";
 import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
@@ -19,13 +19,12 @@ type ResourcesModalProps = {
     name: string;
     image: string;
     description: string;
-
     type: string;
     levels: any;
   };
 };
 
-function ResourcesModal({ clickedResource }: ResourcesModalProps) {
+function ResourcesModal({clickedResource}: ResourcesModalProps) {
   return (
     <>
       <div className="flex flex-row items-center justify-center space-x-3 py-8 sm:justify-between sm:space-y-0 sm:px-8">
