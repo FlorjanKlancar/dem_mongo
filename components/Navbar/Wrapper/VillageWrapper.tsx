@@ -8,16 +8,18 @@ import {
 } from "@heroicons/react/outline";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../types/storeModel";
+import { MAX_LEVEL_BUILDINGS } from "../../../gsVariables";
 
 type VillageWrapperProps = {
   children: React.ReactNode;
 };
 
-const resourcesMaxStorage = 1000;
-
 function VillageWrapper({ children }: VillageWrapperProps) {
   const resourcesRedux = useSelector(
     (state: RootState) => state.village.resourcesStorage
+  );
+  const { gsBuildings }: any = useSelector(
+    (state: RootState) => state.gsBuildings
   );
 
   const resources = [
@@ -40,19 +42,50 @@ function VillageWrapper({ children }: VillageWrapperProps) {
     amount: Math.floor(resourcesRedux.wheatAmount),
   };
 
+  const village = useSelector((state: RootState) => state.village);
+  const warehouseMaxStorage: any = village.villageBuildings.find(
+    (building: any) => building.type === "warehouse"
+  );
+  const granaryLevel: any = village.villageBuildings.find(
+    (building: any) => building.type === "granary"
+  );
+
+  const resourcesMaxStorage =
+    gsBuildings["warehouse"].levels[0][warehouseMaxStorage.level]
+      .warehouseResourceLimit;
+  const granaryMaxStorage =
+    gsBuildings["granary"].levels[0][granaryLevel.level].granaryResourceLimit;
+
+  const warehouseNextLevel =
+    gsBuildings["warehouse"].levels[0][
+      warehouseMaxStorage.level + 1 < MAX_LEVEL_BUILDINGS
+        ? warehouseMaxStorage.level + 1
+        : MAX_LEVEL_BUILDINGS
+    ].warehouseResourceLimit;
+  const granaryNextLevel =
+    gsBuildings["granary"].levels[0][
+      granaryLevel.level + 1 < MAX_LEVEL_BUILDINGS
+        ? granaryLevel.level + 1
+        : MAX_LEVEL_BUILDINGS
+    ].granaryResourceLimit;
+
   return (
     <div className="mt-5 px-6 sm:px-12 md:px-20 ">
-      <div className="mb-8 flex grid-cols-4 flex-col justify-center gap-1 space-y-0.5 sm:grid sm:flex-row sm:space-y-0 lg:flex lg:space-x-1">
+      <div className="resource_bar">
         <div className="flex flex-col rounded-xl border-2 border-primary/60 bg-slate-800 p-3 lg:mr-3">
           <div className="flex w-full justify-center space-x-2 text-center text-white lg:w-32">
             <div>
               <DatabaseIcon className="mt-0.5 h-5 w-5" />
             </div>
             <div>
-              <p>1000</p>
+              <p>{resourcesMaxStorage}</p>
             </div>
           </div>
-          <div className="text-center text-xs ">Next upgrade: 1200</div>
+          <div className="text-center text-xs ">
+            {warehouseMaxStorage.level + 1 < MAX_LEVEL_BUILDINGS
+              ? `Next upgrade: ${warehouseNextLevel}`
+              : "Max level"}
+          </div>
         </div>
 
         {resources.map((resource, i) => (
@@ -73,7 +106,7 @@ function VillageWrapper({ children }: VillageWrapperProps) {
                   : "progress-success"
               } w-full px-1 `}
               value={resource.amount}
-              max="1000"
+              max={resourcesMaxStorage}
             ></progress>
           </div>
         ))}
@@ -84,10 +117,14 @@ function VillageWrapper({ children }: VillageWrapperProps) {
               <DatabaseIcon className="mt-0.5 h-5 w-5" />
             </div>
             <div>
-              <p>1000</p>
+              <p>{granaryMaxStorage}</p>
             </div>
           </div>
-          <div className="text-center text-xs ">Next upgrade: 1200</div>
+          <div className="text-center text-xs ">
+            {granaryLevel.level + 1 < MAX_LEVEL_BUILDINGS
+              ? `Next upgrade: ${granaryNextLevel}`
+              : "Max level"}
+          </div>
         </div>
 
         <div className="flex flex-col space-y-0.5 rounded-xl border-2 border-primary/60 bg-slate-700 p-3 lg:w-32">

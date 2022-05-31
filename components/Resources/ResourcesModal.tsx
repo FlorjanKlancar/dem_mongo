@@ -28,34 +28,32 @@ type ResourcesModalProps = {
 function ResourcesModal({ clickedResource }: ResourcesModalProps) {
   return (
     <>
-      <div className="flex flex-col items-center justify-center space-y-5 py-8 sm:flex-row sm:justify-between sm:space-y-0 sm:px-8">
-        <div className="relative h-32 w-32">
+      <div className="flex flex-row items-center justify-center space-x-3 py-8 sm:justify-between sm:space-y-0 sm:px-8">
+        <div className="relative h-20 w-24 sm:h-32 sm:w-32">
           {clickedResource.image && (
             <Image src={clickedResource.image} layout="fill" />
           )}
-          <div className="text-bold absolute bottom-1 right-9 z-50 text-4xl text-white">
+          <div className="text-bold absolute bottom-1 right-6 z-50 text-lg text-white sm:right-9 sm:text-4xl">
             {clickedResource.level}
           </div>
         </div>
-        <div className="hidden sm:block">
-          <ArrowNarrowRightIcon className="h-12 w-12 text-primary" />
+        <div className="">
+          <ArrowNarrowRightIcon className="h-8 w-8 text-primary sm:h-12 sm:w-12" />
         </div>
-        <div className="sm:hidden">
-          <ArrowNarrowDownIcon className="h-12 w-12 text-primary" />
-        </div>
-        <div className="relative h-32 w-32">
+
+        <div className="relative h-20 w-24 sm:h-32 sm:w-32">
           {clickedResource.image && (
             <Image src={clickedResource.image} layout="fill" />
           )}
 
-          <div className="text-bold absolute bottom-1 right-9 z-50 text-4xl text-white">
+          <div className="text-bold absolute bottom-1 right-6 z-50 text-lg text-white sm:right-9 sm:text-4xl">
             {clickedResource.level + 1}
           </div>
         </div>
       </div>
 
       <div className="text-xl sm:text-2xl">Production</div>
-      <div className="flex justify-between sm:px-14">
+      <div className="flex justify-between px-8 sm:px-14">
         <div>
           From:{" "}
           {clickedResource.levels &&
@@ -74,7 +72,7 @@ function ResourcesModal({ clickedResource }: ResourcesModalProps) {
 
       <div className="text-xl sm:text-2xl">Resources cost</div>
 
-      <div className="grid grid-cols-1 justify-items-center gap-3	sm:grid-cols-2	">
+      <div className="grid grid-cols-2 justify-items-center gap-3	sm:grid-cols-2	">
         <div className="flex items-center space-x-2">
           <div className="relative h-16 w-16">
             <Image src={WoodImg} layout="fill" />

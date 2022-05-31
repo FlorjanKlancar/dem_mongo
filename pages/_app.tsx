@@ -3,20 +3,23 @@ import "../styles/globals.css";
 import Wrapper from "../components/Navbar/Wrapper/Wrapper";
 import NavbarDem from "../components/Navbar/NavbarDem";
 import VillageWrapper from "../components/Navbar/Wrapper/VillageWrapper";
-import {useEffect, useState} from "react";
-import {doc, onSnapshot} from "firebase/firestore";
-import {auth, db} from "../firebase/clientApp";
-import {Provider, useDispatch} from "react-redux";
-import {villageActions} from "../store/village-slice";
+import { useEffect, useState } from "react";
+import { doc, onSnapshot } from "firebase/firestore";
+import { auth, db } from "../firebase/clientApp";
+import { Provider, useDispatch } from "react-redux";
+import { villageActions } from "../store/village-slice";
 import store from "../store";
 import axios from "axios";
-import {gsUnitsActions} from "../store/gsUnits-slice";
-import {gsBuildingsActions} from "../store/gsBuildings-slice";
+import { gsUnitsActions } from "../store/gsUnits-slice";
+import { gsBuildingsActions } from "../store/gsBuildings-slice";
 import Login from "../components/Navbar/Auth/Login";
-import {useAuthState} from "react-firebase-hooks/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 import VillageSkeleton from "../components/skeletons/VillageSkeleton";
+import Image from "next/image";
+import BackgroundImage from "/public/assets/Ozadje_DEM_game.png";
+import { Toaster } from "react-hot-toast";
 
-function MyApp({Component, pageProps}: any) {
+function MyApp({ Component, pageProps }: any) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
 
@@ -24,16 +27,16 @@ function MyApp({Component, pageProps}: any) {
 
   const initializeDataFetch = async () => {
     await axios.get(`api/village/${user?.uid}`, {
-      headers: {Authorization: `Bearer ${user?.accessToken}`},
+      headers: { Authorization: `Bearer ${user?.accessToken}` },
     });
     const buildingsResponse = await axios.get(`api/gsBuildings`, {
-      headers: {Authorization: `Bearer ${user?.accessToken}`},
+      headers: { Authorization: `Bearer ${user?.accessToken}` },
     });
     const unitsResponse = await axios.get(`api/gsUnits`, {
-      headers: {Authorization: `Bearer ${user?.accessToken}`},
+      headers: { Authorization: `Bearer ${user?.accessToken}` },
     });
 
-    dispatch(gsUnitsActions.initializeGsUnits({gsUnits: unitsResponse.data}));
+    dispatch(gsUnitsActions.initializeGsUnits({ gsUnits: unitsResponse.data }));
     dispatch(
       gsBuildingsActions.initializeGsBuildings({
         gsBuildings: buildingsResponse.data,
@@ -106,11 +109,10 @@ function MyApp({Component, pageProps}: any) {
             {isLoading ? (
               <VillageSkeleton />
             ) : (
-              <>
-                <VillageWrapper>
-                  <Component {...pageProps} />
-                </VillageWrapper>
-              </>
+              <VillageWrapper>
+                <Toaster position="top-center" reverseOrder={false} />
+                <Component {...pageProps} />
+              </VillageWrapper>
             )}
           </>
         )}
@@ -119,7 +121,7 @@ function MyApp({Component, pageProps}: any) {
   );
 }
 
-function MyAppWithProvider({Component, pageProps}: any) {
+function MyAppWithProvider({ Component, pageProps }: any) {
   return (
     <Provider store={store}>
       <MyApp Component={Component} pageProps={pageProps} />

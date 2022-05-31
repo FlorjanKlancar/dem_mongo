@@ -19,14 +19,17 @@
     "firebase": "^9.8.1",
     "firebase-admin": "^10.2.0",
     "next": "12.1.6",
+    "node-schedule": "^2.1.0",
     "react": "18.1.0",
     "react-dom": "18.1.0",
     "react-firebase-hooks": "^5.0.3",
+    "react-hot-toast": "^2.2.0",
     "react-redux": "^8.0.2",
     "sharp": "^0.30.6"
   },
   "devDependencies": {
     "@types/node": "17.0.35",
+    "@types/node-schedule": "^2.1.0",
     "@types/react": "18.0.9",
     "@types/react-dom": "18.0.5",
     "autoprefixer": "^10.4.7",

@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type {NextApiRequest, NextApiResponse} from "next";
-import {adminDb, firebaseAdmin} from "../../../firebase/serverApp";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { adminDb, firebaseAdmin } from "../../../firebase/serverApp";
 
 export default async function handler(
   req: NextApiRequest,
@@ -8,11 +8,6 @@ export default async function handler(
 ) {
   switch (req.method) {
     default:
-    case "POST": {
-      {
-      }
-      break;
-    }
     case "GET": {
       try {
         if (!req.headers.authorization)
@@ -31,7 +26,7 @@ export default async function handler(
           }
 
           units.docs.forEach(
-            (unit) => (allUnits = {...allUnits, [unit.id]: unit.data()})
+            (unit) => (allUnits = { ...allUnits, [unit.id]: unit.data() })
           );
           return res.status(200).json(allUnits);
         }

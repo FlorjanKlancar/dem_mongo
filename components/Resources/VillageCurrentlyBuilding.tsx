@@ -2,6 +2,7 @@ import { XIcon } from "@heroicons/react/outline";
 import axios from "axios";
 import React from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
+import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { auth } from "../../firebase/clientApp";
 import { RootState } from "../../types/storeModel";
@@ -16,7 +17,7 @@ function VillageCurrentlyBuilding() {
 
   const cancelHandler = async () => {
     await axios.post(
-      `${process.env.NEXT_PUBLIC_NODEJS_APP}/build`,
+      `api/buildResources`,
       {
         villageId: user.uid,
         buildingName: village.currentlyBuilding[0].buildingId,
@@ -24,6 +25,8 @@ function VillageCurrentlyBuilding() {
       },
       { headers: { Authorization: `Bearer ${user?.accessToken}` } }
     );
+
+    toast.success("Successfully canceled build!");
   };
 
   return (
@@ -31,7 +34,7 @@ function VillageCurrentlyBuilding() {
       {village.currentlyBuilding.length ? (
         <div className="mt-5 rounded-lg border-2 border-primary/80 bg-slate-800 py-4 px-8 text-white">
           <div>Currently building:</div>
-          <div className="mt-2 flex items-center justify-between text-sm">
+          <div className="mt-2 flex flex-col items-center justify-between space-y-4 text-sm sm:flex-row sm:space-y-0">
             <div>
               <button
                 className="flex rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-800 hover:text-slate-200"

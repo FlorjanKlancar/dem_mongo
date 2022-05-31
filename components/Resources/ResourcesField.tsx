@@ -1,12 +1,14 @@
 import axios from "axios";
 import Image from "next/image";
-import React, {useState} from "react";
-import {useAuthState} from "react-firebase-hooks/auth";
-import {useSelector} from "react-redux";
-import {auth} from "../../firebase/clientApp";
-import {MAX_LEVEL_RESOURCES} from "../../gsVariables";
-import {resourceField} from "../../types/resourceField";
-import {RootState} from "../../types/storeModel";
+import React, { useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import toast from "react-hot-toast";
+import { useSelector } from "react-redux";
+import { auth } from "../../firebase/clientApp";
+import { MAX_LEVEL_RESOURCES } from "../../gsVariables";
+import { resourceField } from "../../types/resourceField";
+import { RootState } from "../../types/storeModel";
+import { CogIcon } from "@heroicons/react/outline";
 
 import ResourcesMaxLevelModal from "./ResourcesMaxLevelModal";
 import ResourcesModal from "./ResourcesModal";
@@ -14,12 +16,12 @@ import ResourcesModal from "./ResourcesModal";
 function ResourcesField() {
   const [user]: any = useAuthState(auth);
 
-  const village = useSelector((state: RootState) => state.village);
+  const village: any = useSelector((state: RootState) => state.village);
 
-  const {gsBuildings} = useSelector((state: RootState) => state.gsBuildings);
+  const { gsBuildings } = useSelector((state: RootState) => state.gsBuildings);
 
   const [clickedResource, setClickedResource] = useState<any>({});
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
   const onResourceClickHandler = (id: string, level: number, type: string) => {
     const resourceNextLevelInfo: any = Object.values(gsBuildings).find(
@@ -37,31 +39,47 @@ function ResourcesField() {
       levels: resourceNextLevelInfo?.levels,
       type,
     });
+
+    checkResources();
   };
 
   const upgradeHandler = async () => {
-    setIsLoading(true);
     const response = await axios.post(
-      `${process.env.NEXT_PUBLIC_NODEJS_APP}/build`,
+      `api/buildResources`,
       {
         villageId: user?.uid,
         buildingName: clickedResource.type,
         fieldId: clickedResource.id,
         isBuilding: false,
       },
-      {headers: {Authorization: `Bearer ${user?.accessToken}`}}
+      { headers: { Authorization: `Bearer ${user?.accessToken}` } }
     );
 
-    setIsLoading(false);
+    console.log("response", response);
+    toast.success("Successfully toasted!");
   };
 
-  /*  const checkResources = async() => {
-      if(clickedResource.levels &&
-        clickedResource.levels[0][clickedResource.level + 1]
-          .costWood > village.wood) {
-        return false;
-      }
-    } */
+  const checkResources = async () => {
+    if (
+      (clickedResource?.levels[0][clickedResource.level + 1] &&
+        clickedResource?.levels[0][clickedResource.level + 1].costWood >
+          village.resourcesStorage.woodAmount) ||
+      (clickedResource?.levels[0][clickedResource.level + 1] &&
+        clickedResource?.levels[0][clickedResource.level + 1].costClay >
+          village.resourcesStorage.clayAmount) ||
+      (clickedResource?.levels[0][clickedResource.level + 1] &&
+        clickedResource?.levels[0][clickedResource.level + 1].costIron >
+          village.resourcesStorage.ironAmount) ||
+      (clickedResource?.levels[0][clickedResource.level + 1] &&
+        clickedResource?.levels[0][clickedResource.level + 1].costWheat >
+          village.resourcesStorage.wheatAmount)
+    ) {
+      setIsButtonDisabled(true);
+    } else {
+      setIsButtonDisabled(false);
+    }
+  };
+
   return (
     <>
       <input type="checkbox" id="my-modal-4" className="modal-toggle " />
@@ -70,7 +88,7 @@ function ResourcesField() {
           className="modal-box relative border-2 border-primary/60 bg-slate-800"
           htmlFor=""
         >
-          <div className="space-y-2 px-4">
+          <div className="space-y-2 sm:px-4">
             <div>
               <h3 className="text-center text-lg font-bold sm:text-left">
                 {clickedResource.name}
@@ -89,19 +107,26 @@ function ResourcesField() {
               <ResourcesModal clickedResource={clickedResource} />
             )}
 
-            <div>
+            <div className="modal-action">
               <button
-                className="mt-5 w-full rounded-lg bg-primary/80 py-2 font-bold text-slate-800 hover:bg-primary hover:text-slate-600 disabled:bg-gray-500 disabled:hover:text-slate-800"
+                className="mt-5 w-full rounded-lg bg-primary py-2 font-bold text-slate-800 hover:bg-primary hover:text-slate-600 disabled:bg-gray-500 disabled:hover:text-slate-800"
                 onClick={upgradeHandler}
+                type="submit"
                 disabled={
-                  clickedResource.level + 1 > MAX_LEVEL_RESOURCES ? true : false
+                  clickedResource.level + 1 > MAX_LEVEL_RESOURCES
+                    ? true
+                    : false || isButtonDisabled
+                    ? true
+                    : false
                 }
               >
-                {clickedResource.level + 1 > MAX_LEVEL_RESOURCES
-                  ? "Building is max level!"
-                  : isLoading
-                  ? "Upgrading..."
-                  : "Upgrade"}
+                <label htmlFor="my-modal-4" className="w-full ">
+                  {clickedResource.level + 1 > MAX_LEVEL_RESOURCES
+                    ? "Building is max level!"
+                    : isButtonDisabled
+                    ? "Not enough resources!"
+                    : "Upgrade"}
+                </label>
               </button>
             </div>
           </div>
@@ -113,14 +138,11 @@ function ResourcesField() {
           <label
             htmlFor={`${resource.type !== "village_center" && "my-modal-4"}`}
             key={resource.id}
-            className={`${
-              resource.type === "village_center"
-                ? ""
-                : "rounded-xl border-2 border-slate-500/50"
-            }`}
           >
             <div
-              className={`relative cursor-pointer rounded-xl  border-slate-800/10 hover:border-slate-800/40 `}
+              className={`relative cursor-pointer rounded-xl  border-slate-800/10 hover:border-slate-800/40 ${
+                resource.type === "village_center" ? "" : "border-2"
+              } `}
               onClick={() =>
                 onResourceClickHandler(
                   resource.id,
@@ -130,14 +152,24 @@ function ResourcesField() {
               }
             >
               {resource.imageGrid && (
-                <div className="relative h-20 w-20 md:h-28 md:w-32 lg:h-36 lg:w-44">
+                <div className="relative h-20 w-24 sm:h-28 sm:w-32 md:h-32 md:w-40">
                   <Image src={resource.imageGrid} layout="fill" />
                 </div>
               )}
+
               {resource.level && (
                 <div className="absolute bottom-2 right-2 rounded-full border-2 border-primary/50 bg-white px-2  text-black">
                   {resource.level}
                 </div>
+              )}
+
+              {village.currentlyBuilding.length &&
+              village.currentlyBuilding[0].fieldId === resource.id ? (
+                <div className="absolute top-2 left-2 animate-spin text-black">
+                  <CogIcon className="h-6 w-6" />
+                </div>
+              ) : (
+                <div></div>
               )}
             </div>
           </label>

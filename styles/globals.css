@@ -5,3 +5,7 @@
 .resources_item {
   @apply flex w-28  rounded-xl bg-slate-800 p-3  text-center text-sm text-white;
 }
+
+.resource_bar {
+  @apply mb-8 grid grid-cols-2 justify-center gap-1 space-y-0.5 sm:grid-cols-4 sm:space-y-0 lg:flex lg:space-x-1;
+}
