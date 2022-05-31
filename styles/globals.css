@@ -9,3 +9,12 @@
 .resource_bar {
   @apply mb-8 grid grid-cols-2 justify-center gap-1 space-y-0.5 sm:grid-cols-4 sm:space-y-0 lg:flex lg:space-x-1;
 }
+
+html {
+  background: url("https://play.dem.gg/Ozadje_DEM_game.a181ac50237598e48ecc.png")
+    no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+}
