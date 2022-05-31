@@ -40,10 +40,13 @@ function ResourcesField() {
       type,
     });
 
-    checkResources();
+    if (level < MAX_LEVEL_RESOURCES) {
+      checkResources(resourceNextLevelInfo?.levels[0][level + 1]);
+    }
   };
 
   const upgradeHandler = async () => {
+    const upgradeToast = toast.loading("Upgrading...");
     const response = await axios.post(
       `api/buildResources`,
       {
@@ -55,24 +58,16 @@ function ResourcesField() {
       { headers: { Authorization: `Bearer ${user?.accessToken}` } }
     );
 
-    console.log("response", response);
-    toast.success("Successfully toasted!");
+    toast.success("Successfully toasted!", { id: upgradeToast });
   };
 
-  const checkResources = async () => {
+  const checkResources = async (resourceNextLevelInfo: any) => {
     if (
-      (clickedResource?.levels[0][clickedResource.level + 1] &&
-        clickedResource?.levels[0][clickedResource.level + 1].costWood >
-          village.resourcesStorage.woodAmount) ||
-      (clickedResource?.levels[0][clickedResource.level + 1] &&
-        clickedResource?.levels[0][clickedResource.level + 1].costClay >
-          village.resourcesStorage.clayAmount) ||
-      (clickedResource?.levels[0][clickedResource.level + 1] &&
-        clickedResource?.levels[0][clickedResource.level + 1].costIron >
-          village.resourcesStorage.ironAmount) ||
-      (clickedResource?.levels[0][clickedResource.level + 1] &&
-        clickedResource?.levels[0][clickedResource.level + 1].costWheat >
-          village.resourcesStorage.wheatAmount)
+      resourceNextLevelInfo &&
+      (resourceNextLevelInfo.costWood > village.resourcesStorage.woodAmount ||
+        resourceNextLevelInfo.costClay > village.resourcesStorage.clayAmount ||
+        resourceNextLevelInfo.costIron > village.resourcesStorage.ironAmount ||
+        resourceNextLevelInfo.costWheat > village.resourcesStorage.wheatAmount)
     ) {
       setIsButtonDisabled(true);
     } else {

@@ -1,11 +1,12 @@
 import { XIcon } from "@heroicons/react/outline";
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
 import { auth } from "../../firebase/clientApp";
 import { RootState } from "../../types/storeModel";
+import dayjs from "dayjs";
 
 function VillageCurrentlyBuilding() {
   const [user]: any = useAuthState(auth);
@@ -49,7 +50,12 @@ function VillageCurrentlyBuilding() {
                 gsBuildings[village.currentlyBuilding[0].buildingId].name}{" "}
               - level {village.currentlyBuilding[0].currentlyBuildingLevel}
             </div>
-            <div>End: {village.currentlyBuilding[0].endBuildTime}</div>
+            <div>
+              End:{" "}
+              {dayjs(village.currentlyBuilding[0].endBuildTime).format(
+                "HH:mm:ss"
+              )}
+            </div>
           </div>
         </div>
       ) : (
