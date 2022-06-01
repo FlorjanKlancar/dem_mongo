@@ -1,48 +1,62 @@
 import React from "react";
-import {
-  HandIcon,
-  LightningBoltIcon,
-  ScaleIcon,
-  DatabaseIcon,
-  StarIcon,
-  CogIcon,
-} from "@heroicons/react/outline";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../types/storeModel";
-import { MAX_LEVEL_BUILDINGS } from "../../../gsVariables";
+import {DatabaseIcon, CogIcon} from "@heroicons/react/outline";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../types/storeModel";
+import {MAX_LEVEL_BUILDINGS} from "../../../gsVariables";
+import WoodImg from "../../../public/assets/Wood.png";
+import ClayImg from "../../../public/assets/Clay.png";
+import IronImg from "../../../public/assets/Iron.png";
+import WheatImg from "../../../public/assets/Wheat.png";
+import Image from "next/image";
 
 type VillageWrapperProps = {
   children: React.ReactNode;
 };
 
-function VillageWrapper({ children }: VillageWrapperProps) {
+function VillageWrapper({children}: VillageWrapperProps) {
   const resourcesRedux = useSelector(
     (state: RootState) => state.village.resourcesStorage
   );
   const buildersRedux = useSelector(
     (state: RootState) => state.village.currentlyBuilding
   );
-  const { gsBuildings }: any = useSelector(
+  const {gsBuildings}: any = useSelector(
     (state: RootState) => state.gsBuildings
   );
 
   const resources = [
     {
-      icon: <HandIcon className="mt-0.5 h-5 w-5" />,
+      icon: (
+        <div className="relative h-10 w-10">
+          <Image src={WoodImg} layout="fill" />
+        </div>
+      ),
       amount: Math.floor(resourcesRedux.woodAmount),
     },
     {
-      icon: <LightningBoltIcon className="mt-0.5 h-5 w-5" />,
+      icon: (
+        <div className="relative h-10 w-10">
+          <Image src={ClayImg} layout="fill" />
+        </div>
+      ),
       amount: Math.floor(resourcesRedux.clayAmount),
     },
     {
-      icon: <ScaleIcon className="mt-0.5 h-5 w-5" />,
+      icon: (
+        <div className="relative h-10 w-10">
+          <Image src={IronImg} layout="fill" />
+        </div>
+      ),
       amount: Math.floor(resourcesRedux.ironAmount),
     },
   ];
 
   const wheat = {
-    icon: <StarIcon className="mt-0.5 h-5 w-5" />,
+    icon: (
+      <div className="relative h-10 w-10">
+        <Image src={WheatImg} layout="fill" />
+      </div>
+    ),
     amount: Math.floor(resourcesRedux.wheatAmount),
   };
 
@@ -102,9 +116,9 @@ function VillageWrapper({ children }: VillageWrapperProps) {
         {resources.map((resource, i) => (
           <div
             key={i}
-            className="flex flex-col space-y-0.5 rounded-xl border-2 border-primary/60 bg-slate-700 p-3 lg:w-32"
+            className="flex flex-col space-y-0.5 rounded-xl border-2 border-primary/60 bg-slate-700 px-3 py-1 lg:w-32"
           >
-            <div className="flex w-full justify-center space-x-2 text-center text-white">
+            <div className="flex w-full items-center justify-center space-x-2 text-center text-white">
               <div>{resource.icon}</div>
               <div>
                 <p>{resource.amount}</p>
@@ -143,8 +157,8 @@ function VillageWrapper({ children }: VillageWrapperProps) {
           </div>
         </div>
 
-        <div className="flex flex-col space-y-0.5 rounded-xl border-2 border-primary/60 bg-slate-700 p-3 lg:w-32">
-          <div className="flex w-full justify-center space-x-2 text-center text-white">
+        <div className="flex flex-col space-y-0.5 rounded-xl border-2 border-primary/60 bg-slate-700 px-3 py-1 lg:w-32">
+          <div className="flex w-full items-center justify-center space-x-2 text-center text-white">
             <div>{wheat.icon}</div>
             <div>
               <p>{wheat.amount}</p>

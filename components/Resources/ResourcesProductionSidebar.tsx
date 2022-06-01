@@ -5,30 +5,51 @@ import {
   StarIcon,
 } from "@heroicons/react/outline";
 import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../types/storeModel";
+import {useSelector} from "react-redux";
+import {RootState} from "../../types/storeModel";
+import WoodImg from "../../public/assets/Wood.png";
+import ClayImg from "../../public/assets/Clay.png";
+import IronImg from "../../public/assets/Iron.png";
+import WheatImg from "../../public/assets/Wheat.png";
+import Image from "next/image";
 
 function ResourcesProductionSidebar() {
   const village = useSelector((state: RootState) => state.village);
 
   const resources = [
     {
-      icon: <HandIcon className="mt-0.5 h-5 w-5" />,
+      icon: (
+        <div className="relative h-10 w-10">
+          <Image src={WoodImg} layout="fill" />
+        </div>
+      ),
       title: "Wood",
       amount: village.woodProductionPerH,
     },
     {
-      icon: <LightningBoltIcon className="mt-0.5 h-5 w-5" />,
+      icon: (
+        <div className="relative h-10 w-10">
+          <Image src={ClayImg} layout="fill" />
+        </div>
+      ),
       title: "Clay",
       amount: village.clayProductionPerH,
     },
     {
-      icon: <ScaleIcon className="mt-0.5 h-5 w-5" />,
+      icon: (
+        <div className="relative h-10 w-10">
+          <Image src={IronImg} layout="fill" />
+        </div>
+      ),
       title: "Iron",
       amount: village.ironProductionPerH,
     },
     {
-      icon: <StarIcon className="mt-0.5 h-5 w-5" />,
+      icon: (
+        <div className="relative h-10 w-10">
+          <Image src={WheatImg} layout="fill" />
+        </div>
+      ),
       title: "Wheat",
       amount: village.wheatProductionPerH,
     },
@@ -36,13 +57,18 @@ function ResourcesProductionSidebar() {
 
   return (
     <div className="flex w-full flex-col space-y-4  sm:w-1/2 md:w-full">
-      <div className="rounded-xl border-2 border-primary/80 bg-slate-800 p-5 text-center text-gray-200">
-        <div>Production per hour</div>
-        <hr className="text-gray-200" />
+      <div className="rounded-xl border-2 border-primary/80 bg-slate-800 px-2 py-2 text-center text-gray-200">
+        <div className="text-xl font-semibold text-primary">
+          Production per hour
+        </div>
+        <hr className="border-primary/80 text-gray-200" />
 
         <div className="mt-2 flex w-full flex-col space-y-3">
           {resources.map((resource, i) => (
-            <div key={i} className="flex justify-between">
+            <div
+              key={i}
+              className="grid grid-cols-3 items-center justify-items-center gap-4"
+            >
               <div>{resource.icon}</div>
               <div>{resource.title}</div>
               <div>{resource.amount}</div>

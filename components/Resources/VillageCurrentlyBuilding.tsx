@@ -35,8 +35,8 @@ function VillageCurrentlyBuilding() {
       {village.currentlyBuilding.length ? (
         <div className="mt-5 rounded-lg border-2 border-primary/80 bg-slate-800 py-4 px-8 text-white">
           <div>Currently building:</div>
-          <div className="mt-2  grid grid-cols-2 items-center justify-between gap-2 text-sm sm:grid-cols-3">
-            <div>
+          <div className="mt-2 grid grid-cols-2 items-center justify-between gap-2 sm:flex">
+            <div className="order-last sm:order-first">
               <button
                 className="flex rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-800 hover:text-slate-200"
                 onClick={cancelHandler}
