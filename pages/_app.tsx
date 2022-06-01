@@ -3,22 +3,22 @@ import "../styles/globals.css";
 import Wrapper from "../components/Navbar/Wrapper/Wrapper";
 import NavbarDem from "../components/Navbar/NavbarDem";
 import VillageWrapper from "../components/Navbar/Wrapper/VillageWrapper";
-import {useEffect, useState} from "react";
-import {doc, onSnapshot} from "firebase/firestore";
-import {auth, db} from "../firebase/clientApp";
-import {Provider, useDispatch} from "react-redux";
-import {villageActions} from "../store/village-slice";
+import { useEffect, useState } from "react";
+import { doc, onSnapshot } from "firebase/firestore";
+import { auth, db } from "../firebase/clientApp";
+import { Provider, useDispatch } from "react-redux";
+import { villageActions } from "../store/village-slice";
 import store from "../store";
 import axios from "axios";
-import {gsUnitsActions} from "../store/gsUnits-slice";
-import {gsBuildingsActions} from "../store/gsBuildings-slice";
+import { gsUnitsActions } from "../store/gsUnits-slice";
+import { gsBuildingsActions } from "../store/gsBuildings-slice";
 import Login from "../components/Navbar/Auth/Login";
-import {useAuthState} from "react-firebase-hooks/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 import VillageSkeleton from "../components/skeletons/VillageSkeleton";
-import {Toaster} from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 import Modal from "../components/Modal/Modal";
 
-function MyApp({Component, pageProps}: any) {
+function MyApp({ Component, pageProps }: any) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
 
@@ -26,19 +26,18 @@ function MyApp({Component, pageProps}: any) {
 
   const initializeDataFetch = async () => {
     await axios.get(`api/village/${user?.uid}`, {
-      headers: {Authorization: `Bearer ${user?.accessToken}`},
+      headers: { Authorization: `Bearer ${user?.accessToken}` },
     });
-    const buildingsResponse = await axios.get(`api/gsBuildings`, {
-      headers: {Authorization: `Bearer ${user?.accessToken}`},
-    });
-    const unitsResponse = await axios.get(`api/gsUnits`, {
-      headers: {Authorization: `Bearer ${user?.accessToken}`},
+    const response = await axios.get(`api/initialize`, {
+      headers: { Authorization: `Bearer ${user?.accessToken}` },
     });
 
-    dispatch(gsUnitsActions.initializeGsUnits({gsUnits: unitsResponse.data}));
+    dispatch(
+      gsUnitsActions.initializeGsUnits({ gsUnits: response.data.unitsResponse })
+    );
     dispatch(
       gsBuildingsActions.initializeGsBuildings({
-        gsBuildings: buildingsResponse.data,
+        gsBuildings: response.data.buildingsResponse,
       })
     );
 
@@ -120,7 +119,7 @@ function MyApp({Component, pageProps}: any) {
   );
 }
 
-function MyAppWithProvider({Component, pageProps}: any) {
+function MyAppWithProvider({ Component, pageProps }: any) {
   return (
     <Provider store={store}>
       <MyApp Component={Component} pageProps={pageProps} />

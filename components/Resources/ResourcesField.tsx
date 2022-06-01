@@ -1,25 +1,26 @@
 import axios from "axios";
 import Image from "next/image";
-import React, {useState} from "react";
-import {useAuthState} from "react-firebase-hooks/auth";
+import React, { useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import toast from "react-hot-toast";
-import {useSelector} from "react-redux";
-import {auth} from "../../firebase/clientApp";
-import {MAX_LEVEL_RESOURCES} from "../../gsVariables";
-import {resourceField} from "../../types/resourceField";
-import {RootState} from "../../types/storeModel";
-import {CogIcon} from "@heroicons/react/outline";
+import { useSelector } from "react-redux";
+import { auth } from "../../firebase/clientApp";
+import { MAX_LEVEL_RESOURCES } from "../../gsVariables";
+import { resourceField } from "../../types/resourceField";
+import { RootState } from "../../types/storeModel";
+import { CogIcon } from "@heroicons/react/outline";
 
 import ResourcesMaxLevelModal from "./ResourcesMaxLevelModal";
 import ResourcesModal from "./ResourcesModal";
 import Modal from "../Modal/Modal";
+import Link from "next/link";
 
 function ResourcesField() {
   const [user]: any = useAuthState(auth);
 
   const village: any = useSelector((state: RootState) => state.village);
 
-  const {gsBuildings} = useSelector((state: RootState) => state.gsBuildings);
+  const { gsBuildings } = useSelector((state: RootState) => state.gsBuildings);
 
   const [clickedResource, setClickedResource] = useState<any>({});
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
@@ -42,7 +43,7 @@ function ResourcesField() {
       type,
     });
 
-    setOpen(true);
+    if (type !== "village_center") setOpen(true);
 
     if (level < MAX_LEVEL_RESOURCES) {
       checkResources(resourceNextLevelInfo?.levels[0][level + 1]);
@@ -60,10 +61,10 @@ function ResourcesField() {
         fieldId: clickedResource.id,
         isBuilding: false,
       },
-      {headers: {Authorization: `Bearer ${user?.accessToken}`}}
+      { headers: { Authorization: `Bearer ${user?.accessToken}` } }
     );
 
-    toast.success("Successfully toasted!", {id: upgradeToast});
+    toast.success("Upgrade started successfully!", { id: upgradeToast });
   };
 
   const checkResources = async (resourceNextLevelInfo: any) => {
@@ -146,7 +147,13 @@ function ResourcesField() {
             >
               {resource.imageGrid && (
                 <div className="relative h-20 w-24 sm:h-28 sm:w-32 md:h-32 md:w-40">
-                  <Image src={resource.imageGrid} layout="fill" />
+                  {resource.type === "village_center" ? (
+                    <Link href="/village">
+                      <Image src={resource.imageGrid} layout="fill" />
+                    </Link>
+                  ) : (
+                    <Image src={resource.imageGrid} layout="fill" />
+                  )}
                 </div>
               )}
 

@@ -1,4 +1,5 @@
 import {
+  CogIcon,
   DatabaseIcon,
   HandIcon,
   LightningBoltIcon,
@@ -68,6 +69,16 @@ function VillageSkeleton() {
           <div className="flex flex-col space-y-0.5 rounded-xl border-2 border-primary/60 bg-slate-700 p-3 lg:w-32">
             <div className="flex w-full justify-center space-x-2 text-center text-white">
               <div>{wheat.icon}</div>
+              <div className="h-5 w-16 animate-pulse  rounded-full bg-slate-600"></div>
+            </div>
+            <div className="mt-1 h-4 w-full animate-pulse items-center  rounded-full bg-slate-600"></div>
+          </div>
+
+          <div className="flex flex-col rounded-xl border-2 border-primary/60 bg-slate-800 p-3 lg:mr-3 ">
+            <div className="flex w-full justify-center space-x-2 text-center text-white lg:w-32">
+              <div>
+                <CogIcon className="mt-0.5 h-5 w-5" />
+              </div>
               <div className="h-5 w-16 animate-pulse  rounded-full bg-slate-600"></div>
             </div>
             <div className="mt-1 h-4 w-full animate-pulse items-center  rounded-full bg-slate-600"></div>

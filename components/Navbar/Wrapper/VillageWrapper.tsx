@@ -5,6 +5,7 @@ import {
   ScaleIcon,
   DatabaseIcon,
   StarIcon,
+  CogIcon,
 } from "@heroicons/react/outline";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../types/storeModel";
@@ -17,6 +18,9 @@ type VillageWrapperProps = {
 function VillageWrapper({ children }: VillageWrapperProps) {
   const resourcesRedux = useSelector(
     (state: RootState) => state.village.resourcesStorage
+  );
+  const buildersRedux = useSelector(
+    (state: RootState) => state.village.currentlyBuilding
   );
   const { gsBuildings }: any = useSelector(
     (state: RootState) => state.gsBuildings
@@ -69,22 +73,29 @@ function VillageWrapper({ children }: VillageWrapperProps) {
         : MAX_LEVEL_BUILDINGS
     ].granaryResourceLimit;
 
+  console.log("buildersRedux", buildersRedux.length);
+
   return (
     <div className="mt-5 px-6 sm:px-12 md:px-20 ">
       <div className="resource_bar">
-        <div className="flex flex-col rounded-xl border-2 border-primary/60 bg-slate-800 p-3 lg:mr-3">
-          <div className="flex w-full justify-center space-x-2 text-center text-white lg:w-32">
-            <div>
-              <DatabaseIcon className="mt-0.5 h-5 w-5" />
+        <div
+          className="tooltip"
+          data-tip={`Storage level ${warehouseMaxStorage.level}/${MAX_LEVEL_BUILDINGS}`}
+        >
+          <div className="flex flex-col rounded-xl border-2 border-primary/60 bg-slate-800 p-3 lg:mr-3">
+            <div className="flex w-full justify-center space-x-2 text-center text-white lg:w-32">
+              <div>
+                <DatabaseIcon className="mt-0.5 h-5 w-5" />
+              </div>
+              <div>
+                <p>{resourcesMaxStorage}</p>
+              </div>
             </div>
-            <div>
-              <p>{resourcesMaxStorage}</p>
+            <div className="text-center text-xs ">
+              {warehouseMaxStorage.level + 1 < MAX_LEVEL_BUILDINGS
+                ? `Next upgrade: ${warehouseNextLevel}`
+                : "Max level"}
             </div>
-          </div>
-          <div className="text-center text-xs ">
-            {warehouseMaxStorage.level + 1 < MAX_LEVEL_BUILDINGS
-              ? `Next upgrade: ${warehouseNextLevel}`
-              : "Max level"}
           </div>
         </div>
 
@@ -111,19 +122,24 @@ function VillageWrapper({ children }: VillageWrapperProps) {
           </div>
         ))}
 
-        <div className="flex flex-col rounded-xl border-2 border-primary/60 bg-slate-800 p-3 lg:mr-3">
-          <div className="flex w-full justify-center space-x-2 text-center text-white lg:w-32">
-            <div>
-              <DatabaseIcon className="mt-0.5 h-5 w-5" />
+        <div
+          className="tooltip"
+          data-tip={`Granary level ${granaryLevel.level}/${MAX_LEVEL_BUILDINGS}`}
+        >
+          <div className="flex flex-col rounded-xl border-2 border-primary/60 bg-slate-800 p-3 lg:mr-3">
+            <div className="flex w-full justify-center space-x-2 text-center text-white lg:w-32">
+              <div>
+                <DatabaseIcon className="mt-0.5 h-5 w-5" />
+              </div>
+              <div>
+                <p>{granaryMaxStorage}</p>
+              </div>
             </div>
-            <div>
-              <p>{granaryMaxStorage}</p>
+            <div className="text-center text-xs ">
+              {granaryLevel.level + 1 < MAX_LEVEL_BUILDINGS
+                ? `Next upgrade: ${granaryNextLevel}`
+                : "Max level"}
             </div>
-          </div>
-          <div className="text-center text-xs ">
-            {granaryLevel.level + 1 < MAX_LEVEL_BUILDINGS
-              ? `Next upgrade: ${granaryNextLevel}`
-              : "Max level"}
           </div>
         </div>
 
@@ -136,13 +152,38 @@ function VillageWrapper({ children }: VillageWrapperProps) {
           </div>
           <progress
             className={`progress ${
-              wheat.amount === resourcesMaxStorage
+              wheat.amount === granaryMaxStorage
                 ? "progress-error"
                 : "progress-success"
             } w-full px-1`}
             value={wheat.amount}
-            max="1000"
+            max={granaryMaxStorage}
           ></progress>
+        </div>
+
+        <div
+          className="tooltip"
+          data-tip={`Available builders ${
+            !buildersRedux.length ? "1/1" : "0/1"
+          }`}
+        >
+          <div className="flex flex-col rounded-xl border-2 border-primary/60 bg-slate-800 p-3 lg:mr-3">
+            <div className="flex w-full justify-center space-x-2 text-center text-white lg:w-32">
+              <div>
+                <CogIcon className="mt-0.5 h-5 w-5" />
+              </div>
+              <div>
+                <p>{!buildersRedux.length ? "1/1" : "0/1"}</p>
+              </div>
+            </div>
+            <progress
+              className={`progress mt-2 ${
+                buildersRedux.length ? "progress-error" : "progress-success"
+              } w-full px-1`}
+              value={1}
+              max={1}
+            ></progress>
+          </div>
         </div>
       </div>
 
