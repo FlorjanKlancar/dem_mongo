@@ -1,4 +1,5 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
+import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { adminDb, firebaseAdmin } from "../../../firebase/serverApp";
 import { getServerTime, updateResourcesToDate } from "../gameFunctions";
@@ -30,184 +31,17 @@ export default async function handler(
             const isBuilding = req.body.isBuilding;
             const cancleJob = req.body.cancleJob;
 
-            const docRef = adminDb.collection("village").doc(villageId);
+            const response = await axios.post(
+              `${process.env.NEXT_PUBLIC_NODEJS_APP}/build`,
+              { villageId, buildingName, fieldId, isBuilding, cancleJob },
+              { headers: { Authorization: `Bearer ${jwtToken}` } }
+            );
 
-            if (cancleJob && Object.keys(schedule.scheduledJobs).length !== 0) {
-              var my_job = schedule.scheduledJobs[buildingName];
-              my_job.cancel();
-
-              console.log("cancled job!");
-              docRef.update({
-                currentlyBuilding: [],
-              });
-
-              return res
-                .status(200)
-                .json({ msg: "Job canceled successfully!" });
+            console.log("response", response.status);
+            if (response.status === 200) {
+              res.status(200).send(response.data.msg);
             } else {
-              if (!villageId || !buildingName || !fieldId) {
-                return res.status(400).send("Parameters are missing!");
-              }
-
-              const buildingObject: any = await getBuildingById(buildingName);
-              const villageObject = await getVillageById(villageId);
-
-              if (buildingObject.status === 404) {
-                return res.status(400).send("Building not found!");
-              }
-
-              if (villageObject) {
-                if (villageObject.currentlyBuilding.length) {
-                  return res
-                    .status(400)
-                    .send("Builders are currently unavailable!");
-                }
-
-                const getBuildingCurrentLevel = (
-                  isBuilding === true
-                    ? villageObject.villageBuildings
-                    : villageObject.resourceFields
-                ).find((building: any) => building.id === fieldId);
-
-                if (getBuildingCurrentLevel === undefined) {
-                  return res.status(400).send("Building not found!");
-                }
-
-                const getBuildingNextLevel =
-                  buildingObject[0].levels[0][
-                    `${getBuildingCurrentLevel.level + 1}`
-                  ];
-
-                if (!getBuildingNextLevel) {
-                  return res.status(400).send("Building not found!");
-                }
-
-                if (
-                  getBuildingCurrentLevel.type !== "empty_field" &&
-                  getBuildingCurrentLevel?.type !== buildingName
-                ) {
-                  return res.status(400).send("Building not found!");
-                }
-
-                const villageCurrentResources = await updateResourcesToDate(
-                  villageObject,
-                  villageId
-                );
-
-                const buildingBuildTime = getBuildingNextLevel.timeToBuild;
-                const buildingResourcesNeeded = {
-                  wood: getBuildingNextLevel.costWood,
-                  clay: getBuildingNextLevel.costClay,
-                  iron: getBuildingNextLevel.costIron,
-                  wheat: getBuildingNextLevel.costWheat,
-                };
-
-                if (
-                  villageCurrentResources!.resourcesStorage.woodAmount <
-                    buildingResourcesNeeded.wood ||
-                  villageCurrentResources!.resourcesStorage.clayAmount <
-                    buildingResourcesNeeded.clay ||
-                  villageCurrentResources!.resourcesStorage.ironAmount <
-                    buildingResourcesNeeded.iron ||
-                  villageCurrentResources!.resourcesStorage.wheatAmount <
-                    buildingResourcesNeeded.wheat
-                )
-                  return res.status(400).send("Not enough resources!");
-
-                const currentTime = await getServerTime();
-                const endBuildTime = dayjs(currentTime)
-                  .add(buildingBuildTime, "s")
-                  .toDate();
-
-                let updatedObject = {};
-
-                const iteration =
-                  isBuilding === true
-                    ? villageObject.villageBuildings
-                    : villageObject.resourceFields;
-
-                updatedObject = iteration.map((item: any) => {
-                  if (item.id === fieldId) {
-                    return {
-                      ...item,
-                      level: getBuildingCurrentLevel.level + 1,
-                      imageGrid: getBuildingNextLevel.image
-                        ? getBuildingNextLevel.image
-                        : buildingObject[0].image,
-                      ...(isBuilding === true && {
-                        type: buildingName,
-                      }),
-                      ...(buildingObject[0].description && {
-                        description: buildingObject[0].description,
-                      }),
-                    };
-                  } else {
-                    return item;
-                  }
-                });
-
-                const resourcesStorageMinus = {
-                  woodAmount:
-                    villageCurrentResources!.resourcesStorage.woodAmount -
-                    buildingResourcesNeeded.wood,
-                  clayAmount:
-                    villageCurrentResources!.resourcesStorage.clayAmount -
-                    buildingResourcesNeeded.clay,
-                  ironAmount:
-                    villageCurrentResources!.resourcesStorage.ironAmount -
-                    buildingResourcesNeeded.iron,
-                  wheatAmount:
-                    villageCurrentResources!.resourcesStorage.wheatAmount -
-                    buildingResourcesNeeded.wheat,
-                };
-
-                const buildingNamePrefix = buildingName.split("_");
-
-                docRef.update({
-                  currentlyBuilding: [
-                    {
-                      buildingId: buildingName,
-                      currentlyBuildingLevel: getBuildingCurrentLevel.level + 1,
-                      fieldId,
-                      endBuildTime,
-                    },
-                  ],
-                  resourcesStorage: resourcesStorageMinus,
-                });
-                console.log("Added currently building and reduced resources!");
-
-                const job = schedule.scheduleJob(
-                  buildingName,
-                  endBuildTime,
-                  function () {
-                    console.log("Execute update!");
-
-                    const docRef = adminDb.collection("village").doc(villageId);
-
-                    docRef.update({
-                      currentlyBuilding: [],
-                      population:
-                        villageObject.population +
-                        getBuildingNextLevel.populationAdd,
-
-                      ...(isBuilding === true
-                        ? { villageBuildings: updatedObject }
-                        : {
-                            resourceFields: updatedObject,
-                            [`${buildingNamePrefix[0]}ProductionPerH`]:
-                              getBuildingNextLevel.productionAdd +
-                              villageObject[
-                                `${buildingNamePrefix[0]}ProductionPerH`
-                              ],
-                          }),
-                    });
-                  }
-                );
-              }
-
-              return res
-                .status(200)
-                .json({ msg: "Request for upgrade in progress!" });
+              res.status(400).send(response.data.msg);
             }
           }
         } catch (error) {
