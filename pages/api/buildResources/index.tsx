@@ -1,9 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type {NextApiRequest, NextApiResponse} from "next";
-import {adminDb, firebaseAdmin} from "../../../firebase/serverApp";
-import {getServerTime, updateResourcesToDate} from "../gameFunctions";
-import {getBuildingById} from "../gsBuildings/[id]";
-import {getVillageById} from "../village/[id]";
+import type { NextApiRequest, NextApiResponse } from "next";
+import { adminDb, firebaseAdmin } from "../../../firebase/serverApp";
+import { getServerTime, updateResourcesToDate } from "../gameFunctions";
+import { getBuildingById } from "../gsBuildings/[id]";
+import { getVillageById } from "../village/[id]";
 const schedule = require("node-schedule");
 var dayjs = require("dayjs");
 
@@ -41,17 +41,19 @@ export default async function handler(
                 currentlyBuilding: [],
               });
 
-              return res.status(200).json({msg: "Job canceled successfully!"});
+              return res
+                .status(200)
+                .json({ msg: "Job canceled successfully!" });
             } else {
               if (!villageId || !buildingName || !fieldId) {
-                throw new Error("Parameters are missing!");
+                return res.status(400).send("Parameters are missing!");
               }
 
               const buildingObject: any = await getBuildingById(buildingName);
               const villageObject = await getVillageById(villageId);
 
               if (buildingObject.status === 404) {
-                throw new Error("Building not found!");
+                return res.status(400).send("Building not found!");
               }
 
               if (villageObject) {
@@ -68,7 +70,7 @@ export default async function handler(
                 ).find((building: any) => building.id === fieldId);
 
                 if (getBuildingCurrentLevel === undefined) {
-                  throw new Error("Building not found!");
+                  return res.status(400).send("Building not found!");
                 }
 
                 const getBuildingNextLevel =
@@ -77,22 +79,20 @@ export default async function handler(
                   ];
 
                 if (!getBuildingNextLevel) {
-                  throw new Error("Building is max level!");
+                  return res.status(400).send("Building not found!");
                 }
 
                 if (
                   getBuildingCurrentLevel.type !== "empty_field" &&
                   getBuildingCurrentLevel?.type !== buildingName
                 ) {
-                  throw new Error("Wrong buildingId type in request!");
+                  return res.status(400).send("Building not found!");
                 }
 
                 const villageCurrentResources = await updateResourcesToDate(
                   villageObject,
                   villageId
                 );
-
-                console.log("villageCurrentResources", villageCurrentResources);
 
                 const buildingBuildTime = getBuildingNextLevel.timeToBuild;
                 const buildingResourcesNeeded = {
@@ -101,12 +101,6 @@ export default async function handler(
                   iron: getBuildingNextLevel.costIron,
                   wheat: getBuildingNextLevel.costWheat,
                 };
-
-                console.log(
-                  "villageCurrentResources!.wood  buildingResourcesNeeded.wood",
-                  villageCurrentResources!.wood,
-                  buildingResourcesNeeded.wood
-                );
 
                 if (
                   villageCurrentResources!.resourcesStorage.woodAmount <
@@ -152,13 +146,6 @@ export default async function handler(
                   }
                 });
 
-                console.log(
-                  "buildingResourcesNeeded.wood",
-                  buildingResourcesNeeded.wood,
-                  "villageCurrentResources!.wood",
-                  villageCurrentResources!.wood
-                );
-
                 const resourcesStorageMinus = {
                   woodAmount:
                     villageCurrentResources!.resourcesStorage.woodAmount -
@@ -173,8 +160,6 @@ export default async function handler(
                     villageCurrentResources!.resourcesStorage.wheatAmount -
                     buildingResourcesNeeded.wheat,
                 };
-
-                console.log("resourcesStorageMinus", resourcesStorageMinus);
 
                 const buildingNamePrefix = buildingName.split("_");
 
@@ -206,7 +191,7 @@ export default async function handler(
                         getBuildingNextLevel.populationAdd,
 
                       ...(isBuilding === true
-                        ? {villageBuildings: updatedObject}
+                        ? { villageBuildings: updatedObject }
                         : {
                             resourceFields: updatedObject,
                             [`${buildingNamePrefix[0]}ProductionPerH`]:
@@ -222,7 +207,7 @@ export default async function handler(
 
               return res
                 .status(200)
-                .json({msg: "Request for upgrade in progress!"});
+                .json({ msg: "Request for upgrade in progress!" });
             }
           }
         } catch (error) {
