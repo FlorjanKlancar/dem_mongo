@@ -1,8 +1,8 @@
 import "../styles/globals.css";
 
-import Wrapper from "../components/Navbar/Wrapper/Wrapper";
+import Wrapper from "../components/Wrapper/Wrapper";
 import NavbarDem from "../components/Navbar/NavbarDem";
-import VillageWrapper from "../components/Navbar/Wrapper/VillageWrapper";
+import VillageWrapper from "../components/Wrapper/VillageWrapper";
 import {useEffect, useState} from "react";
 import {doc, onSnapshot} from "firebase/firestore";
 import {auth, db} from "../firebase/clientApp";
@@ -12,7 +12,7 @@ import store from "../store";
 import axios from "axios";
 import {gsUnitsActions} from "../store/gsUnits-slice";
 import {gsBuildingsActions} from "../store/gsBuildings-slice";
-import Login from "../components/Navbar/Auth/Login";
+import Login from "../components/Auth/Login";
 import {useAuthState} from "react-firebase-hooks/auth";
 import VillageSkeleton from "../components/skeletons/VillageSkeleton";
 import {Toaster} from "react-hot-toast";

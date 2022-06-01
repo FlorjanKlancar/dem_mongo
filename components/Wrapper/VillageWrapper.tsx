@@ -1,12 +1,12 @@
 import React from "react";
 import {DatabaseIcon, CogIcon} from "@heroicons/react/outline";
 import {useSelector} from "react-redux";
-import {RootState} from "../../../types/storeModel";
-import {MAX_LEVEL_BUILDINGS} from "../../../gsVariables";
-import WoodImg from "../../../public/assets/Wood.png";
-import ClayImg from "../../../public/assets/Clay.png";
-import IronImg from "../../../public/assets/Iron.png";
-import WheatImg from "../../../public/assets/Wheat.png";
+import {RootState} from "../../types/storeModel";
+import {MAX_LEVEL_BUILDINGS} from "../../gsVariables";
+import WoodImg from "../../public/assets/Wood.png";
+import ClayImg from "../../public/assets/Clay.png";
+import IronImg from "../../public/assets/Iron.png";
+import WheatImg from "../../public/assets/Wheat.png";
 import Image from "next/image";
 
 type VillageWrapperProps = {
