@@ -1,19 +1,17 @@
-import {TruckIcon} from "@heroicons/react/outline";
-import Image from "next/image";
 import React from "react";
-import {useSelector} from "react-redux";
-import {RootState} from "../../types/storeModel";
-import {unitModel} from "../../types/unitModel";
-import {Scrollbars} from "react-custom-scrollbars";
+import { useSelector } from "react-redux";
+import { RootState } from "../../types/storeModel";
+import { unitModel } from "../../types/unitModel";
+import { Scrollbars } from "react-custom-scrollbars";
 
-function ResourcesTroopsInfo() {
+function VillageInfoTroops() {
   const village = useSelector((state: RootState) => state.village);
-  const {gsUnits} = useSelector((state: RootState) => state.gsUnits);
+  const { gsUnits } = useSelector((state: RootState) => state.gsUnits);
 
   return (
-    <div className="max-h-[260px] overflow-x-auto rounded-xl border-2 border-primary/80 bg-slate-800 p-2 text-center text-gray-200 sm:w-1/2 md:w-full">
-      <Scrollbars style={{height: 240}} universal>
-        <div className=" sticky top-0 z-50 bg-slate-800">
+    <div className="max-h-[260px] overflow-y-auto rounded-xl border-2 border-primary/80 bg-slate-800 p-2 text-center text-gray-200 sm:w-1/2 md:w-full">
+      <Scrollbars style={{ height: 240 }} universal>
+        <div className=" z-5 sticky top-0 bg-slate-800">
           <div className=" text-xl font-semibold text-primary ">Troops</div>
           <hr className="border-primary/80 text-gray-200" />
         </div>
@@ -52,4 +50,4 @@ function ResourcesTroopsInfo() {
   );
 }
 
-export default ResourcesTroopsInfo;
+export default VillageInfoTroops;

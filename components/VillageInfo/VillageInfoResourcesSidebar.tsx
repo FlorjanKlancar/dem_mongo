@@ -1,19 +1,13 @@
-import {
-  HandIcon,
-  LightningBoltIcon,
-  ScaleIcon,
-  StarIcon,
-} from "@heroicons/react/outline";
 import React from "react";
-import {useSelector} from "react-redux";
-import {RootState} from "../../types/storeModel";
+import { useSelector } from "react-redux";
+import { RootState } from "../../types/storeModel";
 import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
 import WheatImg from "../../public/assets/Wheat.png";
 import Image from "next/image";
 
-function ResourcesProductionSidebar() {
+function VillageInfoResourcesSidebar() {
   const village = useSelector((state: RootState) => state.village);
 
   const resources = [
@@ -80,4 +74,4 @@ function ResourcesProductionSidebar() {
   );
 }
 
-export default ResourcesProductionSidebar;
+export default VillageInfoResourcesSidebar;

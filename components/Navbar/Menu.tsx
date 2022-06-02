@@ -30,14 +30,14 @@ function Menu() {
       link: "/",
     },
     {
-      image: InventoryImg,
-      title: "Inventory",
-      link: "/inventory",
-    },
-    {
       image: StatisticImg,
       title: "Statistics",
       link: "/statistics",
+    },
+    {
+      image: InventoryImg,
+      title: "Queue",
+      link: "/queue",
     },
   ];
 

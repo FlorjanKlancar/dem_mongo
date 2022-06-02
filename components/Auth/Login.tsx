@@ -1,12 +1,12 @@
-import React, {useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import {
   auth,
   logInWithEmailAndPassword,
   registerWithEmailAndPassword,
   signInWithGoogle,
 } from "../../firebase/clientApp";
-import {useAuthState} from "react-firebase-hooks/auth";
-import {useRouter} from "next/router";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import RegisterComponent from "./RegisterComponent";
 

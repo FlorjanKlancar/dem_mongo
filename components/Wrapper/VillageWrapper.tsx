@@ -1,8 +1,8 @@
 import React from "react";
-import {DatabaseIcon, CogIcon} from "@heroicons/react/outline";
-import {useSelector} from "react-redux";
-import {RootState} from "../../types/storeModel";
-import {MAX_LEVEL_BUILDINGS} from "../../gsVariables";
+import { DatabaseIcon, CogIcon } from "@heroicons/react/outline";
+import { useSelector } from "react-redux";
+import { RootState } from "../../types/storeModel";
+import { MAX_LEVEL_BUILDINGS } from "../../gsVariables";
 import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
@@ -13,14 +13,14 @@ type VillageWrapperProps = {
   children: React.ReactNode;
 };
 
-function VillageWrapper({children}: VillageWrapperProps) {
+function VillageWrapper({ children }: VillageWrapperProps) {
   const resourcesRedux = useSelector(
     (state: RootState) => state.village.resourcesStorage
   );
   const buildersRedux = useSelector(
     (state: RootState) => state.village.currentlyBuilding
   );
-  const {gsBuildings}: any = useSelector(
+  const { gsBuildings }: any = useSelector(
     (state: RootState) => state.gsBuildings
   );
 
@@ -67,6 +67,12 @@ function VillageWrapper({children}: VillageWrapperProps) {
   const granaryLevel: any = village.villageBuildings.find(
     (building: any) => building.type === "granary"
   );
+  console.log("village", village);
+
+  console.log(
+    " gsBuildings[warehouse]?.levels[0]",
+    gsBuildings["warehouse"]?.levels[0]
+  );
 
   const resourcesMaxStorage =
     gsBuildings["warehouse"]?.levels[0][warehouseMaxStorage.level]
@@ -94,7 +100,7 @@ function VillageWrapper({children}: VillageWrapperProps) {
       <div className="resource_bar">
         <div
           className="tooltip"
-          data-tip={`Storage level ${warehouseMaxStorage.level}/${MAX_LEVEL_BUILDINGS}`}
+          data-tip={`Warehouse level ${warehouseMaxStorage.level}/${MAX_LEVEL_BUILDINGS}`}
         >
           <div className="flex flex-col rounded-xl border-2 border-primary/60 bg-slate-800 p-3 lg:mr-3">
             <div className="flex w-full justify-center space-x-2 text-center text-white lg:w-32">

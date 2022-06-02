@@ -1,7 +1,13 @@
 import React from "react";
+import VillageField from "../../components/Village/VillageField";
+import VillageInfoWrapper from "../../components/Wrapper/VillageInfoWrapper";
 
-function index() {
-  return <div>villg</div>;
+function VillageView() {
+  return (
+    <VillageInfoWrapper>
+      <VillageField />
+    </VillageInfoWrapper>
+  );
 }
 
-export default index;
+export default VillageView;

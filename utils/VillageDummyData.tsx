@@ -187,7 +187,7 @@ export const newVillage = {
       description:
         "On the halls of this building, normal citizens become warriors, ready to serve their lords and lands.",
       imageGrid:
-        "https://firebasestorage.googleapis.com/v0/b/app-deus-ex-machina.appspot.com/o/vojasnica.png?alt=media&token=4aa41cf7-ac2e-45de-ae03-6e34704882c7",
+        "https://firebasestorage.googleapis.com/v0/b/app-deus-ex-machina.appspot.com/o/barracks.png?alt=media&token=fd3b5b3f-b899-495f-a25b-efaf622b8c11",
     },
     {
       gridPosition: 3,
@@ -215,7 +215,7 @@ export const newVillage = {
       description:
         "The granary is where the seeds for the new season of growth are safely stored.",
       imageGrid:
-        "https://firebasestorage.googleapis.com/v0/b/app-deus-ex-machina.appspot.com/o/zitnica.png?alt=media&token=42bcf843-1fcd-491b-b999-47470a112aac",
+        "https://firebasestorage.googleapis.com/v0/b/app-deus-ex-machina.appspot.com/o/granary.png?alt=media&token=b298ae5e-75fa-4968-a5e0-9304a82731c0",
     },
     {
       gridPosition: 6,
@@ -248,10 +248,10 @@ export const newVillage = {
       gridPosition: 9,
       id: 30,
       level: 0,
-      type: "empty_field",
+      type: "main_building",
       description: "This plot of land is ready to be used for construction",
       imageGrid:
-        "https://firebasestorage.googleapis.com/v0/b/app-deus-ex-machina.appspot.com/o/Big_empty_03.png?alt=media&token=2b953da6-1176-474e-8d22-94c471ce2ddd",
+        "https://firebasestorage.googleapis.com/v0/b/app-deus-ex-machina.appspot.com/o/main-building.png?alt=media&token=5b6ac813-aba1-43be-a5c1-05e79b012f40",
     },
     {
       gridPosition: 10,
@@ -261,7 +261,7 @@ export const newVillage = {
       description:
         "In this building, the spoils of war, the harvest of the season, the riches mined from the earth and the hand made craft are safely stored.",
       imageGrid:
-        "https://firebasestorage.googleapis.com/v0/b/app-deus-ex-machina.appspot.com/o/skladisce.png?alt=media&token=23b1c22a-c5fc-4324-8e05-7e556e13d254",
+        "https://firebasestorage.googleapis.com/v0/b/app-deus-ex-machina.appspot.com/o/warehouse.png?alt=media&token=770ea3b4-d6c4-493d-9431-44acea237829",
     },
     {
       gridPosition: 11,
