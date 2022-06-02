@@ -20,9 +20,7 @@ function Login() {
   const [user, loading] = useAuthState(auth);
 
   useEffect(() => {
-    if (user) {
-      router.push("/resources");
-    }
+    router.push("/resources");
   }, [user, loading]);
 
   const submitHandler = async (e: any) => {
