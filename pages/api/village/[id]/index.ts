@@ -1,28 +1,9 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { adminDb, firebaseAdmin } from "../../../../firebase/serverApp";
 import { getBuildingById } from "../../gsBuildings/[id]";
-import { updateResourcesToDate } from "../../gameFunctions";
+import { getVillageById, updateResourcesToDate } from "../../gameFunctions";
 import { createUnits } from "../../../../utils/createUnits";
 import { newVillage } from "../../../../utils/VillageDummyData";
-
-const getVillageById = async (id: string) => {
-  let villageArray = [];
-  const village = adminDb.collection("village").doc(id.toString());
-  const doc = await village.get();
-
-  if (!doc.exists) {
-    throw new Error("Village not found!");
-  } else {
-    villageArray.push(doc.data());
-
-    const response = await updateResourcesToDate(
-      villageArray[0],
-      id.toString()
-    );
-
-    return response;
-  }
-};
 
 export default async function handler(
   req: NextApiRequest,
@@ -89,16 +70,16 @@ export default async function handler(
         let userDocRef = adminDb.collection("userInfo").doc(id.toString());
         const userResponse = await userDocRef
           .set({
-            username: "",
+            username: id.toString(),
             email: req.body.userEmail,
-            elo: 100,
+            elo: 1000,
             createdAt: firebaseAdmin.firestore.Timestamp.now(),
             updatedAt: firebaseAdmin.firestore.Timestamp.now(),
           })
           .then(() => userDocRef.get())
           .then((doc) => doc.data());
 
-        let battleDocRef = adminDb.collection("battles").doc(req.body.userId);
+        let battleDocRef = adminDb.collection("battles").doc(id.toString());
         await battleDocRef.set({
           currentOpponent: "",
           createdAt: firebaseAdmin.firestore.Timestamp.now(),
@@ -110,5 +91,3 @@ export default async function handler(
       break;
   }
 }
-
-export { getVillageById };

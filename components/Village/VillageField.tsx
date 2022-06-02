@@ -25,7 +25,6 @@ function VillageField() {
   const [open, setOpen] = useState<boolean>(false);
 
   const onResourceClickHandler = (id: string, level: number, type: string) => {
-    console.log("trigger");
     const resourceNextLevelInfo: any = Object.values(gsBuildings).find(
       (val: any) => {
         if (val.type === type) return val;

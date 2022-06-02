@@ -20,7 +20,6 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "pages/api/village/[id]/index.ts",
     "pages/api/gameFunctions/index.js"
   ],
   "exclude": ["node_modules"]

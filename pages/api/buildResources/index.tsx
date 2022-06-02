@@ -1,12 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { adminDb, firebaseAdmin } from "../../../firebase/serverApp";
-import { getServerTime, updateResourcesToDate } from "../gameFunctions";
-import { getBuildingById } from "../gsBuildings/[id]";
-import { getVillageById } from "../village/[id]";
-const schedule = require("node-schedule");
-var dayjs = require("dayjs");
+import { firebaseAdmin } from "../../../firebase/serverApp";
 
 export default async function handler(
   req: NextApiRequest,
@@ -37,7 +32,6 @@ export default async function handler(
               { headers: { Authorization: `Bearer ${jwtToken}` } }
             );
 
-            console.log("response", response.status);
             if (response.status === 200) {
               res.status(200).send(response.data.msg);
             } else {

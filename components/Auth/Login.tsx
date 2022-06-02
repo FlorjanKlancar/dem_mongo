@@ -9,6 +9,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import RegisterComponent from "./RegisterComponent";
+import axios from "axios";
 
 function Login() {
   const router = useRouter();
@@ -19,11 +20,9 @@ function Login() {
   const [user, loading] = useAuthState(auth);
 
   useEffect(() => {
-    if (loading) {
-      // maybe trigger a loading screen
-      return;
+    if (user) {
+      router.push("/resources");
     }
-    if (user) router.push("/resources");
   }, [user, loading]);
 
   const submitHandler = async (e: any) => {
@@ -33,10 +32,18 @@ function Login() {
   const onSubmitRegister = (event: any) => {
     if (passwordOne === passwordTwo)
       registerWithEmailAndPassword(email, passwordOne)
-        .then((authUser) => {
+        .then(async (authUser: any) => {
           console.log("Success. The user is created in Firebase");
-          router.push("/resources");
+
+          const response = await axios.post(
+            `/api/village/${authUser?.user.uid}`,
+            {
+              userEmail: authUser?.user.email,
+            }
+          );
+          console.log("RESPONSE FROM BACKEND", response);
         })
+        .then(() => router.push("/resources"))
         .catch((error) => {
           // An error occurred. Set error message to be displayed to user
           console.log(error.message);

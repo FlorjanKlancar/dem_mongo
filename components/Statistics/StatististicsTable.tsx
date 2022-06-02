@@ -1,4 +1,7 @@
 import React from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase/clientApp";
+import { ChevronDoubleRightIcon } from "@heroicons/react/outline";
 
 type StatististicsTableProps = {
   players: any;
@@ -6,7 +9,7 @@ type StatististicsTableProps = {
 };
 
 function StatististicsTable({ players, ranks }: StatististicsTableProps) {
-  console.log("ranks", ranks);
+  const [user] = useAuthState(auth);
 
   return (
     <div className="w-full overflow-x-auto">
@@ -21,9 +24,14 @@ function StatististicsTable({ players, ranks }: StatististicsTableProps) {
         </thead>
         <tbody>
           {players.map((player: any) => (
-            <tr>
+            <tr key={player.id}>
               <td>
                 <div className="flex items-center space-x-3">
+                  {player.id == user?.uid && (
+                    <div>
+                      <ChevronDoubleRightIcon className="h-5 w-5 text-primary" />
+                    </div>
+                  )}
                   <div className="avatar">
                     <div className="mask mask-squircle h-12 w-12">
                       <img
@@ -41,12 +49,6 @@ function StatististicsTable({ players, ranks }: StatististicsTableProps) {
               <td>{player.population}</td>
               <td>
                 {ranks.map((rank: any) => {
-                  console.log(
-                    "rank.upToElo",
-                    rank.upToElo,
-                    "player.elo",
-                    player.elo
-                  );
                   if (rank.upToElo == player.elo) {
                     return (
                       <div className="flex items-center space-x-2">

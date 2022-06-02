@@ -89,4 +89,23 @@ async function updateResourcesToDate(villageObject, villageId) {
   return response;
 }
 
-export { getServerTime, updateResourcesToDate };
+const getVillageById = async (id) => {
+  let villageArray = [];
+  const village = adminDb.collection("village").doc(id.toString());
+  const doc = await village.get();
+
+  if (!doc.exists) {
+    throw new Error("Village not found!");
+  } else {
+    villageArray.push(doc.data());
+
+    const response = await updateResourcesToDate(
+      villageArray[0],
+      id.toString()
+    );
+
+    return response;
+  }
+};
+
+export { getServerTime, updateResourcesToDate, getVillageById };

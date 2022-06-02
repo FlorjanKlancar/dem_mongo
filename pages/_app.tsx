@@ -27,7 +27,7 @@ function MyApp({ Component, pageProps }: any) {
     const response1 = await axios.get(`api/village/${user?.uid}`, {
       headers: { Authorization: `Bearer ${user?.accessToken}` },
     });
-    console.log("response1", response1);
+
     const response = await axios.get(`api/initialize`, {
       headers: { Authorization: `Bearer ${user?.accessToken}` },
     });
