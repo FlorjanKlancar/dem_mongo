@@ -13,9 +13,9 @@ function Register() {
   const onSubmitRegister = (event: any) => {
     if (passwordOne === passwordTwo)
       registerWithEmailAndPassword(email, passwordOne)
-        .then(async (authUser) => {
+        .then(async (authUser: any) => {
           const response = await axios.post(
-            `/api/village/${authUser?.user.uid}`,
+            `/api/village/${authUser.user.uid}`,
             {
               userEmail: authUser?.user.email,
             }
