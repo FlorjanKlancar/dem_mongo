@@ -54,7 +54,7 @@ function ResourcesField() {
     setOpen(false);
     const upgradeToast = toast.loading("Upgrading...");
     await axios.post(
-      `api/buildResources`,
+      `api/build/resources`,
       {
         villageId: user?.uid,
         buildingName: clickedResource.type,

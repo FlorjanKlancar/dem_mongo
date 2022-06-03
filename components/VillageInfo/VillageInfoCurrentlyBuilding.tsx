@@ -18,7 +18,7 @@ function VillageInfoCurrentlyBuilding() {
 
   const cancelHandler = async () => {
     await axios.post(
-      `api/buildResources`,
+      `api/build/resources`,
       {
         villageId: user.uid,
         buildingName: village.currentlyBuilding[0].buildingId,

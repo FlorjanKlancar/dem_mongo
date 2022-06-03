@@ -32,8 +32,8 @@ function NewBuildingModal({
 
     setOpen(false);
     const upgradeToast = toast.loading("Upgrading...");
-    const response = await axios.post(
-      "/api/buildResources",
+    await axios.post(
+      "/api/build/resources",
       {
         villageId: user?.uid,
         buildingName: type,
