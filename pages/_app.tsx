@@ -23,11 +23,12 @@ function MyApp({ Component, pageProps }: any) {
   const [user]: any = useAuthState(auth);
 
   const initializeDataFetch = async () => {
-    const response1 = await axios.get(`api/village/${user?.uid}`, {
+    console.log("initialize fetch");
+    await axios.get(`/api/village/${user?.uid}`, {
       headers: { Authorization: `Bearer ${user?.accessToken}` },
     });
 
-    const response = await axios.get(`api/initialize`, {
+    const response = await axios.get(`/api/initialize`, {
       headers: { Authorization: `Bearer ${user?.accessToken}` },
     });
 

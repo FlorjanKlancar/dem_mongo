@@ -6,7 +6,7 @@ async function getBuildingById(buildingId: string) {
   const doc = await building.get();
 
   if (!doc.exists) {
-    throw new Error("Building not found!");
+    return [];
   } else {
     buildingArray.push(doc.data());
     return buildingArray;

@@ -1,7 +1,9 @@
 export interface buildingModel {
   description: string;
   image: string;
-  levels: number[];
+  levels: any;
   name: string;
   type: string;
+  isBuilding: boolean;
+  group: string;
 }
