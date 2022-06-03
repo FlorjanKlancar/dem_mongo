@@ -1,12 +1,11 @@
 import "../styles/globals.css";
 
-import Wrapper from "../components/Wrapper/Wrapper";
 import NavbarDem from "../components/Navbar/NavbarDem";
 import VillageWrapper from "../components/Wrapper/VillageWrapper";
 import { useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "../firebase/clientApp";
-import { Provider, useDispatch, useSelector } from "react-redux";
+import { Provider, useDispatch } from "react-redux";
 import { villageActions } from "../store/village-slice";
 import store from "../store";
 import axios from "axios";
@@ -97,25 +96,23 @@ function MyApp({ Component, pageProps }: any) {
   }, [user]);
 
   return (
-    <Wrapper>
-      <div className="relative">
-        {!user ? (
-          <Login />
-        ) : (
-          <>
-            <NavbarDem />
-            {isLoading ? (
-              <VillageSkeleton />
-            ) : (
-              <VillageWrapper>
-                <Toaster position="top-center" reverseOrder={false} />
-                <Component {...pageProps} />
-              </VillageWrapper>
-            )}
-          </>
-        )}
-      </div>
-    </Wrapper>
+    <div className="relative">
+      {!user ? (
+        <Login />
+      ) : (
+        <>
+          <NavbarDem />
+          {isLoading ? (
+            <VillageSkeleton />
+          ) : (
+            <VillageWrapper>
+              <Toaster position="top-center" reverseOrder={false} />
+              <Component {...pageProps} />
+            </VillageWrapper>
+          )}
+        </>
+      )}
+    </div>
   );
 }
 
