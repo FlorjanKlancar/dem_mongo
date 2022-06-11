@@ -1,34 +1,34 @@
 import axios from "axios";
-import { GetServerSidePropsContext } from "next";
+import {GetServerSidePropsContext} from "next";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { buildingModel } from "../../../types/buildingModel";
-import { getBuildingById } from "../../api/gsBuildings/[id]";
+import React, {useEffect, useState} from "react";
+import {buildingModel} from "../../../types/buildingModel";
+import {getBuildingById} from "../../api/gsBuildings/[id]";
 import WoodImg from "../../../public/assets/Wood.png";
 import ClayImg from "../../../public/assets/Clay.png";
 import IronImg from "../../../public/assets/Iron.png";
 import WheatImg from "../../../public/assets/Wheat.png";
 import UpkeepImg from "../../../public/assets/upkeep.png";
-import { ClockIcon, PlusIcon } from "@heroicons/react/outline";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../types/storeModel";
+import {ClockIcon, PlusIcon} from "@heroicons/react/outline";
+import {useSelector} from "react-redux";
+import {RootState} from "../../../types/storeModel";
 import toast from "react-hot-toast";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../../firebase/clientApp";
-import { useRouter } from "next/router";
-import { MAX_LEVEL_BUILDINGS } from "../../../gsVariables";
+import {useAuthState} from "react-firebase-hooks/auth";
+import {auth} from "../../../firebase/clientApp";
+import {useRouter} from "next/router";
+import {MAX_LEVEL_BUILDINGS} from "../../../gsVariables";
 
 type VillageTypeProps = {
   building: buildingModel;
 };
 
-function VillageType({ building }: VillageTypeProps) {
+function VillageType({building}: VillageTypeProps) {
   const router = useRouter();
   const [user]: any = useAuthState(auth);
 
   const village = useSelector((state: RootState) => state.village);
 
-  const { gsUnits }: any = useSelector((state: RootState) => state.gsUnits);
+  const {gsUnits}: any = useSelector((state: RootState) => state.gsUnits);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
@@ -39,20 +39,20 @@ function VillageType({ building }: VillageTypeProps) {
   );
 
   const upgradeHandler = async () => {
-    router.push("/village");
+    //router.push("/village");
     const upgradeToast = toast.loading("Upgrading...");
     await axios.post(
-      `/api/build/resources`,
+      `/api/build`,
       {
         villageId: user?.uid,
         buildingName: building.type,
         fieldId: selectedBuilding.id,
         isBuilding: true,
       },
-      { headers: { Authorization: `Bearer ${user?.accessToken}` } }
+      {headers: {Authorization: `Bearer ${user?.accessToken}`}}
     );
 
-    toast.success("Upgrade started successfully!", { id: upgradeToast });
+    toast.success("Upgrade started successfully!", {id: upgradeToast});
   };
 
   const checkResources = async (resourceNextLevelInfo: any) => {
@@ -83,7 +83,7 @@ function VillageType({ building }: VillageTypeProps) {
         unitName: "gorjacar",
         unitAmount: 5,
       },
-      { headers: { Authorization: `Bearer ${user?.accessToken}` } }
+      {headers: {Authorization: `Bearer ${user?.accessToken}`}}
     );
     console.log("response", response);
   };
@@ -354,17 +354,15 @@ function VillageType({ building }: VillageTypeProps) {
 
 export default VillageType;
 
-export async function getServerSideProps({
-  params,
-}: GetServerSidePropsContext) {
+export async function getServerSideProps({params}: GetServerSidePropsContext) {
   const type = params!.type;
 
   if (type) {
     const building = await getBuildingById(type.toString());
 
     if (!building) {
-      return { notFound: true };
+      return {notFound: true};
     }
-    return { props: { building: building[0] } };
+    return {props: {building: building[0]}};
   }
 }
