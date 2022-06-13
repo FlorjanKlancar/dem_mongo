@@ -2,18 +2,13 @@ import {GetServerSidePropsContext} from "next";
 import {buildingModel} from "../../../types/buildingModel";
 import {getBuildingById} from "../../api/gsBuildings/[id]";
 import UpgradeBuildingPage from "../../../components/Village/UpgradeBuildingPage";
-import NewBuildingPage from "../../../components/Village/NewBuildingPage";
 
 type VillageTypeProps = {
   building: buildingModel;
 };
 
 function VillageType({building}: VillageTypeProps) {
-  return building ? (
-    <UpgradeBuildingPage building={building} />
-  ) : (
-    <NewBuildingPage />
-  );
+  return <UpgradeBuildingPage building={building} />;
 }
 
 export default VillageType;
