@@ -18,3 +18,7 @@ html {
   -o-background-size: cover;
   background-size: cover;
 }
+
+.primary_button {
+  @apply mt-5 w-full rounded-lg bg-primary py-2 font-bold text-slate-800 hover:bg-primary hover:text-slate-600 disabled:bg-gray-500 disabled:hover:text-slate-800;
+}

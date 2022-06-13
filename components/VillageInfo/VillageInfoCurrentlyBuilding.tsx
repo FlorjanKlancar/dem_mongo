@@ -1,18 +1,19 @@
-import { XIcon } from "@heroicons/react/outline";
+import {XIcon} from "@heroicons/react/outline";
 import axios from "axios";
 import React from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
+import {useAuthState} from "react-firebase-hooks/auth";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
-import { auth } from "../../firebase/clientApp";
-import { RootState } from "../../types/storeModel";
+import {useSelector} from "react-redux";
+import {auth} from "../../firebase/clientApp";
+import {RootState} from "../../types/storeModel";
 import dayjs from "dayjs";
+import Countdown, {zeroPad} from "react-countdown";
 
 function VillageInfoCurrentlyBuilding() {
   const [user]: any = useAuthState(auth);
 
   const village: any = useSelector((state: RootState) => state.village);
-  const { gsBuildings }: any = useSelector(
+  const {gsBuildings}: any = useSelector(
     (state: RootState) => state.gsBuildings
   );
 
@@ -24,10 +25,19 @@ function VillageInfoCurrentlyBuilding() {
         buildingName: village.currentlyBuilding[0].buildingId,
         cancleJob: true,
       },
-      { headers: { Authorization: `Bearer ${user?.accessToken}` } }
+      {headers: {Authorization: `Bearer ${user?.accessToken}`}}
     );
 
     toast.success("Successfully canceled build!");
+  };
+
+  const renderer = ({hours, minutes, seconds, completed}: any) => {
+    // Render a countdown
+    return (
+      <span>
+        {zeroPad(hours)}:{zeroPad(minutes)}:{zeroPad(seconds)}
+      </span>
+    );
   };
 
   return (
@@ -50,11 +60,21 @@ function VillageInfoCurrentlyBuilding() {
                 gsBuildings[village.currentlyBuilding[0].buildingId].name}{" "}
               - level {village.currentlyBuilding[0].currentlyBuildingLevel}
             </div>
-            <div>
-              End:{" "}
-              {dayjs(village.currentlyBuilding[0].endBuildTime).format(
-                "HH:mm:ss"
-              )}
+            <div className="grid grid-cols-2 items-center">
+              <div className="w-20">Time left:</div>
+              <div>
+                <Countdown
+                  date={village.currentlyBuilding[0].endBuildTime}
+                  renderer={renderer}
+                  zeroPadTime={2}
+                />
+              </div>
+              <div className="w-20">End time:</div>
+              <div>
+                {dayjs(village.currentlyBuilding[0].endBuildTime).format(
+                  "HH:mm:ss"
+                )}
+              </div>
             </div>
           </div>
         </div>
