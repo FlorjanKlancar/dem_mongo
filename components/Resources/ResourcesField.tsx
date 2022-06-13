@@ -1,14 +1,14 @@
 import axios from "axios";
 import Image from "next/image";
-import React, { useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
+import React, {useState} from "react";
+import {useAuthState} from "react-firebase-hooks/auth";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
-import { auth } from "../../firebase/clientApp";
-import { MAX_LEVEL_RESOURCES } from "../../gsVariables";
-import { resourceField } from "../../types/resourceField";
-import { RootState } from "../../types/storeModel";
-import { CogIcon } from "@heroicons/react/outline";
+import {useSelector} from "react-redux";
+import {auth} from "../../firebase/clientApp";
+import {MAX_LEVEL_RESOURCES} from "../../gsVariables";
+import {resourceField} from "../../types/resourceField";
+import {RootState} from "../../types/storeModel";
+import {CogIcon} from "@heroicons/react/outline";
 
 import ResourcesMaxLevelModal from "./ResourcesMaxLevelModal";
 import ResourcesModal from "./ResourcesModal";
@@ -20,7 +20,7 @@ function ResourcesField() {
 
   const village: any = useSelector((state: RootState) => state.village);
 
-  const { gsBuildings } = useSelector((state: RootState) => state.gsBuildings);
+  const {gsBuildings} = useSelector((state: RootState) => state.gsBuildings);
 
   const [clickedResource, setClickedResource] = useState<any>({});
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
@@ -61,10 +61,10 @@ function ResourcesField() {
         fieldId: clickedResource.id,
         isBuilding: false,
       },
-      { headers: { Authorization: `Bearer ${user?.accessToken}` } }
+      {headers: {Authorization: `Bearer ${user?.accessToken}`}}
     );
 
-    toast.success("Upgrade started successfully!", { id: upgradeToast });
+    toast.success("Upgrade started successfully!", {id: upgradeToast});
   };
 
   const checkResources = async (resourceNextLevelInfo: any) => {
@@ -107,13 +107,15 @@ function ResourcesField() {
             </div>
             <div className="col-span-2">
               <button
-                className="mt-5 w-full rounded-lg bg-primary py-2 font-bold text-slate-800 hover:bg-primary hover:text-slate-600 disabled:bg-gray-500 disabled:hover:text-slate-800"
+                className="primary_button"
                 onClick={upgradeHandler}
                 type="submit"
                 disabled={
                   clickedResource.level + 1 > MAX_LEVEL_RESOURCES
                     ? true
                     : false || isButtonDisabled
+                    ? true
+                    : false || village.currentlyBuilding.length
                     ? true
                     : false
                 }
@@ -122,6 +124,8 @@ function ResourcesField() {
                   ? "Building is max level!"
                   : isButtonDisabled
                   ? "Not enough resources!"
+                  : village.currentlyBuilding.length
+                  ? "Builders are unavailable!"
                   : "Upgrade"}
               </button>
             </div>

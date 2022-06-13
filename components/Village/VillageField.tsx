@@ -1,19 +1,38 @@
-import { CogIcon } from "@heroicons/react/outline";
+import {CogIcon} from "@heroicons/react/outline";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
-import { useSelector } from "react-redux";
-import { resourceField } from "../../types/resourceField";
-import { RootState } from "../../types/storeModel";
+import React, {useState} from "react";
+import {useSelector} from "react-redux";
+import {resourceField} from "../../types/resourceField";
+import {RootState} from "../../types/storeModel";
+import Modal from "../Modal/Modal";
+import NewBuildingModal from "./NewBuildingModal";
 
 function VillageField() {
   const village: any = useSelector((state: RootState) => state.village);
+  const [open, setOpen] = useState(false);
+  const [clickedResourceId, setClickedResourceId] = useState<number>(0);
+  const {gsBuildings} = useSelector((state: RootState) => state.gsBuildings);
 
   return (
     <div className="grid max-h-[500px] w-full grid-cols-4 sm:grid-cols-4 md:w-9/12">
       {village.villageBuildings.map((resource: resourceField) => (
-        <div key={resource.id}>
-          <Link href={`/village/${resource.type}`}>
+        <div
+          key={resource.id}
+          onClick={
+            resource.type === "empty_field"
+              ? () => {
+                  setClickedResourceId(+resource.id);
+                  setOpen(true);
+                }
+              : () => resource.id
+          }
+        >
+          <Link
+            href={
+              resource.type !== "empty_field" ? `/village/${resource.type}` : ""
+            }
+          >
             <div
               className={`relative cursor-pointer rounded-xl  border-slate-800/10 hover:border-slate-800/40 ${
                 resource.type === "village_center" ? "" : "border-2"
@@ -47,6 +66,15 @@ function VillageField() {
           </Link>
         </div>
       ))}
+
+      <Modal open={open} setOpen={setOpen}>
+        <NewBuildingModal
+          gsBuildings={gsBuildings}
+          clickedResourceId={clickedResourceId}
+          setOpen={setOpen}
+          village={village}
+        />
+      </Modal>
     </div>
   );
 }

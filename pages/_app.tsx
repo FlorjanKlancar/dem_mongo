@@ -2,21 +2,21 @@ import "../styles/globals.css";
 
 import NavbarDem from "../components/Navbar/NavbarDem";
 import VillageWrapper from "../components/Wrapper/VillageWrapper";
-import { useEffect, useState } from "react";
-import { doc, onSnapshot } from "firebase/firestore";
-import { auth, db } from "../firebase/clientApp";
-import { Provider, useDispatch } from "react-redux";
-import { villageActions } from "../store/village-slice";
+import {useEffect, useState} from "react";
+import {doc, onSnapshot} from "firebase/firestore";
+import {auth, db} from "../firebase/clientApp";
+import {Provider, useDispatch} from "react-redux";
+import {villageActions} from "../store/village-slice";
 import store from "../store";
 import axios from "axios";
-import { gsUnitsActions } from "../store/gsUnits-slice";
-import { gsBuildingsActions } from "../store/gsBuildings-slice";
+import {gsUnitsActions} from "../store/gsUnits-slice";
+import {gsBuildingsActions} from "../store/gsBuildings-slice";
 import Login from "../components/Auth/Login";
-import { useAuthState } from "react-firebase-hooks/auth";
+import {useAuthState} from "react-firebase-hooks/auth";
 import VillageSkeleton from "../components/skeletons/VillageSkeleton";
-import { Toaster } from "react-hot-toast";
+import {Toaster} from "react-hot-toast";
 
-function MyApp({ Component, pageProps }: any) {
+function MyApp({Component, pageProps}: any) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const dispatch = useDispatch();
 
@@ -25,15 +25,15 @@ function MyApp({ Component, pageProps }: any) {
   const initializeDataFetch = async () => {
     console.log("initialize fetch");
     await axios.get(`/api/village/${user?.uid}`, {
-      headers: { Authorization: `Bearer ${user?.accessToken}` },
+      headers: {Authorization: `Bearer ${user?.accessToken}`},
     });
 
     const response = await axios.get(`/api/initialize`, {
-      headers: { Authorization: `Bearer ${user?.accessToken}` },
+      headers: {Authorization: `Bearer ${user?.accessToken}`},
     });
 
     dispatch(
-      gsUnitsActions.initializeGsUnits({ gsUnits: response.data.unitsResponse })
+      gsUnitsActions.initializeGsUnits({gsUnits: response.data.unitsResponse})
     );
     dispatch(
       gsBuildingsActions.initializeGsBuildings({
@@ -84,6 +84,16 @@ function MyApp({ Component, pageProps }: any) {
               ],
             }),
 
+            ...(docSnapshot.data().unitTrainQueue.length && {
+              unitTrainQueue: docSnapshot
+                .data()
+                .unitTrainQueue.map((unit: any) => {
+                  return {
+                    ...unit,
+                    endThisBuild: unit.endThisBuild.toMillis(),
+                  };
+                }),
+            }),
             createdAt: docSnapshot.data().createdAt.toMillis(),
             updatedAt: docSnapshot.data().updatedAt.toMillis(),
           })
@@ -117,7 +127,7 @@ function MyApp({ Component, pageProps }: any) {
   );
 }
 
-function MyAppWithProvider({ Component, pageProps }: any) {
+function MyAppWithProvider({Component, pageProps}: any) {
   return (
     <Provider store={store}>
       <MyApp Component={Component} pageProps={pageProps} />

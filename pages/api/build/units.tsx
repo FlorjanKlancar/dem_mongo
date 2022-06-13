@@ -1,7 +1,7 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import axios from "axios";
-import type { NextApiRequest, NextApiResponse } from "next";
-import { firebaseAdmin } from "../../../firebase/serverApp";
+import type {NextApiRequest, NextApiResponse} from "next";
+import {firebaseAdmin} from "../../../firebase/serverApp";
 
 export default async function handler(
   req: NextApiRequest,
@@ -22,22 +22,33 @@ export default async function handler(
           if (token) {
             const villageId = req.body.villageId;
             const buildingName = req.body.buildingName;
-            const unitName = req.body.unitName;
-            const unitAmount = req.body.unitAmount;
+            const troops = req.body.troops;
 
-            console.log(villageId, buildingName, unitName, unitAmount);
+            let errorResponse = "";
 
-            const response = await axios.post(
-              `${process.env.NEXT_PUBLIC_NODEJS_APP}/build/units`,
+            for (const troop of troops) {
+              if (troop.unitAmount > 0) {
+                const response = await axios.post(
+                  `${process.env.NEXT_PUBLIC_NODEJS_APP}/build/units`,
 
-              { villageId, buildingName, unitName, unitAmount },
-              { headers: { Authorization: `Bearer ${jwtToken}` } }
-            );
+                  {
+                    villageId,
+                    buildingName,
+                    unitName: troop.unitName,
+                    unitAmount: troop.unitAmount,
+                  },
+                  {headers: {Authorization: `Bearer ${jwtToken}`}}
+                );
+                if (response.status !== 200) {
+                  errorResponse = response.data;
+                }
+              }
+            }
 
-            if (response.status === 200) {
-              res.status(200).send(response.data.msg);
+            if (errorResponse.length) {
+              res.status(400).send(errorResponse);
             } else {
-              res.status(400).send(response.data.msg);
+              res.status(200).send("Unit build request sent successfully!");
             }
           }
         } catch (error) {
