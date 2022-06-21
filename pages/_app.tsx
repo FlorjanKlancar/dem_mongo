@@ -5,7 +5,7 @@ import VillageWrapper from "../components/Wrapper/VillageWrapper";
 import { useEffect, useState } from "react";
 import { doc, onSnapshot } from "firebase/firestore";
 import { auth, db } from "../firebase/clientApp";
-import { Provider, useDispatch } from "react-redux";
+import { Provider, useDispatch, useSelector } from "react-redux";
 import { villageActions } from "../store/village-slice";
 import store from "../store";
 import axios from "axios";
@@ -16,21 +16,24 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import VillageSkeleton from "../components/skeletons/VillageSkeleton";
 import { Toaster } from "react-hot-toast";
 import { SessionProvider, useSession } from "next-auth/react";
+import { RootState } from "../types/storeModel";
 
 let firstLoad = true;
 
 function MyApp({ Component, pageProps }: any) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const village: any = useSelector((state: RootState) => state.village);
   const dispatch = useDispatch();
 
   const { data: session, status }: any = useSession();
-  console.log("status", status);
 
   const initializeDataFetch = async () => {
     console.log("initialize fetch");
-    await axios.get(`/api/village/${session.user.uid}`);
+    const village = await axios.get(`/api/village/${session.user.uid}`);
 
     const response = await axios.get(`/api/initialize`);
+
+    dispatch(villageActions.setVillage(village.data));
 
     dispatch(
       gsUnitsActions.initializeGsUnits({ gsUnits: response.data.unitsResponse })
@@ -45,9 +48,9 @@ function MyApp({ Component, pageProps }: any) {
   };
 
   useEffect(() => {
-    if (!session.user) return;
+    if (!session) return;
 
-    if (!firstLoad) {
+    if (firstLoad) {
       initializeDataFetch();
     }
     firstLoad = false;
@@ -55,22 +58,8 @@ function MyApp({ Component, pageProps }: any) {
 
   return (
     <div className="relative">
-      {/*  {!user ? (
-        <Login />
-      ) : (
-        <>
-          <NavbarDem />
-          {isLoading ? (
-            <VillageSkeleton />
-          ) : ( */}
-      {/*  <VillageWrapper> */}
-      <NavbarDem />
-      <Toaster position="top-center" reverseOrder={false} />
       <Component {...pageProps} />
-      {/*  </VillageWrapper> */}
-      {/*   )}
-        </>
-      )} */}
+      <Toaster position="top-center" reverseOrder={false} />
     </div>
   );
 }

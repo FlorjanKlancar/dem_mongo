@@ -1,3 +1,4 @@
+import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
 import { firebaseAdmin } from "../../../firebase/serverApp";
 import { connectToDatabase } from "../../../utils/mongodb";
@@ -15,10 +16,18 @@ export default async function handler(
     case "GET": {
       {
         try {
-          const buildingsResponse = await db.collection("buildings").find({});
-          const unitsResponse = await db.collection("units").find({});
+          const buildingsResponse = await axios.get(
+            `${process.env.NODE_JS_URI}/gsBuildings`
+          );
 
-          res.status(200).json({ buildingsResponse, unitsResponse });
+          const unitsResponse = await axios.get(
+            `${process.env.NODE_JS_URI}/gsUnits`
+          );
+
+          res.status(200).json({
+            buildingsResponse: buildingsResponse.data,
+            unitsResponse: unitsResponse.data,
+          });
         } catch (error) {
           console.log("error", error);
         }

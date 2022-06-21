@@ -17,6 +17,7 @@ function VillageWrapper({ children }: VillageWrapperProps) {
   const resourcesRedux = useSelector(
     (state: RootState) => state.village.resourcesStorage
   );
+
   const buildersRedux = useSelector(
     (state: RootState) => state.village.currentlyBuilding
   );
@@ -68,20 +69,27 @@ function VillageWrapper({ children }: VillageWrapperProps) {
     (building: any) => building.type === "granary"
   );
 
+  const findWarehouse = gsBuildings.find(
+    (building: any) => building.type === "warehouse"
+  );
+  const findGranary = gsBuildings.find(
+    (building: any) => building.type === "granary"
+  );
+
   const resourcesMaxStorage =
-    gsBuildings["warehouse"]?.levels[0][warehouseMaxStorage.level]
-      .warehouseResourceLimit;
+    findWarehouse?.levels[0][warehouseMaxStorage.level].warehouseResourceLimit;
+
   const granaryMaxStorage =
-    gsBuildings["granary"]?.levels[0][granaryLevel.level].granaryResourceLimit;
+    findGranary?.levels[0][granaryLevel.level].granaryResourceLimit;
 
   const warehouseNextLevel =
-    gsBuildings["warehouse"].levels[0][
+    findWarehouse.levels[0][
       warehouseMaxStorage.level + 1 < MAX_LEVEL_BUILDINGS
         ? warehouseMaxStorage.level + 1
         : MAX_LEVEL_BUILDINGS
     ].warehouseResourceLimit;
   const granaryNextLevel =
-    gsBuildings["granary"].levels[0][
+    findGranary.levels[0][
       granaryLevel.level + 1 < MAX_LEVEL_BUILDINGS
         ? granaryLevel.level + 1
         : MAX_LEVEL_BUILDINGS

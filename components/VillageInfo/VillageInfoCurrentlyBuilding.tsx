@@ -40,11 +40,6 @@ function VillageInfoCurrentlyBuilding() {
     );
   };
 
-  console.log(
-    "village.currentlyBuilding[0].endBuildTime",
-    village.currentlyBuilding[0]?.endBuildTime
-  );
-
   return (
     <div>
       {village.currentlyBuilding.length ? (

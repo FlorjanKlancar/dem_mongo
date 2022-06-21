@@ -3,8 +3,13 @@ import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React from "react";
+import { useSelector } from "react-redux";
+import NavbarDem from "../../components/Navbar/NavbarDem";
 import ResourcesField from "../../components/Resources/ResourcesField";
+import VillageSkeleton from "../../components/skeletons/VillageSkeleton";
 import VillageInfoWrapper from "../../components/Wrapper/VillageInfoWrapper";
+import VillageWrapper from "../../components/Wrapper/VillageWrapper";
+import { RootState } from "../../types/storeModel";
 
 function ResourcesView() {
   const router = useRouter();
@@ -15,24 +20,22 @@ function ResourcesView() {
     },
   });
 
-  console.log("session from sr", session);
+  const villageId: string = useSelector((state: RootState) => state.village.id);
 
-  const testingHandler = async () => {
-    const response = await axios.post(
-      `/api/village/123`,
-      {},
-      { headers: { Authorization: `Bearer ${session?.accessToken}` } }
-    );
-    console.log("response", response);
-  };
-
-  return (
-    <VillageInfoWrapper>
-      <button className="text-white" onClick={testingHandler}>
-        Click me
-      </button>
-      <ResourcesField />
-    </VillageInfoWrapper>
+  return !villageId ? (
+    <>
+      <NavbarDem />
+      <VillageSkeleton />
+    </>
+  ) : (
+    <>
+      <NavbarDem />
+      <VillageWrapper>
+        <VillageInfoWrapper>
+          <ResourcesField />
+        </VillageInfoWrapper>
+      </VillageWrapper>
+    </>
   );
 }
 

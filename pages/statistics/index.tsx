@@ -1,7 +1,9 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import NavbarDem from "../../components/Navbar/NavbarDem";
 import StatisticsTableSkeleton from "../../components/skeletons/StatisticsTableSkeleton";
 import StatististicsTable from "../../components/Statistics/StatististicsTable";
+import VillageWrapper from "../../components/Wrapper/VillageWrapper";
 
 function StatisticsView() {
   const [players, setPlayers] = useState([]);
@@ -20,13 +22,16 @@ function StatisticsView() {
   }, []);
 
   return (
-    <div>
-      {players.length && ranks.length ? (
-        <StatististicsTable players={players} ranks={ranks} />
-      ) : (
-        <StatisticsTableSkeleton />
-      )}
-    </div>
+    <>
+      <NavbarDem />
+      <VillageWrapper>
+        {players.length && ranks.length ? (
+          <StatististicsTable players={players} ranks={ranks} />
+        ) : (
+          <StatisticsTableSkeleton />
+        )}
+      </VillageWrapper>
+    </>
   );
 }
 

@@ -6,17 +6,11 @@ import { createUnits } from "../../../../utils/createUnits";
 import { newVillage } from "../../../../utils/VillageDummyData";
 import { getToken } from "next-auth/jwt";
 import axios from "axios";
-import { connectToDatabase } from "../../../../utils/mongodb";
-import { ObjectId } from "mongodb";
-import mongoose, { Types } from "mongoose";
-
-const secret = process.env.JWT_SECRET;
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { db } = await connectToDatabase();
   switch (req.method) {
     default:
     case "GET":
@@ -27,18 +21,15 @@ export default async function handler(
         }
 
         try {
-          console.log(id);
-          let o_id = new ObjectId(id.toString()); // id as a string is passed
+          const response = await axios.get(
+            `${process.env.NODE_JS_URI}/village/${id}`
+          );
 
-          const village = await db
-            .collection("villages")
-            .find({
-              userId: new Types.ObjectId(id.toString()),
-            })
-            .toArray();
-
-          console.log("village", village);
-          return res.status(200).json(village);
+          if (response.status === 200) {
+            return res.status(200).json(response.data);
+          } else {
+            return res.status(404).send("Village not found!");
+          }
         } catch (error) {
           console.log("error", error);
         }
@@ -50,14 +41,17 @@ export default async function handler(
       {
         const { id } = req.query;
 
-        const response = await axios.post("http://localhost:5000/api/village", {
-          userId: id,
-        });
+        const response = await axios.post(
+          `${process.env.NODE_JS_URI}/village`,
+          {
+            userId: id,
+          }
+        );
 
         console.log("response", response);
 
-        if (response.status === 200) {
-          res.status(200).send(response.data);
+        if (response.status === 201) {
+          res.status(201).send(response.data);
         } else {
           res.status(400).send("Error");
         }
