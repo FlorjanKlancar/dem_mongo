@@ -1,19 +1,19 @@
-import {XIcon} from "@heroicons/react/outline";
+import { XIcon } from "@heroicons/react/outline";
 import axios from "axios";
 import React from "react";
-import {useAuthState} from "react-firebase-hooks/auth";
+import { useAuthState } from "react-firebase-hooks/auth";
 import toast from "react-hot-toast";
-import {useSelector} from "react-redux";
-import {auth} from "../../firebase/clientApp";
-import {RootState} from "../../types/storeModel";
+import { useSelector } from "react-redux";
+import { auth } from "../../firebase/clientApp";
+import { RootState } from "../../types/storeModel";
 import dayjs from "dayjs";
-import Countdown, {zeroPad} from "react-countdown";
+import Countdown, { zeroPad } from "react-countdown";
 
 function VillageInfoCurrentlyBuilding() {
   const [user]: any = useAuthState(auth);
 
   const village: any = useSelector((state: RootState) => state.village);
-  const {gsBuildings}: any = useSelector(
+  const { gsBuildings }: any = useSelector(
     (state: RootState) => state.gsBuildings
   );
 
@@ -25,13 +25,13 @@ function VillageInfoCurrentlyBuilding() {
         buildingName: village.currentlyBuilding[0].buildingId,
         cancleJob: true,
       },
-      {headers: {Authorization: `Bearer ${user?.accessToken}`}}
+      { headers: { Authorization: `Bearer ${user?.accessToken}` } }
     );
 
     toast.success("Successfully canceled build!");
   };
 
-  const renderer = ({hours, minutes, seconds, completed}: any) => {
+  const renderer = ({ hours, minutes, seconds, completed }: any) => {
     // Render a countdown
     return (
       <span>
@@ -39,6 +39,11 @@ function VillageInfoCurrentlyBuilding() {
       </span>
     );
   };
+
+  console.log(
+    "village.currentlyBuilding[0].endBuildTime",
+    village.currentlyBuilding[0]?.endBuildTime
+  );
 
   return (
     <div>

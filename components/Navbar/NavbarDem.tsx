@@ -1,21 +1,11 @@
 import React from "react";
 import NavbarMobile from "./NavbarMobile";
 import Menu from "./Menu";
-import { useDispatch } from "react-redux";
-import { authActions } from "../../store/auth-slice";
-import { signOut } from "firebase/auth";
-import { auth } from "../../firebase/clientApp";
-import { useRouter } from "next/router";
+import { signOut } from "next-auth/react";
 
 function NavbarDem() {
-  const dispatch = useDispatch();
-  const router = useRouter();
-
-  const logoutHandler = async () => {
-    signOut(auth);
-    dispatch(authActions.logOut());
-
-    router.push("/");
+  const signOutHandler = async () => {
+    await signOut();
   };
 
   return (
@@ -33,8 +23,8 @@ function NavbarDem() {
         </div>
 
         <div className="flex justify-center">
-          <button className="btn" onClick={logoutHandler}>
-            Logout
+          <button className="btn" onClick={signOutHandler}>
+            Sign out
           </button>
         </div>
       </div>

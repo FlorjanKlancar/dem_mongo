@@ -6,7 +6,7 @@ import {
 } from "@heroicons/react/outline";
 import Image from "next/image";
 import React from "react";
-import {BASE_PRODUCTION_NUMBER} from "../../gsVariables";
+import { BASE_PRODUCTION_NUMBER } from "../../gsVariables";
 import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
@@ -24,7 +24,7 @@ type ResourcesModalProps = {
   };
 };
 
-function ResourcesModal({clickedResource}: ResourcesModalProps) {
+function ResourcesModal({ clickedResource }: ResourcesModalProps) {
   return (
     <>
       <div className="flex flex-row items-center justify-center space-x-3 py-8 sm:justify-between sm:space-y-0 sm:px-8">
@@ -114,7 +114,8 @@ function ResourcesModal({clickedResource}: ResourcesModalProps) {
             <ClockIcon className="h-12 w-12 text-primary/80" />
           </div>
           <div className="text-lg sm:text-2xl">
-            {clickedResource.levels && clickedResource.levels[0][1].timeToBuild}
+            {clickedResource.levels &&
+              clickedResource.levels[0][clickedResource.level + 1].timeToBuild}
             <span className="text-base">s</span>
           </div>
         </div>
@@ -125,7 +126,8 @@ function ResourcesModal({clickedResource}: ResourcesModalProps) {
           </div>
           <div className="text-lg sm:text-2xl">
             {clickedResource.levels &&
-              clickedResource.levels[0][1].populationAdd}
+              clickedResource.levels[0][clickedResource.level + 1]
+                .populationAdd}
             <span className="text-base">pop</span>
           </div>
         </div>

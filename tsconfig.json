@@ -20,7 +20,8 @@
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    "pages/api/gameFunctions/index.js"
+    "pages/api/gameFunctions/index.js",
+    "utils/mongodb.js"
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules, lib"]
 }

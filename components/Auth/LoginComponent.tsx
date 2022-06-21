@@ -10,8 +10,14 @@ import { useRouter } from "next/router";
 import Link from "next/link";
 import RegisterComponent from "./RegisterComponent";
 import axios from "axios";
+import { providerModel } from "../../types/providerModel";
+import { signIn } from "next-auth/react";
 
-function Login() {
+type LoginComponentProps = {
+  providers: providerModel[];
+};
+
+function LoginComponent({ providers }: LoginComponentProps) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [passwordOne, setPasswordOne] = useState("");
@@ -19,9 +25,9 @@ function Login() {
   const [register, setRegister] = useState(false);
   const [user, loading] = useAuthState(auth);
 
-  useEffect(() => {
+  /* useEffect(() => {
     router.push("/resources");
-  }, [user, loading]);
+  }, [user, loading]); */
 
   const submitHandler = async (e: any) => {
     e.preventDefault();
@@ -100,10 +106,25 @@ function Login() {
                   }
                   type="submit"
                   value="Log In"
-                  className="mt-8 bg-black p-2 text-lg font-bold text-white hover:bg-gray-700"
+                  className="mt-8 cursor-pointer bg-primary p-2 text-lg font-bold text-white hover:bg-primary/80"
                 />
-                <button onClick={signInWithGoogle}>Login with Google</button>
               </form>
+
+              {Object.values(providers).map((provider) => (
+                <div key={provider.name}>
+                  <div>
+                    <button
+                      className="mt-2 w-full cursor-pointer bg-primary p-2 text-lg font-bold text-white hover:bg-primary/80"
+                      onClick={() =>
+                        signIn(provider.id, { callbackUrl: "/resources" })
+                      }
+                    >
+                      Sign in with {provider.name}
+                    </button>
+                  </div>
+                </div>
+              ))}
+
               <div className="pt-12 pb-12 text-center ">
                 <div>
                   <Link href="/reset">Forgot Password</Link>
@@ -136,4 +157,4 @@ function Login() {
     </>
   );
 }
-export default Login;
+export default LoginComponent;

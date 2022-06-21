@@ -96,7 +96,8 @@ function BuildingModal({ clickedResource }: ResourcesModalProps) {
             <ClockIcon className="h-12 w-12 text-primary/80" />
           </div>
           <div className="text-lg sm:text-2xl">
-            {clickedResource.levels && clickedResource.levels[0][1].timeToBuild}
+            {clickedResource.levels &&
+              clickedResource.levels[0][clickedResource.level + 1].timeToBuild}
             <span className="text-base">s</span>
           </div>
         </div>
@@ -107,7 +108,8 @@ function BuildingModal({ clickedResource }: ResourcesModalProps) {
           </div>
           <div className="text-lg sm:text-2xl">
             {clickedResource.levels &&
-              clickedResource.levels[0][1].populationAdd}
+              clickedResource.levels[0][clickedResource.level + 1]
+                .populationAdd}
             <span className="text-base">pop</span>
           </div>
         </div>

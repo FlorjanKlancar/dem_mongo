@@ -4,11 +4,19 @@ import { getBuildingById } from "../../gsBuildings/[id]";
 import { getVillageById, updateResourcesToDate } from "../../gameFunctions";
 import { createUnits } from "../../../../utils/createUnits";
 import { newVillage } from "../../../../utils/VillageDummyData";
+import { getToken } from "next-auth/jwt";
+import axios from "axios";
+import { connectToDatabase } from "../../../../utils/mongodb";
+import { ObjectId } from "mongodb";
+import mongoose, { Types } from "mongoose";
+
+const secret = process.env.JWT_SECRET;
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  const { db } = await connectToDatabase();
   switch (req.method) {
     default:
     case "GET":
@@ -19,12 +27,18 @@ export default async function handler(
         }
 
         try {
-          if (!req.headers.authorization)
-            return res.status(400).send("Token error!");
+          console.log(id);
+          let o_id = new ObjectId(id.toString()); // id as a string is passed
 
-          const response = await getVillageById(id.toString());
+          const village = await db
+            .collection("villages")
+            .find({
+              userId: new Types.ObjectId(id.toString()),
+            })
+            .toArray();
 
-          return res.status(200).send(response);
+          console.log("village", village);
+          return res.status(200).json(village);
         } catch (error) {
           console.log("error", error);
         }
@@ -34,59 +48,19 @@ export default async function handler(
 
     case "POST":
       {
-        let { id } = req.query;
+        const { id } = req.query;
 
-        const allUnits = createUnits;
-
-        let unitsArray: any = [];
-
-        allUnits.forEach(async (item: any) => {
-          for (const key in item) {
-            if (item[key].unitName) {
-              unitsArray.push({ name: key, amount: 5, level: 0 });
-            }
-          }
+        const response = await axios.post("http://localhost:5000/api/village", {
+          userId: id,
         });
 
-        if (!id) {
-          res.status(400).send("Missing userId!");
+        console.log("response", response);
+
+        if (response.status === 200) {
+          res.status(200).send(response.data);
+        } else {
+          res.status(400).send("Error");
         }
-
-        let villageDocRef = adminDb.collection("village").doc(id.toString());
-        const villageResponse = await villageDocRef
-          .set({
-            ...newVillage,
-            units: unitsArray,
-            createdAt: firebaseAdmin.firestore.Timestamp.now(),
-            updatedAt: firebaseAdmin.firestore.Timestamp.now(),
-          })
-          .then(() => villageDocRef.get())
-          .then((doc) => doc.data());
-
-        if (!req.body.userEmail) {
-          res.status(400).send("Missing userEmail!");
-        }
-
-        let userDocRef = adminDb.collection("userInfo").doc(id.toString());
-        const userResponse = await userDocRef
-          .set({
-            username: id.toString(),
-            email: req.body.userEmail,
-            elo: 1000,
-            createdAt: firebaseAdmin.firestore.Timestamp.now(),
-            updatedAt: firebaseAdmin.firestore.Timestamp.now(),
-          })
-          .then(() => userDocRef.get())
-          .then((doc) => doc.data());
-
-        let battleDocRef = adminDb.collection("battles").doc(id.toString());
-        await battleDocRef.set({
-          currentOpponent: "",
-          createdAt: firebaseAdmin.firestore.Timestamp.now(),
-          updatedAt: firebaseAdmin.firestore.Timestamp.now(),
-        });
-
-        res.status(201).json({ village: villageResponse, user: userResponse });
       }
       break;
   }
