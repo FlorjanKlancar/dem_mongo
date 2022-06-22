@@ -1,6 +1,4 @@
 import React from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../firebase/clientApp";
 import { ChevronDoubleRightIcon } from "@heroicons/react/outline";
 
 type StatististicsTableProps = {
@@ -9,8 +7,6 @@ type StatististicsTableProps = {
 };
 
 function StatististicsTable({ players, ranks }: StatististicsTableProps) {
-  const [user] = useAuthState(auth);
-
   return (
     <div className="w-full overflow-x-auto">
       <table className="table w-full">

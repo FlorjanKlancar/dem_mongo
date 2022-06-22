@@ -1,23 +1,18 @@
 import axios from "axios";
 import Image from "next/image";
 import React, { useState } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
 import toast from "react-hot-toast";
 import { useSelector } from "react-redux";
-import { auth } from "../../firebase/clientApp";
 import { MAX_LEVEL_RESOURCES } from "../../gsVariables";
 import { resourceField } from "../../types/resourceField";
 import { RootState } from "../../types/storeModel";
 import { CogIcon } from "@heroicons/react/outline";
-
 import ResourcesMaxLevelModal from "./ResourcesMaxLevelModal";
 import ResourcesModal from "./ResourcesModal";
 import Modal from "../Modal/Modal";
 import Link from "next/link";
 
 function ResourcesField() {
-  const [user]: any = useAuthState(auth);
-
   const village: any = useSelector((state: RootState) => state.village);
 
   const { gsBuildings } = useSelector((state: RootState) => state.gsBuildings);
@@ -51,7 +46,7 @@ function ResourcesField() {
   };
 
   const upgradeHandler = async () => {
-    setOpen(false);
+    /*  setOpen(false);
     const upgradeToast = toast.loading("Upgrading...");
     await axios.post(
       `api/build/resources`,
@@ -64,7 +59,7 @@ function ResourcesField() {
       { headers: { Authorization: `Bearer ${user?.accessToken}` } }
     );
 
-    toast.success("Upgrade started successfully!", { id: upgradeToast });
+    toast.success("Upgrade started successfully!", { id: upgradeToast }); */
   };
 
   const checkResources = async (resourceNextLevelInfo: any) => {
@@ -148,17 +143,24 @@ function ResourcesField() {
                 )
               }
             >
-              {resource.imageGrid && (
-                <div className="relative h-20 w-24 sm:h-28 sm:w-32 md:h-32 md:w-40">
-                  {resource.type === "village_center" ? (
+              <div className="relative h-20 w-24 sm:h-28 sm:w-32 md:h-32 md:w-40">
+                {resource.imageGrid &&
+                  (resource.type === "village_center" ? (
                     <Link href="/village">
-                      <Image src={resource.imageGrid} layout="fill" />
+                      <a>
+                        <div className="relative h-full w-full">
+                          <Image
+                            src={resource.imageGrid}
+                            layout="fill"
+                            priority
+                          />
+                        </div>
+                      </a>
                     </Link>
                   ) : (
-                    <Image src={resource.imageGrid} layout="fill" />
-                  )}
-                </div>
-              )}
+                    <Image src={resource.imageGrid} layout="fill" priority />
+                  ))}
+              </div>
 
               {resource.level && (
                 <div className="absolute bottom-2 right-2 rounded-full border-2 border-primary/50 bg-white px-2  text-black">

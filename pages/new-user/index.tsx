@@ -34,7 +34,7 @@ function NewUser() {
   }, [session]);
 
   return (
-    <div className="flex flex-col items-center space-y-12 pt-32">
+    <div className="flex flex-col items-center space-y-12 pt-56">
       <div>
         <h1 className="text-2xl font-semibold text-slate-700">
           Creating new village

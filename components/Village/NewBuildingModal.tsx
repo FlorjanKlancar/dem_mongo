@@ -6,8 +6,6 @@ import IronImg from "../../public/assets/Iron.png";
 import WheatImg from "../../public/assets/Wheat.png";
 import { ClockIcon, PlusIcon } from "@heroicons/react/outline";
 import axios from "axios";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../firebase/clientApp";
 import toast from "react-hot-toast";
 
 type NewBuildingModalProps = {
@@ -23,8 +21,6 @@ function NewBuildingModal({
   setOpen,
   village,
 }: NewBuildingModalProps) {
-  const [user]: any = useAuthState(auth);
-
   const filterBuildings = Object.values(gsBuildings).filter(
     (building: any) => building.isBuilding
   );
@@ -34,7 +30,7 @@ function NewBuildingModal({
   );
 
   const buildHandler = async (building: any) => {
-    const { type } = building;
+    /*   const { type } = building;
 
     setOpen(false);
     const upgradeToast = toast.loading("Upgrading...");
@@ -49,7 +45,7 @@ function NewBuildingModal({
       { headers: { Authorization: `Bearer ${user?.accessToken}` } }
     );
 
-    toast.success("Upgrade started successfully!", { id: upgradeToast });
+    toast.success("Upgrade started successfully!", { id: upgradeToast }); */
   };
 
   return (

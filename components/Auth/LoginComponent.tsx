@@ -1,11 +1,4 @@
 import React, { useEffect, useState } from "react";
-import {
-  auth,
-  logInWithEmailAndPassword,
-  registerWithEmailAndPassword,
-  signInWithGoogle,
-} from "../../firebase/clientApp";
-import { useAuthState } from "react-firebase-hooks/auth";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import RegisterComponent from "./RegisterComponent";
@@ -23,7 +16,6 @@ function LoginComponent({ providers }: LoginComponentProps) {
   const [passwordOne, setPasswordOne] = useState("");
   const [passwordTwo, setPasswordTwo] = useState("");
   const [register, setRegister] = useState(false);
-  const [user, loading] = useAuthState(auth);
 
   /* useEffect(() => {
     router.push("/resources");
@@ -34,25 +26,6 @@ function LoginComponent({ providers }: LoginComponentProps) {
   };
 
   const onSubmitRegister = (event: any) => {
-    if (passwordOne === passwordTwo)
-      registerWithEmailAndPassword(email, passwordOne)
-        .then(async (authUser: any) => {
-          console.log("Success. The user is created in Firebase");
-
-          const response = await axios.post(
-            `/api/village/${authUser?.user.uid}`,
-            {
-              userEmail: authUser?.user.email,
-            }
-          );
-          console.log("RESPONSE FROM BACKEND", response);
-        })
-        .then(() => router.push("/resources"))
-        .catch((error) => {
-          // An error occurred. Set error message to be displayed to user
-          console.log(error.message);
-        });
-    else console.log("Password do not match");
     event.preventDefault();
   };
 
@@ -97,13 +70,6 @@ function LoginComponent({ providers }: LoginComponentProps) {
                 </div>
 
                 <input
-                  onClick={() =>
-                    logInWithEmailAndPassword({
-                      auth,
-                      email,
-                      password: passwordOne,
-                    })
-                  }
                   type="submit"
                   value="Log In"
                   className="mt-8 cursor-pointer bg-primary p-2 text-lg font-bold text-white hover:bg-primary/80"
