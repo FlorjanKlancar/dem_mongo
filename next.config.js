@@ -2,7 +2,10 @@
 const nextConfig = {
   reactStrictMode: true,
   images: {
-    domains: ["ts6.x1.international.travian.com"],
+    domains: [
+      "firebasestorage.googleapis.com",
+      "ts6.x1.international.travian.com",
+    ],
   },
 };
 
