@@ -11,9 +11,6 @@ export default async function handler(
     case "POST": {
       {
         try {
-          if (!req.headers.authorization)
-            return res.status(400).send("Token error!");
-
           const villageId = req.body.villageId;
           const buildingName = req.body.buildingName;
           const fieldId = req.body.fieldId;
@@ -21,14 +18,14 @@ export default async function handler(
           const cancleJob = req.body.cancleJob;
 
           const response = await axios.post(
-            `${process.env.NEXT_PUBLIC_NODEJS_APP}/build`,
+            `${process.env.NODE_JS_URI}/build/buildings`,
             { villageId, buildingName, fieldId, isBuilding, cancleJob }
           );
 
           if (response.status === 200) {
-            res.status(200).send(response.data.msg);
+            res.status(200).json(response.data);
           } else {
-            res.status(400).send(response.data.msg);
+            res.status(400).send("Error");
           }
         } catch (error) {
           console.log("error", error);

@@ -2,7 +2,7 @@ import axios from "axios";
 import Image from "next/image";
 import React, { useState } from "react";
 import toast from "react-hot-toast";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MAX_LEVEL_RESOURCES } from "../../gsVariables";
 import { resourceField } from "../../types/resourceField";
 import { RootState } from "../../types/storeModel";
@@ -11,10 +11,14 @@ import ResourcesMaxLevelModal from "./ResourcesMaxLevelModal";
 import ResourcesModal from "./ResourcesModal";
 import Modal from "../Modal/Modal";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
+import { villageActions } from "../../store/village-slice";
 
 function ResourcesField() {
-  const village: any = useSelector((state: RootState) => state.village);
+  const { data: session }: any = useSession();
+  const dispatch = useDispatch();
 
+  const village: any = useSelector((state: RootState) => state.village);
   const { gsBuildings } = useSelector((state: RootState) => state.gsBuildings);
 
   const [clickedResource, setClickedResource] = useState<any>({});
@@ -46,20 +50,28 @@ function ResourcesField() {
   };
 
   const upgradeHandler = async () => {
-    /*  setOpen(false);
+    setOpen(false);
     const upgradeToast = toast.loading("Upgrading...");
-    await axios.post(
-      `api/build/resources`,
-      {
-        villageId: user?.uid,
-        buildingName: clickedResource.type,
-        fieldId: clickedResource.id,
-        isBuilding: false,
-      },
-      { headers: { Authorization: `Bearer ${user?.accessToken}` } }
-    );
+    const response = await axios.post(`api/build/resources`, {
+      villageId: session.user.uid,
+      buildingName: clickedResource.type,
+      fieldId: clickedResource.id,
+      isBuilding: false,
+    });
 
-    toast.success("Upgrade started successfully!", { id: upgradeToast }); */
+    console.log(response.data);
+    if (response.status === 200) {
+      dispatch(
+        villageActions.addBuildingNow({
+          currentlyBuilding: [response.data.currentlyBuilding],
+          resourcesStorage: response.data.resourcesStorageMinus,
+        })
+      );
+
+      toast.success("Upgrade started successfully!", { id: upgradeToast });
+    } else {
+      toast.error("Unable to upgrade...", { id: upgradeToast });
+    }
   };
 
   const checkResources = async (resourceNextLevelInfo: any) => {
