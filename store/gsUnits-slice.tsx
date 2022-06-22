@@ -1,7 +1,7 @@
-import {createSlice} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const gsUnitsInitialState = {
-  gsUnits: {},
+  gsUnits: [],
 };
 
 const gsUnitsSlice = createSlice({

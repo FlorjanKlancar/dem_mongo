@@ -5,7 +5,7 @@ import { unitModel } from "../../types/unitModel";
 import { Scrollbars } from "react-custom-scrollbars";
 
 function VillageInfoTroops() {
-  const village = useSelector((state: RootState) => state.village);
+  const villageUnits = useSelector((state: RootState) => state.village.units);
   const { gsUnits } = useSelector((state: RootState) => state.gsUnits);
 
   return (
@@ -17,23 +17,20 @@ function VillageInfoTroops() {
         </div>
 
         <div className="mt-2 flex w-full flex-col space-y-2">
-          {village.units.map((unit: unitModel, i) => (
+          {villageUnits.map((unit: unitModel) => (
             <div key={unit.name}>
               {unit.amount ? (
-                Object.values(gsUnits).map((val: any, i) => {
-                  if (val[unit.name]) {
+                gsUnits.map((gsUnit: any, i) => {
+                  if (gsUnit.unitName === unit.name) {
                     return (
                       <div
                         key={i}
                         className="grid grid-cols-3 items-center justify-items-center gap-4"
                       >
                         <div className="h-7 w-7 text-white">
-                          <img
-                            className="text-white"
-                            src={val[unit.name].unitIcon}
-                          />
+                          <img className="text-white" src={gsUnit.unitIcon} />
                         </div>
-                        <div>{val[unit.name].unitName}</div>
+                        <div>{gsUnit.unitName}</div>
                         <div>{unit.amount}</div>
                       </div>
                     );

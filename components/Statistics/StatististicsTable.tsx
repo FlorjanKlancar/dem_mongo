@@ -23,7 +23,7 @@ function StatististicsTable({ players, ranks }: StatististicsTableProps) {
           </tr>
         </thead>
         <tbody>
-          {players.map((player: any) => (
+          {/* {players.map((player: any) => (
             <tr key={player.id}>
               <td>
                 <div className="flex items-center space-x-3">
@@ -68,7 +68,7 @@ function StatististicsTable({ players, ranks }: StatististicsTableProps) {
                 <button className="btn btn-ghost btn-xs">details</button>
               </th>
             </tr>
-          ))}
+          ))} */}
         </tbody>
 
         <tfoot>

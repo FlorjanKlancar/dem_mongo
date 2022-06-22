@@ -17,20 +17,19 @@ function StatisticsView() {
     setRanks(ranksResponse.data);
   };
 
-  useEffect(() => {
+  /*   useEffect(() => {
     fetchStatistics();
-  }, []);
+  }, []); */
 
   return (
     <>
       <NavbarDem />
-      <VillageWrapper>
-        {players.length && ranks.length ? (
+      This is statistics
+      {/* {players.length && ranks.length ? (
           <StatististicsTable players={players} ranks={ranks} />
         ) : (
           <StatisticsTableSkeleton />
-        )}
-      </VillageWrapper>
+        )} */}
     </>
   );
 }
