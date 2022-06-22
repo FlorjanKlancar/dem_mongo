@@ -8,7 +8,6 @@ export async function middleware(req: NextRequest, res: NextResponse) {
       secret: process.env.JWT_SECRET,
       secureCookie: process.env.NODE_ENV === "production",
     });
-    console.log("session", session);
     // You could also check for any property on the session object,
     // like role === "admin" or name === "John Doe", etc.
     if (!session) {

@@ -48,8 +48,6 @@ export default async function handler(
           }
         );
 
-        console.log("response", response);
-
         if (response.status === 201) {
           res.status(201).send(response.data);
         } else {

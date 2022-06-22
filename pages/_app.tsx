@@ -17,43 +17,22 @@ import VillageSkeleton from "../components/skeletons/VillageSkeleton";
 import { Toaster } from "react-hot-toast";
 import { SessionProvider, useSession } from "next-auth/react";
 import { RootState } from "../types/storeModel";
+import { loadingActions } from "../store/loading-slice";
+import { initializeDataFetch } from "../utils/utilFunctions";
 
 let firstLoad = true;
 
 function MyApp({ Component, pageProps }: any) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
-  const village: any = useSelector((state: RootState) => state.village);
+  const villagestate: any = useSelector((state: RootState) => state.village);
   const dispatch = useDispatch();
 
   const { data: session, status }: any = useSession();
 
-  const initializeDataFetch = async () => {
-    console.log("initialize fetch");
-    const village = await axios.get(`/api/village/${session.user.uid}`);
-
-    const response = await axios.get(`/api/initialize`);
-
-    dispatch(villageActions.setVillage(village.data));
-
-    dispatch(
-      gsUnitsActions.initializeGsUnits({ gsUnits: response.data.unitsResponse })
-    );
-    dispatch(
-      gsBuildingsActions.initializeGsBuildings({
-        gsBuildings: response.data.buildingsResponse,
-      })
-    );
-
-    setIsLoading(false);
-  };
-
   useEffect(() => {
     if (!session) return;
 
-    if (firstLoad) {
-      initializeDataFetch();
-    }
-    firstLoad = false;
+    initializeDataFetch(session.user.uid, dispatch);
   }, []);
 
   return (

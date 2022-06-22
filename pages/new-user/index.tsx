@@ -2,9 +2,13 @@ import axios from "axios";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import Spinner from "../../components/Spinner/Spinner";
+import { villageActions } from "../../store/village-slice";
+import { initializeDataFetch } from "../../utils/utilFunctions";
 
 function NewUser() {
+  const dispatch = useDispatch();
   const router = useRouter();
   const { data: session, status }: any = useSession({
     required: true,
@@ -13,11 +17,10 @@ function NewUser() {
     },
   });
 
-  console.log("session", session);
-
   const createNewVillage = async () => {
     const response = await axios.post(`/api/village/${session?.user?.uid}`);
-    console.log("response", response);
+
+    initializeDataFetch(session.user.uid, dispatch);
 
     if (response.status === 201) {
       router.push("/resources");

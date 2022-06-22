@@ -27,7 +27,7 @@ const villageSlice = createSlice({
   initialState: () => villageInitialSlice,
   reducers: {
     setVillage(state, action) {
-      state.id = action.payload._id;
+      state.id = action.payload.id;
       state.population = action.payload.population;
 
       state.resourceFields = action.payload.resourceFields;

@@ -8,9 +8,9 @@ import VillageWrapper from "../../components/Wrapper/VillageWrapper";
 import { RootState } from "../../types/storeModel";
 
 function VillageView() {
-  const villageId: string = useSelector((state: RootState) => state.village.id);
+  const { loading } = useSelector((state: RootState) => state.loading);
 
-  return !villageId ? (
+  return loading ? (
     <>
       <NavbarDem />
       <VillageSkeleton />

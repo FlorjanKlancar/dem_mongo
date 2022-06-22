@@ -4,10 +4,10 @@ import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
 import WheatImg from "../../public/assets/Wheat.png";
-import {ClockIcon, PlusIcon} from "@heroicons/react/outline";
+import { ClockIcon, PlusIcon } from "@heroicons/react/outline";
 import axios from "axios";
-import {useAuthState} from "react-firebase-hooks/auth";
-import {auth} from "../../firebase/clientApp";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../../firebase/clientApp";
 import toast from "react-hot-toast";
 
 type NewBuildingModalProps = {
@@ -33,10 +33,8 @@ function NewBuildingModal({
     (building: any) => building.type
   );
 
-  console.log("villageB", villageB);
-
   const buildHandler = async (building: any) => {
-    const {type} = building;
+    const { type } = building;
 
     setOpen(false);
     const upgradeToast = toast.loading("Upgrading...");
@@ -48,10 +46,10 @@ function NewBuildingModal({
         fieldId: clickedResourceId,
         isBuilding: true,
       },
-      {headers: {Authorization: `Bearer ${user?.accessToken}`}}
+      { headers: { Authorization: `Bearer ${user?.accessToken}` } }
     );
 
-    toast.success("Upgrade started successfully!", {id: upgradeToast});
+    toast.success("Upgrade started successfully!", { id: upgradeToast });
   };
 
   return (
