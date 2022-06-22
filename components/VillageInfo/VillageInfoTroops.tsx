@@ -28,7 +28,11 @@ function VillageInfoTroops() {
                         className="grid grid-cols-3 items-center justify-items-center gap-4"
                       >
                         <div className="h-7 w-7 text-white">
-                          <img className="text-white" src={gsUnit.unitIcon} />
+                          <img
+                            className="text-white"
+                            alt={gsUnit.unitName}
+                            src={gsUnit.unitIcon}
+                          />
                         </div>
                         <div>{gsUnit.unitName}</div>
                         <div>{unit.amount}</div>

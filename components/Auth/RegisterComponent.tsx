@@ -1,6 +1,5 @@
-import {useRouter} from "next/router";
-import React, {useState} from "react";
-import {registerWithEmailAndPassword} from "../../firebase/clientApp";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 
 type RegisterComponentProps = {
   email: string;

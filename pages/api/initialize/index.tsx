@@ -1,16 +1,10 @@
 import axios from "axios";
 import { NextApiRequest, NextApiResponse } from "next";
-import { firebaseAdmin } from "../../../firebase/serverApp";
-import { connectToDatabase } from "../../../utils/mongodb";
-import { getAllBuildings } from "../gsBuildings";
-import { getAllUnits } from "../gsUnits";
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  const { db } = await connectToDatabase();
-
   switch (req.method) {
     default:
     case "GET": {

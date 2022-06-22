@@ -14,7 +14,7 @@ function VillageInfoResourcesSidebar() {
     {
       icon: (
         <div className="relative h-10 w-10">
-          <Image src={WoodImg} layout="fill" />
+          <Image src={WoodImg} alt="WoodImg" layout="fill" />
         </div>
       ),
       title: "Wood",
@@ -23,7 +23,7 @@ function VillageInfoResourcesSidebar() {
     {
       icon: (
         <div className="relative h-10 w-10">
-          <Image src={ClayImg} layout="fill" />
+          <Image src={ClayImg} alt="ClayImg" layout="fill" />
         </div>
       ),
       title: "Clay",
@@ -32,7 +32,7 @@ function VillageInfoResourcesSidebar() {
     {
       icon: (
         <div className="relative h-10 w-10">
-          <Image src={IronImg} layout="fill" />
+          <Image src={IronImg} alt="IronImg" layout="fill" />
         </div>
       ),
       title: "Iron",
@@ -41,7 +41,7 @@ function VillageInfoResourcesSidebar() {
     {
       icon: (
         <div className="relative h-10 w-10">
-          <Image src={WheatImg} layout="fill" />
+          <Image src={WheatImg} alt="WheatImg" layout="fill" />
         </div>
       ),
       title: "Wheat",

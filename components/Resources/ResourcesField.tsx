@@ -151,6 +151,7 @@ function ResourcesField() {
                         <div className="relative h-full w-full">
                           <Image
                             src={resource.imageGrid}
+                            alt={resource.type}
                             layout="fill"
                             priority
                           />
@@ -158,7 +159,12 @@ function ResourcesField() {
                       </a>
                     </Link>
                   ) : (
-                    <Image src={resource.imageGrid} layout="fill" priority />
+                    <Image
+                      src={resource.imageGrid}
+                      alt={resource.type}
+                      layout="fill"
+                      priority
+                    />
                   ))}
               </div>
 

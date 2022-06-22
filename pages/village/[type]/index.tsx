@@ -1,20 +1,21 @@
-import {GetServerSidePropsContext} from "next";
-import {buildingModel} from "../../../types/buildingModel";
-import {getBuildingById} from "../../api/gsBuildings/[id]";
+import { GetServerSidePropsContext } from "next";
+import { buildingModel } from "../../../types/buildingModel";
 import UpgradeBuildingPage from "../../../components/Village/UpgradeBuildingPage";
 
 type VillageTypeProps = {
   building: buildingModel;
 };
 
-function VillageType({building}: VillageTypeProps) {
+function VillageType({ building }: VillageTypeProps) {
   return <UpgradeBuildingPage building={building} />;
 }
 
 export default VillageType;
 
-export async function getServerSideProps({params}: GetServerSidePropsContext) {
-  const type = params!.type;
+export async function getServerSideProps({
+  params,
+}: GetServerSidePropsContext) {
+  /*  const type = params!.type;
 
   if (type === "empty_field")
     return {
@@ -28,5 +29,5 @@ export async function getServerSideProps({params}: GetServerSidePropsContext) {
       return {notFound: true};
     }
     return {props: {building: building[0]}};
-  }
+  } */
 }

@@ -1,11 +1,11 @@
-import {ClockIcon} from "@heroicons/react/outline";
+import { ClockIcon } from "@heroicons/react/outline";
 import axios from "axios";
 import dayjs from "dayjs";
 import Image from "next/image";
 import React from "react";
-import Countdown, {zeroPad} from "react-countdown";
-import {buildingModel} from "../../types/buildingModel";
-import {troopsInputModel} from "../../types/troopsInputModel";
+import Countdown, { zeroPad } from "react-countdown";
+import { buildingModel } from "../../types/buildingModel";
+import { troopsInputModel } from "../../types/troopsInputModel";
 import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
@@ -14,7 +14,6 @@ import UpkeepImg from "../../public/assets/upkeep.png";
 import toast from "react-hot-toast";
 
 type TroopsTrainProps = {
-  user: any;
   building: buildingModel;
   troops: troopsInputModel[];
   setTroops: (troop: any) => void;
@@ -23,7 +22,6 @@ type TroopsTrainProps = {
 };
 
 function TroopsTrain({
-  user,
   building,
   troops,
   setTroops,
@@ -32,7 +30,7 @@ function TroopsTrain({
 }: TroopsTrainProps) {
   const buildUnitsHandler = async (e: any) => {
     e.preventDefault();
-    const trainToast = toast.loading("Training...");
+    /*     const trainToast = toast.loading("Training...");
     axios.post(
       "/api/build/units",
       {
@@ -40,18 +38,18 @@ function TroopsTrain({
         buildingName: building.type,
         troops: troops,
       },
-      {headers: {Authorization: `Bearer ${user?.accessToken}`}}
+      { headers: { Authorization: `Bearer ${user?.accessToken}` } }
     );
-    toast.success("Training started successfully!", {id: trainToast});
+    toast.success("Training started successfully!", { id: trainToast });
 
     setTroops(
       troops.map((troop: troopsInputModel) => {
-        return {...troop, unitAmount: 0};
+        return { ...troop, unitAmount: 0 };
       })
-    );
+    ); */
   };
 
-  const renderer = ({hours, minutes, seconds, completed}: any) => {
+  const renderer = ({ hours, minutes, seconds, completed }: any) => {
     // Render a countdown
     return (
       <span>
@@ -64,7 +62,7 @@ function TroopsTrain({
     e.preventDefault();
 
     let data: any = [...troops];
-    data[index] = {unitName: e.target.name, unitAmount: +e.target.value};
+    data[index] = { unitName: e.target.name, unitAmount: +e.target.value };
 
     setTroops(data);
   };
@@ -89,7 +87,7 @@ function TroopsTrain({
                   className="grid grid-cols-1 items-center justify-items-center py-4 px-4 sm:grid-cols-2"
                 >
                   <div className="relative h-32 w-32">
-                    <img src={gsUnits[building.type][val].unitIcon} />
+                    <img src={gsUnits[building.type][val].unitIcon} alt="img" />
                   </div>
                   <div className="flex flex-col">
                     <div className="text-center text-primary sm:text-left">
@@ -100,7 +98,7 @@ function TroopsTrain({
                       <div className="grid grid-cols-2 items-center justify-around justify-items-center gap-3 md:flex md:space-x-3">
                         <div className="flex items-center ">
                           <div className="relative h-12 w-12">
-                            <Image src={WoodImg} layout="fill" />
+                            <Image src={WoodImg} alt="woodImg" layout="fill" />
                           </div>
                           <div className="text-xl">
                             {gsUnits[building.type][val].costWood}
@@ -109,7 +107,7 @@ function TroopsTrain({
 
                         <div className="flex items-center ">
                           <div className="relative h-12 w-12">
-                            <Image src={ClayImg} layout="fill" />
+                            <Image src={ClayImg} alt="ClayImg" layout="fill" />
                           </div>
                           <div className="text-xl">
                             {gsUnits[building.type][val].costClay}
@@ -118,7 +116,7 @@ function TroopsTrain({
 
                         <div className="flex items-center ">
                           <div className="relative h-12 w-12">
-                            <Image src={IronImg} layout="fill" />
+                            <Image src={IronImg} alt="IronImg" layout="fill" />
                           </div>
                           <div className="text-xl">
                             {gsUnits[building.type][val].costIron}
@@ -127,7 +125,11 @@ function TroopsTrain({
 
                         <div className="flex items-center ">
                           <div className="relative h-12 w-12">
-                            <Image src={WheatImg} layout="fill" />
+                            <Image
+                              src={WheatImg}
+                              alt="WheatImg"
+                              layout="fill"
+                            />
                           </div>
                           <div className="text-xl">
                             {gsUnits[building.type][val].costWheat}

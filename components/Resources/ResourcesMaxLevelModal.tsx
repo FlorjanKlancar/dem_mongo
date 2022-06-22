@@ -20,7 +20,11 @@ function ResourcesMaxLevelModal({
     <div className="flex flex-col items-center justify-center space-y-5 py-8 sm:space-y-2 sm:px-8">
       <div className="relative h-32 w-32">
         {clickedResource.image && (
-          <Image src={clickedResource.image} layout="fill" />
+          <Image
+            src={clickedResource.image}
+            alt={clickedResource.type}
+            layout="fill"
+          />
         )}
         <div className="text-bold absolute bottom-1 right-9 z-50 text-4xl text-white">
           {clickedResource.level}

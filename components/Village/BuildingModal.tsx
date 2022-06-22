@@ -28,7 +28,11 @@ function BuildingModal({ clickedResource }: ResourcesModalProps) {
       <div className="flex flex-row items-center justify-center space-x-3 py-8 sm:justify-between sm:space-y-0 sm:px-8">
         <div className="relative h-20 w-24 sm:h-32 sm:w-32">
           {clickedResource.image && (
-            <Image src={clickedResource.image} layout="fill" />
+            <Image
+              src={clickedResource.image}
+              alt={clickedResource.type}
+              layout="fill"
+            />
           )}
           <div className="text-bold absolute bottom-1 right-6 z-50 text-lg text-white sm:right-9 sm:text-4xl">
             {clickedResource.level}
@@ -40,7 +44,11 @@ function BuildingModal({ clickedResource }: ResourcesModalProps) {
 
         <div className="relative h-20 w-24 sm:h-32 sm:w-32">
           {clickedResource.image && (
-            <Image src={clickedResource.image} layout="fill" />
+            <Image
+              src={clickedResource.image}
+              alt={clickedResource.type}
+              layout="fill"
+            />
           )}
 
           <div className="text-bold absolute bottom-1 right-6 z-50 text-lg text-white sm:right-9 sm:text-4xl">
@@ -56,7 +64,7 @@ function BuildingModal({ clickedResource }: ResourcesModalProps) {
       <div className="grid grid-cols-2 justify-items-center gap-3	sm:grid-cols-2	">
         <div className="flex items-center space-x-2">
           <div className="relative h-16 w-16">
-            <Image src={WoodImg} layout="fill" />
+            <Image src={WoodImg} alt="WoodImg" layout="fill" />
           </div>
           <div className="text-lg sm:text-2xl">
             {clickedResource.levels &&
@@ -65,7 +73,7 @@ function BuildingModal({ clickedResource }: ResourcesModalProps) {
         </div>
         <div className="flex items-center space-x-2">
           <div className="relative h-16 w-16">
-            <Image src={ClayImg} layout="fill" />
+            <Image src={ClayImg} alt="ClayImg" layout="fill" />
           </div>
           <div className="text-lg sm:text-2xl">
             {clickedResource.levels &&
@@ -74,7 +82,7 @@ function BuildingModal({ clickedResource }: ResourcesModalProps) {
         </div>
         <div className="flex items-center space-x-2">
           <div className="relative h-16 w-16">
-            <Image src={IronImg} layout="fill" />
+            <Image src={IronImg} alt="IronImg" layout="fill" />
           </div>
           <div className="text-lg sm:text-2xl">
             {clickedResource.levels &&
@@ -83,7 +91,7 @@ function BuildingModal({ clickedResource }: ResourcesModalProps) {
         </div>
         <div className="flex items-center space-x-2">
           <div className="relative h-16 w-16">
-            <Image src={WheatImg} layout="fill" />
+            <Image src={WheatImg} alt="WheatImg" layout="fill" />
           </div>
           <div className="text-lg sm:text-2xl">
             {clickedResource.levels &&

@@ -1,34 +1,30 @@
 import axios from "axios";
-import {GetServerSidePropsContext} from "next";
+import { GetServerSidePropsContext } from "next";
 import Image from "next/image";
-import React, {useEffect, useState} from "react";
-import {buildingModel} from "../../types/buildingModel";
-import {getBuildingById} from "../../pages/api/gsBuildings/[id]";
+import React, { useEffect, useState } from "react";
+import { buildingModel } from "../../types/buildingModel";
 import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
 import WheatImg from "../../public/assets/Wheat.png";
-import {ClockIcon, PlusIcon} from "@heroicons/react/outline";
-import {useSelector} from "react-redux";
-import {RootState} from "../../types/storeModel";
+import { ClockIcon, PlusIcon } from "@heroicons/react/outline";
+import { useSelector } from "react-redux";
+import { RootState } from "../../types/storeModel";
 import toast from "react-hot-toast";
-import {useAuthState} from "react-firebase-hooks/auth";
-import {auth} from "../../firebase/clientApp";
-import {useRouter} from "next/router";
-import {MAX_LEVEL_BUILDINGS} from "../../gsVariables";
-import {troopsInputModel} from "../../types/troopsInputModel";
+import { useRouter } from "next/router";
+import { MAX_LEVEL_BUILDINGS } from "../../gsVariables";
+import { troopsInputModel } from "../../types/troopsInputModel";
 import TroopsTrain from "../../components/Village/TroopsTrain";
 
 type VillageTypeProps = {
   building: buildingModel;
 };
 
-function UpgradeBuildingPage({building}: VillageTypeProps) {
+function UpgradeBuildingPage({ building }: VillageTypeProps) {
   const router = useRouter();
-  const [user]: any = useAuthState(auth);
 
   const village = useSelector((state: RootState) => state.village);
-  const {gsUnits}: any = useSelector((state: RootState) => state.gsUnits);
+  const { gsUnits }: any = useSelector((state: RootState) => state.gsUnits);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [troops, setTroops] = useState<troopsInputModel[]>(
@@ -49,7 +45,7 @@ function UpgradeBuildingPage({building}: VillageTypeProps) {
   );
 
   const upgradeHandler = async () => {
-    router.push("/village");
+    /*     router.push("/village");
     const upgradeToast = toast.loading("Upgrading...");
     await axios.post(
       `/api/build/resources`,
@@ -62,7 +58,7 @@ function UpgradeBuildingPage({building}: VillageTypeProps) {
       {headers: {Authorization: `Bearer ${user?.accessToken}`}}
     );
 
-    toast.success("Upgrade started successfully!", {id: upgradeToast});
+    toast.success("Upgrade started successfully!", {id: upgradeToast}); */
   };
 
   const checkResources = async (resourceNextLevelInfo: any) => {
@@ -108,7 +104,7 @@ function UpgradeBuildingPage({building}: VillageTypeProps) {
                     <div className="grid grid-cols-2 justify-around justify-items-center px-4 sm:px-0 md:flex">
                       <div className="flex items-center space-x-2">
                         <div className="relative h-12 w-12 sm:h-16 sm:w-16">
-                          <Image src={WoodImg} layout="fill" />
+                          <Image src={WoodImg} alt="WoodImg" layout="fill" />
                         </div>
                         <div className="text-base sm:text-lg xl:text-2xl">
                           {
@@ -120,7 +116,7 @@ function UpgradeBuildingPage({building}: VillageTypeProps) {
 
                       <div className="flex items-center space-x-2">
                         <div className="relative h-12 w-12 sm:h-16 sm:w-16">
-                          <Image src={ClayImg} layout="fill" />
+                          <Image src={ClayImg} alt="ClayImg" layout="fill" />
                         </div>
                         <div className="text-base sm:text-lg xl:text-2xl">
                           {
@@ -132,7 +128,7 @@ function UpgradeBuildingPage({building}: VillageTypeProps) {
 
                       <div className="flex items-center space-x-2">
                         <div className="relative h-12 w-12 sm:h-16 sm:w-16">
-                          <Image src={IronImg} layout="fill" />
+                          <Image src={IronImg} alt="IronImg" layout="fill" />
                         </div>
                         <div className="text-base sm:text-lg xl:text-2xl">
                           {
@@ -144,7 +140,7 @@ function UpgradeBuildingPage({building}: VillageTypeProps) {
 
                       <div className="flex items-center space-x-2">
                         <div className="relative h-12 w-12 sm:h-16 sm:w-16">
-                          <Image src={WheatImg} layout="fill" />
+                          <Image src={WheatImg} alt="WheatImg" layout="fill" />
                         </div>
                         <div className="text-base sm:text-lg xl:text-2xl">
                           {
@@ -224,7 +220,6 @@ function UpgradeBuildingPage({building}: VillageTypeProps) {
           gsUnits={gsUnits}
           setTroops={setTroops}
           building={building}
-          user={user}
         />
       )}
     </div>

@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Spinner from "../../components/Spinner/Spinner";
-import { villageActions } from "../../store/village-slice";
 import { initializeDataFetch } from "../../utils/utilFunctions";
 
 function NewUser() {

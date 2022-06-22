@@ -1,10 +1,4 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { adminDb, firebaseAdmin } from "../../../../firebase/serverApp";
-import { getBuildingById } from "../../gsBuildings/[id]";
-import { getVillageById, updateResourcesToDate } from "../../gameFunctions";
-import { createUnits } from "../../../../utils/createUnits";
-import { newVillage } from "../../../../utils/VillageDummyData";
-import { getToken } from "next-auth/jwt";
 import axios from "axios";
 
 export default async function handler(

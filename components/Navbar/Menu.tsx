@@ -5,7 +5,6 @@ import ResourcesImg from "../../public/assets/Resources.png";
 import StatisticImg from "../../public/assets/Statistic.png";
 import VillageImg from "../../public/assets/Village.png";
 import InventoryImg from "../../public/assets/Inventory.png";
-import BackgroundImage from "../../public/assets/Ozadje_menu.png";
 import { MenuItemModel } from "../../types/MenuItemModel";
 import Image from "next/image";
 
@@ -56,7 +55,7 @@ function Menu() {
               {item.logo ? (
                 <div className="hidden justify-center md:flex">Logo</div>
               ) : (
-                <Image src={item.image} />
+                <Image src={item.image} alt={item.title} />
               )}
             </div>
 

@@ -1,33 +1,17 @@
 import "../styles/globals.css";
-
-import NavbarDem from "../components/Navbar/NavbarDem";
-import VillageWrapper from "../components/Wrapper/VillageWrapper";
-import { useEffect, useState } from "react";
-import { doc, onSnapshot } from "firebase/firestore";
-import { auth, db } from "../firebase/clientApp";
-import { Provider, useDispatch, useSelector } from "react-redux";
-import { villageActions } from "../store/village-slice";
+import { useEffect } from "react";
+import { Provider, useDispatch } from "react-redux";
 import store from "../store";
-import axios from "axios";
-import { gsUnitsActions } from "../store/gsUnits-slice";
-import { gsBuildingsActions } from "../store/gsBuildings-slice";
-import LoginComponent from "../components/Auth/LoginComponent";
-import { useAuthState } from "react-firebase-hooks/auth";
-import VillageSkeleton from "../components/skeletons/VillageSkeleton";
 import { Toaster } from "react-hot-toast";
 import { SessionProvider, useSession } from "next-auth/react";
-import { RootState } from "../types/storeModel";
-import { loadingActions } from "../store/loading-slice";
 import { initializeDataFetch } from "../utils/utilFunctions";
 
 let firstLoad = true;
 
 function MyApp({ Component, pageProps }: any) {
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const villagestate: any = useSelector((state: RootState) => state.village);
   const dispatch = useDispatch();
 
-  const { data: session, status }: any = useSession();
+  const { data: session }: any = useSession();
 
   useEffect(() => {
     if (!session) return;

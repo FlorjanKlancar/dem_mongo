@@ -71,35 +71,35 @@ function NewBuildingModal({
               </div>
 
               <div className="relative h-24 w-24">
-                <Image src={building.image} layout="fill" />
+                <Image src={building.image} alt={building.name} layout="fill" />
               </div>
             </div>
 
             <div className="flex justify-between px-4">
               <div className="flex items-center space-x-1">
                 <div className="relative h-10 w-10">
-                  <Image src={WoodImg} layout="fill" />
+                  <Image src={WoodImg} alt="WoodImg" layout="fill" />
                 </div>
                 <div>{building.levels[0][1].costWood}</div>
               </div>
 
               <div className="flex items-center space-x-1">
                 <div className="relative h-10 w-10">
-                  <Image src={ClayImg} layout="fill" />
+                  <Image src={ClayImg} alt="ClayImg" layout="fill" />
                 </div>
                 <div>{building.levels[0][1].costClay}</div>
               </div>
 
               <div className="flex items-center space-x-1">
                 <div className="relative h-10 w-10">
-                  <Image src={IronImg} layout="fill" />
+                  <Image src={IronImg} alt="IronImg" layout="fill" />
                 </div>
                 <div>{building.levels[0][1].costIron}</div>
               </div>
 
               <div className="flex items-center space-x-1">
                 <div className="relative h-10 w-10">
-                  <Image src={WheatImg} layout="fill" />
+                  <Image src={WheatImg} alt="WheatImg" layout="fill" />
                 </div>
                 <div>{building.levels[0][1].costWheat}</div>
               </div>
