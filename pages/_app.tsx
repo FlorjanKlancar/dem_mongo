@@ -6,8 +6,6 @@ import { Toaster } from "react-hot-toast";
 import { SessionProvider, useSession } from "next-auth/react";
 import { initializeDataFetch } from "../utils/utilFunctions";
 
-let firstLoad = true;
-
 function MyApp({ Component, pageProps }: any) {
   const dispatch = useDispatch();
 
@@ -17,7 +15,7 @@ function MyApp({ Component, pageProps }: any) {
     if (!session) return;
 
     initializeDataFetch(session.user.uid, dispatch);
-  }, []);
+  }, [session]);
 
   return (
     <div className="relative">

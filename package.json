@@ -13,6 +13,7 @@
     "@heroicons/react": "^1.0.6",
     "@next-auth/mongodb-adapter": "^1.0.3",
     "@reduxjs/toolkit": "^1.8.2",
+    "@zilliqa-js/zilliqa": "^3.3.4",
     "axios": "^0.27.2",
     "daisyui": "^2.15.1",
     "dayjs": "^1.11.2",

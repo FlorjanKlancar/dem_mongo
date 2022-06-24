@@ -5,6 +5,7 @@ const nextConfig = {
     domains: [
       "firebasestorage.googleapis.com",
       "ts6.x1.international.travian.com",
+      "wallpaperaccess.com",
     ],
   },
 };
