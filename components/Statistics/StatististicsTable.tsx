@@ -1,12 +1,15 @@
 import React from "react";
 import { ChevronDoubleRightIcon } from "@heroicons/react/outline";
+import { useSession } from "next-auth/react";
+import dayjs from "dayjs";
 
 type StatististicsTableProps = {
   players: any;
-  ranks: any;
+  ranks?: any;
 };
 
 function StatististicsTable({ players, ranks }: StatististicsTableProps) {
+  const { data: session }: any = useSession();
   return (
     <div className="w-full overflow-x-auto">
       <table className="table w-full">
@@ -15,15 +18,16 @@ function StatististicsTable({ players, ranks }: StatististicsTableProps) {
             <th>User</th>
             <th>Population</th>
             <th>Rank</th>
+            <th>Creation date</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          {/* {players.map((player: any) => (
-            <tr key={player.id}>
+          {players.map((player: any) => (
+            <tr key={player._id}>
               <td>
                 <div className="flex items-center space-x-3">
-                  {player.id == user?.uid && (
+                  {player._id == session.user.uid && (
                     <div>
                       <ChevronDoubleRightIcon className="h-5 w-5 text-primary" />
                     </div>
@@ -31,40 +35,37 @@ function StatististicsTable({ players, ranks }: StatististicsTableProps) {
                   <div className="avatar">
                     <div className="mask mask-squircle h-12 w-12">
                       <img
-                        src="https://store.playstation.com/store/api/chihiro/00_09_000/container/US/en/19/UP2136-CUSA02727_00-AV00000000000014/image?w=320&h=320&bg_color=000000&opacity=100&_version=00_09_000"
+                        src={`https://avatars.dicebear.com/api/bottts/${player._id}.svg`}
                         alt="Avatar Tailwind CSS Component"
                       />
                     </div>
                   </div>
                   <div>
-                    <div className="font-bold">{player.username}</div>
+                    <div className="font-bold">{player._id}</div>
                     <span className="badge badge-sm badge-ghost">Romans</span>
                   </div>
                 </div>
               </td>
               <td>{player.population}</td>
               <td>
-                {ranks.map((rank: any) => {
-                  if (rank.upToElo == player.elo) {
-                    return (
-                      <div className="flex items-center space-x-2">
-                        <div className="mask mask-squircle h-12 w-12">
-                          <img
-                            src={rank.icon}
-                            alt="Avatar Tailwind CSS Component"
-                          />
-                        </div>
-                        <div>{rank.rank}</div>
-                      </div>
-                    );
-                  }
-                })}
+                <div className="flex items-center space-x-2">
+                  <div className="mask mask-squircle h-12 w-12">
+                    <img
+                      src="https://eloboost24.eu/images/divisions/6.webp"
+                      alt="Avatar Tailwind CSS Component"
+                    />
+                  </div>
+                  <div>Iron</div>
+                </div>
               </td>
+              <th className="font-normal">
+                {dayjs(player.createdAt).format("DD-MM-YYYY")}
+              </th>
               <th>
                 <button className="btn btn-ghost btn-xs">details</button>
               </th>
             </tr>
-          ))} */}
+          ))}
         </tbody>
 
         <tfoot>
@@ -72,6 +73,7 @@ function StatististicsTable({ players, ranks }: StatististicsTableProps) {
             <th>User</th>
             <th>Population</th>
             <th>Rank</th>
+            <th>Creation date</th>
             <th></th>
           </tr>
         </tfoot>

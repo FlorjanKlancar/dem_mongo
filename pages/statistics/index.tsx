@@ -1,35 +1,42 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import NavbarDem from "../../components/Navbar/NavbarDem";
 import StatisticsTableSkeleton from "../../components/skeletons/StatisticsTableSkeleton";
 import StatististicsTable from "../../components/Statistics/StatististicsTable";
 import VillageWrapper from "../../components/Wrapper/VillageWrapper";
+import { RootState } from "../../types/storeModel";
 
 function StatisticsView() {
   const [players, setPlayers] = useState([]);
-  const [ranks, setRanks] = useState([]);
+  /* const [ranks, setRanks] = useState([]); */
 
   const fetchStatistics = async () => {
-    const playersResponse = await axios.get("api/statistics");
+    const playersResponse = await axios.get("/api/statistics");
+
     setPlayers(playersResponse.data);
 
-    const ranksResponse = await axios.get("api/ranks");
-    setRanks(ranksResponse.data);
+    /* const ranksResponse = await axios.get("api/ranks");
+    setRanks(ranksResponse.data); */
   };
 
-  /*   useEffect(() => {
+  useEffect(() => {
     fetchStatistics();
-  }, []); */
+  }, []);
 
-  return (
+  const { loading } = useSelector((state: RootState) => state.loading);
+
+  return players.length && loading ? (
     <>
       <NavbarDem />
-      This is statistics
-      {/* {players.length && ranks.length ? (
-          <StatististicsTable players={players} ranks={ranks} />
-        ) : (
-          <StatisticsTableSkeleton />
-        )} */}
+      <StatisticsTableSkeleton />
+    </>
+  ) : (
+    <>
+      <NavbarDem />
+      <VillageWrapper>
+        <StatististicsTable players={players} />
+      </VillageWrapper>
     </>
   );
 }
