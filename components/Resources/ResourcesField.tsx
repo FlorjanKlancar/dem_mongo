@@ -59,7 +59,6 @@ function ResourcesField() {
       isBuilding: false,
     });
 
-    console.log(response.data);
     if (response.status === 200) {
       dispatch(
         villageActions.addBuildingNow({

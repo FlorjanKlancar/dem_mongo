@@ -13,7 +13,7 @@ function ConnectedWallet({
   return (
     <div className="w-full">
       <form
-        className="flex rounded-lg border-2 border-slate-800 bg-black px-6 py-4 opacity-75 shadow-xl"
+        className="flex flex-col space-y-4 rounded-lg border-2 border-slate-800 bg-black px-6 py-4 opacity-75 shadow-xl lg:flex-row lg:space-y-0"
         onSubmit={(e) => submitHandler(e, walletId)}
       >
         <input

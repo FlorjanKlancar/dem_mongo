@@ -1,13 +1,33 @@
 import { GetServerSidePropsContext } from "next";
 import { buildingModel } from "../../../types/buildingModel";
 import UpgradeBuildingPage from "../../../components/Village/UpgradeBuildingPage";
+import axios from "axios";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../types/storeModel";
+import NavbarDem from "../../../components/Navbar/NavbarDem";
+import VillageSkeleton from "../../../components/skeletons/VillageSkeleton";
+import VillageWrapper from "../../../components/Wrapper/VillageWrapper";
 
 type VillageTypeProps = {
   building: buildingModel;
 };
 
 function VillageType({ building }: VillageTypeProps) {
-  return <UpgradeBuildingPage building={building} />;
+  const { loading } = useSelector((state: RootState) => state.loading);
+
+  return loading ? (
+    <>
+      <NavbarDem />
+      <VillageSkeleton />
+    </>
+  ) : (
+    <>
+      <NavbarDem />
+      <VillageWrapper>
+        <UpgradeBuildingPage building={building} />
+      </VillageWrapper>
+    </>
+  );
 }
 
 export default VillageType;
@@ -15,19 +35,21 @@ export default VillageType;
 export async function getServerSideProps({
   params,
 }: GetServerSidePropsContext) {
-  /*  const type = params!.type;
+  const type = params!.type;
 
   if (type === "empty_field")
     return {
-      props: {building: null},
+      props: { building: null },
     };
 
   if (type) {
-    const building = await getBuildingById(type.toString());
+    const response = await axios.get(
+      `http://localhost:5000/api/gsBuildings/${type}`
+    );
 
-    if (!building.length) {
-      return {notFound: true};
+    if (response.status !== 200) {
+      return { notFound: true };
     }
-    return {props: {building: building[0]}};
-  } */
+    return { props: { building: response.data } };
+  }
 }

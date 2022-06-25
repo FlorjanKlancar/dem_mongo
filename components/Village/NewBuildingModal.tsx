@@ -7,6 +7,9 @@ import WheatImg from "../../public/assets/Wheat.png";
 import { ClockIcon, PlusIcon } from "@heroicons/react/outline";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useSession } from "next-auth/react";
+import { useDispatch } from "react-redux";
+import { villageActions } from "../../store/village-slice";
 
 type NewBuildingModalProps = {
   gsBuildings: any;
@@ -21,31 +24,40 @@ function NewBuildingModal({
   setOpen,
   village,
 }: NewBuildingModalProps) {
-  const filterBuildings = Object.values(gsBuildings).filter(
-    (building: any) => building.isBuilding
-  );
+  const { data: session }: any = useSession();
+  const dispatch = useDispatch();
 
-  const villageB = village.villageBuildings.map(
-    (building: any) => building.type
+  const filterBuildings = gsBuildings.filter(
+    (building: any) => building.group !== "Resources"
   );
+  console.log("gsBuildings", gsBuildings);
+  console.log("filterBuildings", filterBuildings);
 
   const buildHandler = async (building: any) => {
-    /*   const { type } = building;
+    console.log("building", building);
+    const { type } = building;
 
     setOpen(false);
     const upgradeToast = toast.loading("Upgrading...");
-    await axios.post(
-      "/api/build/resources",
-      {
-        villageId: user?.uid,
-        buildingName: type,
-        fieldId: clickedResourceId,
-        isBuilding: true,
-      },
-      { headers: { Authorization: `Bearer ${user?.accessToken}` } }
-    );
+    const response = await axios.post(`api/build/resources`, {
+      villageId: session.user.uid,
+      buildingName: type,
+      fieldId: clickedResourceId,
+      isBuilding: true,
+    });
 
-    toast.success("Upgrade started successfully!", { id: upgradeToast }); */
+    if (response.status === 200) {
+      dispatch(
+        villageActions.addBuildingNow({
+          currentlyBuilding: [response.data.currentlyBuilding],
+          resourcesStorage: response.data.resourcesStorageMinus,
+        })
+      );
+
+      toast.success("Upgrade started successfully!", { id: upgradeToast });
+    } else {
+      toast.error("Unable to upgrade...", { id: upgradeToast });
+    }
   };
 
   return (
@@ -71,35 +83,35 @@ function NewBuildingModal({
               </div>
 
               <div className="relative h-24 w-24">
-                <Image src={building.image} alt={building.name} layout="fill" />
+                <Image src={building.image} layout="fill" />
               </div>
             </div>
 
             <div className="flex justify-between px-4">
               <div className="flex items-center space-x-1">
                 <div className="relative h-10 w-10">
-                  <Image src={WoodImg} alt="WoodImg" layout="fill" />
+                  <Image src={WoodImg} layout="fill" />
                 </div>
                 <div>{building.levels[0][1].costWood}</div>
               </div>
 
               <div className="flex items-center space-x-1">
                 <div className="relative h-10 w-10">
-                  <Image src={ClayImg} alt="ClayImg" layout="fill" />
+                  <Image src={ClayImg} layout="fill" />
                 </div>
                 <div>{building.levels[0][1].costClay}</div>
               </div>
 
               <div className="flex items-center space-x-1">
                 <div className="relative h-10 w-10">
-                  <Image src={IronImg} alt="IronImg" layout="fill" />
+                  <Image src={IronImg} layout="fill" />
                 </div>
                 <div>{building.levels[0][1].costIron}</div>
               </div>
 
               <div className="flex items-center space-x-1">
                 <div className="relative h-10 w-10">
-                  <Image src={WheatImg} alt="WheatImg" layout="fill" />
+                  <Image src={WheatImg} layout="fill" />
                 </div>
                 <div>{building.levels[0][1].costWheat}</div>
               </div>

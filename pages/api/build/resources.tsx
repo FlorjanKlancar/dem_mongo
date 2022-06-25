@@ -22,6 +22,7 @@ export default async function handler(
             { villageId, buildingName, fieldId, isBuilding, cancleJob }
           );
 
+          console.log("response", response);
           if (response.status === 200) {
             res.status(200).json(response.data);
           } else {

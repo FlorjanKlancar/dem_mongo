@@ -8,6 +8,8 @@ import {
   MessageType,
 } from "@zilliqa-js/zilliqa";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { zilWalletActions } from "../../store/zilWallet-slice";
 
 declare global {
   interface Window {
@@ -15,18 +17,15 @@ declare global {
   }
 }
 
-type ConnectWalletButtonProps = {
-  wallet: any;
-  setWallet: (wallet: any) => void;
-};
+function ConnectWalletButton() {
+  const dispatch = useDispatch();
 
-function ConnectWalletButton({ wallet, setWallet }: ConnectWalletButtonProps) {
   function getCurrentAccount() {
     window.zilPay.wallet.connect().then(function (connected: any) {
       console.log(connected);
       console.log(window.zilPay.wallet.net);
       console.log(window.zilPay.wallet.defaultAccount);
-      setWallet(window.zilPay.wallet.defaultAccount);
+      dispatch(zilWalletActions.setWallet(window.zilPay.wallet.defaultAccount));
 
       window.zilPay.wallet
         .observableNetwork()
@@ -69,10 +68,7 @@ function ConnectWalletButton({ wallet, setWallet }: ConnectWalletButtonProps) {
 
   return (
     <div>
-      <button
-        onClick={connectZilPay}
-        className="btn items-center justify-center rounded-lg border-2 border-primary bg-slate-800 font-semibold  hover:border-primary/80 hover:bg-slate-900"
-      >
+      <button onClick={connectZilPay} className="navbar_button">
         Connect ZilPay
       </button>
     </div>

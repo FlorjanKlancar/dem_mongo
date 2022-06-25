@@ -80,19 +80,18 @@ function TroopsTrain({
             onSubmit={buildUnitsHandler}
             className="space-y-4 divide-y-2 divide-primary/80 divide-opacity-50"
           >
-            {Object.keys(gsUnits[building.type]).map((val: any, i) => {
+            {gsUnits.map((val: any, i: number) => {
               return (
                 <div
                   key={i}
                   className="grid grid-cols-1 items-center justify-items-center py-4 px-4 sm:grid-cols-2"
                 >
                   <div className="relative h-32 w-32">
-                    <img src={gsUnits[building.type][val].unitIcon} alt="img" />
+                    <img src={val.unitIcon} alt="img" />
                   </div>
                   <div className="flex flex-col">
                     <div className="text-center text-primary sm:text-left">
-                      {gsUnits[building.type][val].unitName} -{" "}
-                      {gsUnits[building.type][val].type}
+                      {val.unitName} - {val.type}
                     </div>
                     <div>
                       <div className="grid grid-cols-2 items-center justify-around justify-items-center gap-3 md:flex md:space-x-3">
@@ -100,27 +99,21 @@ function TroopsTrain({
                           <div className="relative h-12 w-12">
                             <Image src={WoodImg} alt="woodImg" layout="fill" />
                           </div>
-                          <div className="text-xl">
-                            {gsUnits[building.type][val].costWood}
-                          </div>
+                          <div className="text-xl">{val.costWood}</div>
                         </div>
 
                         <div className="flex items-center ">
                           <div className="relative h-12 w-12">
                             <Image src={ClayImg} alt="ClayImg" layout="fill" />
                           </div>
-                          <div className="text-xl">
-                            {gsUnits[building.type][val].costClay}
-                          </div>
+                          <div className="text-xl">{val.costClay}</div>
                         </div>
 
                         <div className="flex items-center ">
                           <div className="relative h-12 w-12">
                             <Image src={IronImg} alt="IronImg" layout="fill" />
                           </div>
-                          <div className="text-xl">
-                            {gsUnits[building.type][val].costIron}
-                          </div>
+                          <div className="text-xl">{val.costIron}</div>
                         </div>
 
                         <div className="flex items-center ">
@@ -131,9 +124,7 @@ function TroopsTrain({
                               layout="fill"
                             />
                           </div>
-                          <div className="text-xl">
-                            {gsUnits[building.type][val].costWheat}
-                          </div>
+                          <div className="text-xl">{val.costWheat}</div>
                         </div>
                       </div>
                     </div>
@@ -142,33 +133,25 @@ function TroopsTrain({
                         <div className="relative h-8 w-8">
                           <img src="https://icon-library.com/images/attack-icon/attack-icon-7.jpg" />
                         </div>
-                        <div className="text-xl">
-                          {gsUnits[building.type][val].attack}
-                        </div>
+                        <div className="text-xl">{val.attack}</div>
                       </div>
                       <div className="flex items-center space-x-2">
                         <div className="relative h-8 w-8">
                           <img src="https://cdn-icons-png.flaticon.com/512/81/81137.png" />
                         </div>
-                        <div className="text-xl">
-                          {gsUnits[building.type][val].defense}
-                        </div>
+                        <div className="text-xl">{val.defense}</div>
                       </div>
                       <div className="flex items-center space-x-2">
                         <div>
                           <ClockIcon className="h-8 w-8 text-primary/80" />
                         </div>
-                        <div className="text-xl">
-                          {gsUnits[building.type][val].timeToBuild}
-                        </div>
+                        <div className="text-xl">{val.timeToBuild}</div>
                       </div>
                       <div className="flex items-center space-x-2">
                         <div className="relative h-8 w-8">
                           <Image src={UpkeepImg} layout="fill" />
                         </div>
-                        <div className="text-xl">
-                          {gsUnits[building.type][val].upkeep}
-                        </div>
+                        <div className="text-xl">{val.upkeep}</div>
                       </div>
                     </div>
                     <div className="form-control mt-3 flex w-full max-w-xs ">

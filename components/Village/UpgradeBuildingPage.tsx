@@ -8,13 +8,15 @@ import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
 import WheatImg from "../../public/assets/Wheat.png";
 import { ClockIcon, PlusIcon } from "@heroicons/react/outline";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../types/storeModel";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { MAX_LEVEL_BUILDINGS } from "../../gsVariables";
 import { troopsInputModel } from "../../types/troopsInputModel";
 import TroopsTrain from "../../components/Village/TroopsTrain";
+import { useSession } from "next-auth/react";
+import { villageActions } from "../../store/village-slice";
 
 type VillageTypeProps = {
   building: buildingModel;
@@ -22,20 +24,15 @@ type VillageTypeProps = {
 
 function UpgradeBuildingPage({ building }: VillageTypeProps) {
   const router = useRouter();
+  const { data: session }: any = useSession();
+  const dispatch = useDispatch();
 
   const village = useSelector((state: RootState) => state.village);
   const { gsUnits }: any = useSelector((state: RootState) => state.gsUnits);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [troops, setTroops] = useState<troopsInputModel[]>(
-    Object.keys(building.group === "Offense" && gsUnits[building?.type]).map(
-      (val: any) => {
-        return {
-          unitName: val,
-          unitAmount: 0,
-        };
-      }
-    )
+    building.group === "Offense" && gsUnits.map((val: any) => val)
   );
 
   const selectedBuilding: any = Object.values(village.villageBuildings).find(
@@ -45,20 +42,29 @@ function UpgradeBuildingPage({ building }: VillageTypeProps) {
   );
 
   const upgradeHandler = async () => {
-    /*     router.push("/village");
+    router.push("/village");
     const upgradeToast = toast.loading("Upgrading...");
-    await axios.post(
-      `/api/build/resources`,
-      {
-        villageId: user?.uid,
-        buildingName: building.type,
-        fieldId: selectedBuilding.id,
-        isBuilding: true,
-      },
-      {headers: {Authorization: `Bearer ${user?.accessToken}`}}
-    );
+    const response = await axios.post(`/api/build/resources`, {
+      villageId: session.user.uid,
+      buildingName: building.type,
+      fieldId: selectedBuilding.id,
+      isBuilding: true,
+    });
 
-    toast.success("Upgrade started successfully!", {id: upgradeToast}); */
+    if (response.status === 200) {
+      dispatch(
+        villageActions.addBuildingNow({
+          currentlyBuilding: [response.data.currentlyBuilding],
+          resourcesStorage: response.data.resourcesStorageMinus,
+        })
+      );
+
+      toast.success("Upgrade started successfully!", { id: upgradeToast });
+    } else {
+      toast.error("Unable to upgrade...", { id: upgradeToast });
+    }
+
+    toast.success("Upgrade started successfully!", { id: upgradeToast });
   };
 
   const checkResources = async (resourceNextLevelInfo: any) => {
