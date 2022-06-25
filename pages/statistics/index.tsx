@@ -26,7 +26,7 @@ function StatisticsView() {
 
   const { loading } = useSelector((state: RootState) => state.loading);
 
-  return players.length && loading ? (
+  return loading ? (
     <>
       <NavbarDem />
       <StatisticsTableSkeleton />
@@ -35,7 +35,11 @@ function StatisticsView() {
     <>
       <NavbarDem />
       <VillageWrapper>
-        <StatististicsTable players={players} />
+        {players.length ? (
+          <StatististicsTable players={players} />
+        ) : (
+          <StatisticsTableSkeleton />
+        )}
       </VillageWrapper>
     </>
   );
