@@ -44,7 +44,7 @@ export async function getServerSideProps({
 
   if (type) {
     const response = await axios.get(
-      `http://localhost:5000/api/gsBuildings/${type}`
+      `${process.env.NODE_JS_URI}/gsBuildings/${type}`
     );
 
     if (response.status !== 200) {
