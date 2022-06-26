@@ -25,6 +25,7 @@
     "next-auth": "^4.5.0",
     "react": "18.1.0",
     "react-countdown": "^2.3.2",
+    "react-countdown-circle-timer": "^3.0.9",
     "react-custom-scrollbars": "^4.2.1",
     "react-dom": "18.1.0",
     "react-hot-toast": "^2.2.0",

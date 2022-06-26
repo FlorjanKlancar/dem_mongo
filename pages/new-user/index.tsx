@@ -1,15 +1,15 @@
 import axios from "axios";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
-import Spinner from "../../components/Spinner/Spinner";
-import { initializeDataFetch } from "../../utils/utilFunctions";
+import {useSession} from "next-auth/react";
+import {useRouter} from "next/router";
+import React, {useEffect} from "react";
+import {useDispatch} from "react-redux";
+import Spinner from "../../components/Widgets/Spinner";
+import {initializeDataFetch} from "../../utils/utilFunctions";
 
 function NewUser() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const { data: session, status }: any = useSession({
+  const {data: session, status}: any = useSession({
     required: true,
     onUnauthenticated() {
       router.push("/login");

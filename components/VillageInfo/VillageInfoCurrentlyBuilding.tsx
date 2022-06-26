@@ -1,29 +1,33 @@
-import { XIcon, ThumbUpIcon } from "@heroicons/react/outline";
+import {XIcon, ThumbUpIcon} from "@heroicons/react/outline";
 import axios from "axios";
 import React from "react";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../types/storeModel";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../types/storeModel";
 import dayjs from "dayjs";
-import Countdown, { zeroPad } from "react-countdown";
-import { useSession } from "next-auth/react";
-import { initializeDataFetch } from "../../utils/utilFunctions";
-import { villageActions } from "../../store/village-slice";
-import { Zilliqa } from "@zilliqa-js/zilliqa";
-import { BN, Long, units } from "@zilliqa-js/zilliqa";
-import { StatusType, MessageType } from "@zilliqa-js/zilliqa";
+import Countdown, {zeroPad} from "react-countdown";
+import {useSession} from "next-auth/react";
+import {initializeDataFetch} from "../../utils/utilFunctions";
+import {villageActions} from "../../store/village-slice";
+import {Zilliqa} from "@zilliqa-js/zilliqa";
+import {BN, Long, units} from "@zilliqa-js/zilliqa";
+import {StatusType, MessageType} from "@zilliqa-js/zilliqa";
+import {CountdownCircleTimer} from "react-countdown-circle-timer";
+var relativeTime = require("dayjs/plugin/relativeTime");
+
+dayjs.extend(relativeTime);
 
 const contractAddress = "0xfeb6b442f1166f3d2bfa9072e4515b2755de13cc";
 
 function VillageInfoCurrentlyBuilding() {
-  const { data: session }: any = useSession();
+  const {data: session}: any = useSession();
   const dispatch = useDispatch();
 
   const village: any = useSelector((state: RootState) => state.village);
-  const { gsBuildings }: any = useSelector(
+  const {gsBuildings}: any = useSelector(
     (state: RootState) => state.gsBuildings
   );
-  const { zilWallet } = useSelector((state: RootState) => state.zilWallet);
+  const {zilWallet} = useSelector((state: RootState) => state.zilWallet);
 
   const cancelHandler = async () => {
     const response = await axios.post(`api/build/resources`, {
@@ -41,7 +45,7 @@ function VillageInfoCurrentlyBuilding() {
     }
   };
 
-  const renderer = ({ hours, minutes, seconds, completed }: any) => {
+  const renderer = ({hours, minutes, seconds, completed}: any) => {
     return (
       <span>
         {zeroPad(hours)}:{zeroPad(minutes)}:{zeroPad(seconds)}
@@ -91,7 +95,7 @@ function VillageInfoCurrentlyBuilding() {
         toast.success(
           "Transaction was confirmed: pokliči api na nodejs da zakluči " +
             event["value"][0]["event_logs"][0]["_eventname"],
-          { id: upgradeToast }
+          {id: upgradeToast}
         );
       }
     });
@@ -102,13 +106,21 @@ function VillageInfoCurrentlyBuilding() {
     subscriber.start();
   }
 
+  const children = ({remainingTime}: any) => {
+    const hours = Math.floor(remainingTime / 3600);
+    const minutes = Math.floor((remainingTime % 3600) / 60);
+    const seconds = remainingTime % 60;
+
+    return `${zeroPad(hours)}:${zeroPad(minutes)}:${zeroPad(seconds)}`;
+  };
+
   return (
     <div>
       {village.currentlyBuilding.length ? (
-        <div className="mt-5 rounded-lg border-2 border-primary/80 bg-slate-800 py-4 px-8 text-white">
-          <div>Currently building:</div>
-          <div className="mt-2 grid grid-cols-2 items-center justify-between gap-2 sm:flex">
-            <div className="order-last flex space-x-3 sm:order-first">
+        <div className="mt-5 grid grid-cols-3 items-center rounded-lg border-2 border-primary/80 bg-slate-800 py-2 px-5 text-white	">
+          <div className="flex flex-col space-y-3">
+            <div>Currently building:</div>
+            <div className="flex space-x-3 ">
               <div>
                 <button
                   className="flex rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-800 hover:text-slate-200"
@@ -119,7 +131,7 @@ function VillageInfoCurrentlyBuilding() {
                 </button>
               </div>
 
-              {Object.keys(zilWallet).length && (
+              {Object.keys(zilWallet).length ? (
                 <div>
                   <button
                     onClick={upgradeInstantFinish}
@@ -129,23 +141,44 @@ function VillageInfoCurrentlyBuilding() {
                     <ThumbUpIcon className="mt-0.5 ml-1 h-5 w-5" />
                   </button>
                 </div>
+              ) : (
+                <div></div>
               )}
             </div>
-            <div>
-              {village.currentlyBuilding[0].buildingId &&
-                gsBuildings.map((building: any) => {
-                  if (
-                    building.type === village.currentlyBuilding[0].buildingId
-                  ) {
-                    return <span key={building.name}>{building.name}</span>;
-                  }
-                })}{" "}
-              - level {village.currentlyBuilding[0].currentlyBuildingLevel}
-            </div>
+          </div>
+
+          <div>
+            {village.currentlyBuilding[0].buildingId &&
+              gsBuildings.map((building: any) => {
+                if (building.type === village.currentlyBuilding[0].buildingId) {
+                  return <span key={building.name}>{building.name}</span>;
+                }
+              })}{" "}
+            - level {village.currentlyBuilding[0].currentlyBuildingLevel}
+          </div>
+
+          <div className="flex flex-col items-end gap-2 space-y-4 sm:flex">
             <div className="grid grid-cols-2 items-center">
               <div className="w-20">Time left:</div>
               <div>
-                <Countdown
+                <CountdownCircleTimer
+                  size={85}
+                  isPlaying
+                  duration={dayjs(
+                    village.currentlyBuilding[0].endBuildTime
+                  ).diff(dayjs(), "second")}
+                  colors={["#004777", "#F7B801", "#A30000", "#A30000"]}
+                  colorsTime={[7, 5, 2, 0]}
+                  onComplete={() => {
+                    setTimeout(
+                      () => initializeDataFetch(session.user.uid, dispatch),
+                      1000
+                    );
+                  }}
+                >
+                  {(remainingTime) => children(remainingTime)}
+                </CountdownCircleTimer>
+                {/* <Countdown
                   date={village.currentlyBuilding[0].endBuildTime}
                   renderer={renderer}
                   zeroPadTime={2}
@@ -155,8 +188,10 @@ function VillageInfoCurrentlyBuilding() {
                       500
                     )
                   }
-                />
+                /> */}
               </div>
+            </div>
+            <div className="grid grid-cols-2 items-center">
               <div className="w-20">End time:</div>
               <div>
                 {dayjs(village.currentlyBuilding[0].endBuildTime).format(
