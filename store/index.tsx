@@ -4,6 +4,7 @@ import gsUnitsSlice from "./gsUnits-slice";
 import villageSlice from "./village-slice";
 import loadingSlice from "./loading-slice";
 import zilWalletSlice from "./zilWallet-slice";
+import heroSlice from "./hero-slice";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     gsBuildings: gsBuildingsSlice.reducer,
     loading: loadingSlice.reducer,
     zilWallet: zilWalletSlice.reducer,
+    hero: heroSlice.reducer,
   },
 });
 

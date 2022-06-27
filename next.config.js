@@ -7,6 +7,7 @@ const nextConfig = {
       "ts6.x1.international.travian.com",
       "wallpaperaccess.com",
       "cdn-icons-png.flaticon.com",
+      "ipfs.io",
     ],
   },
 };
