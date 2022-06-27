@@ -19,7 +19,7 @@ function HeroCircle() {
             }`}
             objectFit="cover"
             alt="nft-img"
-            className="rounded-full"
+            className="rounded-full object-top	"
             layout="fill"
           />
         </div>

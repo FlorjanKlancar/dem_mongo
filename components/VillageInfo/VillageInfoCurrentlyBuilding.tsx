@@ -83,10 +83,7 @@ function VillageInfoCurrentlyBuilding() {
     });
 
     subscriber.emitter.on(MessageType.EVENT_LOG, async (event: any) => {
-      console.log("get new event log: ", event);
       if ("value" in event) {
-        console.log(event["value"][0]["event_logs"][0]["params"][0]["value"]);
-        console.log(event["value"][0]["event_logs"][0]["params"][1]["value"]);
         subscriber.stop();
 
         toast.success(

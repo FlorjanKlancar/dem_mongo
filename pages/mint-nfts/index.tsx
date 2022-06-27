@@ -17,11 +17,7 @@ function MintNfts() {
   const submitHandler = async (e: any) => {
     e.preventDefault();
     MintYourNft(walletId);
-
-    console.log("submit", walletId);
   };
-
-  console.log("zilWallet", zilWallet);
 
   const contractAddress = "0xf1678662108e263cbbd94091eef52b01133266af";
 

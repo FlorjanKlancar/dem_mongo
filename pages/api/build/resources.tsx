@@ -30,7 +30,6 @@ export default async function handler(
             }
           );
 
-          console.log("response", response);
           if (response.status === 200) {
             res.status(200).json(response.data);
           } else {

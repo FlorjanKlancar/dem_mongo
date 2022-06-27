@@ -28,19 +28,11 @@ function HeroPageComponent() {
     let tokenOwners = ContractState.token_owners;
     let tokenUris = ContractState.token_uris;
 
-    console.log("tokenOwnerss", tokenOwners);
-    console.log(
-      "window.zilPay.wallet.defaultAccount.base16",
-      window.zilPay.wallet.defaultAccount.base16
-    );
-
     for (let i in tokenOwners) {
       if (window.zilPay.wallet.defaultAccount.base16 == tokenOwners[i]) {
-        console.log("tokenUris[i]", tokenUris[i]);
         getNftData(tokenUris[i]);
       }
       getNftData(tokenUris[i]);
-      console.log("tokenUris[i]", tokenUris[i]);
     }
   }
 
@@ -53,11 +45,10 @@ function HeroPageComponent() {
       })
       .then(function (myJson) {
         data = myJson;
-        console.log("data", data);
+
         setMyNfts((oldMyNfts: any) => [...oldMyNfts, data]);
       });
   }
-  console.log(MyNfts);
 
   async function onloadInit() {
     ContractObject = loadContract(ContractAddress);
@@ -108,7 +99,7 @@ function HeroPageComponent() {
           </button>
         </div>
         <div className="tabs">
-          <a className="tab tab-lifted tab-active tab-lg">My Collection</a>
+          <a className="tab tab-active tab-lifted tab-lg">My Collection</a>
           <div
             className="tooltip-top tooltip"
             data-tip="Market is in development"
@@ -123,7 +114,7 @@ function HeroPageComponent() {
           {MyNfts.map((nft: any, i: number) => (
             <div
               key={i}
-              className="cursor-pointer text-center font-bold text-white"
+              className="max-h-[56px] cursor-pointer text-center font-bold text-white"
               onClick={() => setPreviewNft(nft)}
             >
               <div className="rounded-lg bg-primary px-8 py-4">{nft.name}</div>
@@ -137,7 +128,7 @@ function HeroPageComponent() {
                 <img
                   src={previewNft.resources[0].uri}
                   alt="Hero_icon.png"
-                  className="h-[400px] w-full object-cover "
+                  className="h-[400px] w-full object-cover object-top"
                 />
               </figure>
               <div className="card-body">

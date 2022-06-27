@@ -30,11 +30,8 @@ function NewBuildingModal({
   const filterBuildings = gsBuildings.filter(
     (building: any) => building.group !== "Resources"
   );
-  console.log("gsBuildings", gsBuildings);
-  console.log("filterBuildings", filterBuildings);
 
   const buildHandler = async (building: any) => {
-    console.log("building", building);
     const { type } = building;
 
     setOpen(false);

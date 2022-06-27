@@ -9,7 +9,6 @@ export const initializeDataFetch = async (
   dispatch: any,
   firstLoad?: boolean
 ) => {
-  console.log("initialize fetch");
   const village = await axios.get(`/api/village/${userId}`);
 
   if (firstLoad) {
