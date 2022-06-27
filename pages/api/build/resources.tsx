@@ -16,10 +16,18 @@ export default async function handler(
           const fieldId = req.body.fieldId;
           const isBuilding = req.body.isBuilding;
           const cancleJob = req.body.cancleJob;
+          const forceFinishJob = req.body.forceFinishJob;
 
           const response = await axios.post(
             `${process.env.NODE_JS_URI}/build/buildings`,
-            { villageId, buildingName, fieldId, isBuilding, cancleJob }
+            {
+              villageId,
+              buildingName,
+              fieldId,
+              isBuilding,
+              cancleJob,
+              forceFinishJob,
+            }
           );
 
           console.log("response", response);

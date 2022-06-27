@@ -4,11 +4,25 @@ import { gsUnitsActions } from "../store/gsUnits-slice";
 import { loadingActions } from "../store/loading-slice";
 import { villageActions } from "../store/village-slice";
 
-export const initializeDataFetch = async (userId: string, dispatch: any) => {
+export const initializeDataFetch = async (
+  userId: string,
+  dispatch: any,
+  firstLoad?: boolean
+) => {
   console.log("initialize fetch");
   const village = await axios.get(`/api/village/${userId}`);
 
-  const response = await axios.get(`/api/initialize`);
+  if (firstLoad) {
+    const response = await axios.get(`/api/initialize`);
+    dispatch(
+      gsUnitsActions.initializeGsUnits({ gsUnits: response.data.unitsResponse })
+    );
+    dispatch(
+      gsBuildingsActions.initializeGsBuildings({
+        gsBuildings: response.data.buildingsResponse,
+      })
+    );
+  }
 
   dispatch(
     villageActions.setVillage({
@@ -26,15 +40,6 @@ export const initializeDataFetch = async (userId: string, dispatch: any) => {
       unitTrainQueue: village.data.unitTrainQueue,
       createdAt: village.data.createdAt,
       updatedAt: village.data.updatedAt,
-    })
-  );
-
-  dispatch(
-    gsUnitsActions.initializeGsUnits({ gsUnits: response.data.unitsResponse })
-  );
-  dispatch(
-    gsBuildingsActions.initializeGsBuildings({
-      gsBuildings: response.data.buildingsResponse,
     })
   );
 

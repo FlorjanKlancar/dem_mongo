@@ -17,7 +17,7 @@ function MyApp({ Component, pageProps }: any) {
     if (!session) return;
 
     if (firstLoad) {
-      initializeDataFetch(session.user.uid, dispatch);
+      initializeDataFetch(session.user.uid, dispatch, true);
       firstLoad = false;
     }
   }, [session]);
