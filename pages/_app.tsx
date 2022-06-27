@@ -17,6 +17,7 @@ function MyApp({ Component, pageProps }: any) {
     if (!session) return;
 
     if (firstLoad) {
+      console.log("firstLoad", firstLoad);
       initializeDataFetch(session.user.uid, dispatch, true);
       firstLoad = false;
     }

@@ -6,6 +6,7 @@ const nextConfig = {
       "firebasestorage.googleapis.com",
       "ts6.x1.international.travian.com",
       "wallpaperaccess.com",
+      "cdn-icons-png.flaticon.com",
     ],
   },
 };
