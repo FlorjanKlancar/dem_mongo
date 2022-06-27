@@ -34,9 +34,13 @@ function LoginComponent({ providers }: LoginComponentProps) {
       {!register ? (
         <div className="flex h-screen w-full items-center justify-center px-2">
           <div className="flex w-full flex-col rounded-xl bg-slate-800 md:w-1/2">
-            <div className="my-auto flex flex-col justify-center px-8 pt-8 md:justify-start md:px-24 md:pt-0 lg:px-32">
+            <div className="my-auto flex flex-col justify-center space-y-4 px-8 pt-8 md:justify-start md:px-24 md:pt-0 lg:px-32">
               <p className="pt-5 text-center text-3xl">Welcome to play.dem</p>
-              <p className="text-center">Login form</p>
+              <p className="text-center text-lg">Login form</p>
+              <p className="text-center underline decoration-primary underline-offset-4">
+                At the moment only Sign in with Google is available... Sorry for
+                inconvenience
+              </p>
               <form
                 className="flex flex-col pt-3 md:pt-8"
                 onSubmit={submitHandler}
@@ -47,6 +51,7 @@ function LoginComponent({ providers }: LoginComponentProps) {
                   </label>
                   <input
                     type="email"
+                    disabled
                     id="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -60,6 +65,7 @@ function LoginComponent({ providers }: LoginComponentProps) {
                     Password
                   </label>
                   <input
+                    disabled
                     type="password"
                     id="password"
                     value={passwordOne}
@@ -69,11 +75,13 @@ function LoginComponent({ providers }: LoginComponentProps) {
                   />
                 </div>
 
-                <input
+                <button
                   type="submit"
-                  value="Log In"
-                  className="mt-8 cursor-pointer bg-primary p-2 text-lg font-bold text-white hover:bg-primary/80"
-                />
+                  disabled
+                  className="mt-8 cursor-pointer bg-primary p-2 text-lg font-bold text-white hover:bg-primary/80 disabled:bg-primary/50 hover:disabled:cursor-not-allowed	"
+                >
+                  Log In
+                </button>
               </form>
 
               {Object.values(providers).map((provider) => (
@@ -93,11 +101,11 @@ function LoginComponent({ providers }: LoginComponentProps) {
 
               <div className="pt-12 pb-12 text-center ">
                 <div>
-                  <Link href="/reset">Forgot Password</Link>
+                  {/* <Link href="/reset"> */}Forgot Password{/* </Link> */}
                 </div>
                 <div>
                   Don&apos;t have an account?{" "}
-                  <button onClick={() => setRegister(true)}>
+                  <button /* onClick={() => setRegister(true)} */>
                     <span className="cursor-pointer font-semibold underline">
                       Register
                     </span>
