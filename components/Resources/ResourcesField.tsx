@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { MAX_LEVEL_RESOURCES } from "../../gsVariables";
 import { resourceField } from "../../types/resourceField";
 import { RootState } from "../../types/storeModel";
-import { CogIcon } from "@heroicons/react/outline";
+import { CogIcon, LibraryIcon } from "@heroicons/react/outline";
 import ResourcesMaxLevelModal from "./ResourcesMaxLevelModal";
 import ResourcesModal from "./ResourcesModal";
 import Modal from "../Modal/Modal";
@@ -159,13 +159,14 @@ function ResourcesField() {
                   (resource.type === "village_center" ? (
                     <Link href="/village">
                       <a>
-                        <div className="relative h-full w-full">
+                        <div className="relative flex h-full w-full items-center justify-center">
                           <Image
-                            src={resource.imageGrid}
+                            src="https://firebasestorage.googleapis.com/v0/b/app-deus-ex-machina.appspot.com/o/Big_empty_03.png?alt=media&token=2b953da6-1176-474e-8d22-94c471ce2ddd"
                             alt={resource.type}
                             layout="fill"
                             priority
                           />
+                          <LibraryIcon className="absolute h-12 w-12 text-slate-600/80" />
                         </div>
                       </a>
                     </Link>
