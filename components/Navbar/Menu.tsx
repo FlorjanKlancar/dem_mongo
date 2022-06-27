@@ -5,6 +5,7 @@ import ResourcesImg from "../../public/assets/Resources.png";
 import StatisticImg from "../../public/assets/Statistic.png";
 import VillageImg from "../../public/assets/Village.png";
 import InventoryImg from "../../public/assets/Inventory.png";
+import LogoImg from "../../public/assets/Logo.png";
 import { MenuItemModel } from "../../types/MenuItemModel";
 import Image from "next/image";
 
@@ -23,7 +24,7 @@ function Menu() {
       link: "/village",
     },
     {
-      image: "https://cdn-icons-png.flaticon.com/512/3903/3903967.png",
+      image: LogoImg,
       title: "Play DEM",
       logo: true,
       link: "/",
@@ -34,7 +35,7 @@ function Menu() {
       link: "/statistics",
     },
     {
-      image: InventoryImg,
+      image: "https://cdn-icons-png.flaticon.com/512/3903/3903967.png",
       title: "Queue",
       link: "/queue",
       disabled: true,
@@ -54,7 +55,11 @@ function Menu() {
               } ${item.link === router.asPath ? "bg-primary text-white " : ""}`}
             >
               <div>
-                <div className="relative h-7  w-7 md:h-12 md:w-12 xl:h-14 xl:w-14">
+                <div
+                  className={`relative h-7  w-7 md:h-12 md:w-12 ${
+                    item.logo ? "xl:h-20 xl:w-20" : "xl:h-14 xl:w-14"
+                  }`}
+                >
                   <Image src={item.image} alt={item.title} layout="fill" />
                 </div>
               </div>
@@ -65,7 +70,7 @@ function Menu() {
                     item.logo ? "font-semibold text-primary " : ""
                   }`}
                 >
-                  {item.title}
+                  {item.logo ? "" : item.title}
                 </h1>
               </div>
             </div>

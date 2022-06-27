@@ -108,8 +108,13 @@ function ResourcesField() {
           )}
 
           <div className="grid w-full grid-cols-3 space-x-3">
-            <div className="mt-5 rounded-lg bg-slate-500 py-2 text-center font-bold text-white hover:bg-slate-600 hover:text-slate-200 ">
-              <button onClick={() => setOpen(false)}>Close</button>
+            <div>
+              <button
+                className="mt-5 w-full rounded-lg bg-slate-500 py-2 text-center font-bold text-white hover:bg-slate-600 hover:text-slate-200 "
+                onClick={() => setOpen(false)}
+              >
+                Close
+              </button>
             </div>
             <div className="col-span-2">
               <button
@@ -159,14 +164,19 @@ function ResourcesField() {
                   (resource.type === "village_center" ? (
                     <Link href="/village">
                       <a>
-                        <div className="relative flex h-full w-full items-center justify-center">
+                        <div className=" relative flex h-full w-full items-center justify-center">
                           <Image
                             src="https://firebasestorage.googleapis.com/v0/b/app-deus-ex-machina.appspot.com/o/Big_empty_03.png?alt=media&token=2b953da6-1176-474e-8d22-94c471ce2ddd"
                             alt={resource.type}
                             layout="fill"
                             priority
                           />
-                          <LibraryIcon className="absolute h-12 w-12 text-slate-600/80" />
+
+                          <div className="absolute">
+                            <div className="tooltip" data-tip="Go to Village">
+                              <LibraryIcon className="  h-12 w-12 text-slate-600/80" />
+                            </div>
+                          </div>
                         </div>
                       </a>
                     </Link>
