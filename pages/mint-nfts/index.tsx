@@ -65,7 +65,7 @@ function MintNfts() {
         console.log(event["value"][0]["event_logs"][0]["params"][1]["value"]);
         subscriber.stop();
         toast.success(
-          "Transaction was confirmed: pokliči api na nodejs da zakluči " +
+          "Transaction was confirmed: nft minted" +
             event["value"][0]["event_logs"][0]["_eventname"],
           { id: upgradeToast }
         );

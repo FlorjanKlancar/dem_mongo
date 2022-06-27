@@ -11,7 +11,7 @@ function HeroPageComponent() {
 
   const dispatch = useDispatch();
 
-  var ContractAddress = "0xfe7662f86d46c7a40133570e45a58698c07888bb";
+  var ContractAddress = "0xf1678662108e263cbbd94091eef52b01133266af";
   var ContractObject: any;
   var ContractState: any;
 
@@ -108,7 +108,7 @@ function HeroPageComponent() {
           </button>
         </div>
         <div className="tabs">
-          <a className="tab tab-active tab-lifted tab-lg">My Collection</a>
+          <a className="tab tab-lifted tab-active tab-lg">My Collection</a>
           <div
             className="tooltip-top tooltip"
             data-tip="Market is in development"
