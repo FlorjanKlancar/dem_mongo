@@ -4,6 +4,10 @@ import { useSelector } from "react-redux";
 import ConnectedWallet from "../../components/NFTMint/ConnectedWallet";
 import ConnectWalletButton from "../../components/NFTMint/ConnectWalletButton";
 import { RootState } from "../../types/storeModel";
+import { Zilliqa } from "@zilliqa-js/zilliqa";
+import { BN, Long, units } from "@zilliqa-js/zilliqa";
+import { StatusType, MessageType } from "@zilliqa-js/zilliqa";
+import toast from "react-hot-toast";
 
 function MintNfts() {
   const [walletId, setWalletId] = useState<string>("");
@@ -12,11 +16,100 @@ function MintNfts() {
 
   const submitHandler = async (e: any) => {
     e.preventDefault();
+    MintYourNft(walletId);
 
     console.log("submit", walletId);
   };
 
   console.log("zilWallet", zilWallet);
+
+  const contractAddress = "0xf1678662108e263cbbd94091eef52b01133266af";
+
+  function getContractDetails() {
+    const mintContract = window.zilPay.contracts.at(contractAddress);
+
+    mintContract.getInit().then(function (initData: any) {
+      console.log(initData);
+    });
+
+    mintContract.getCode().then(function (code: any) {
+      console.log(code);
+    });
+
+    mintContract.getState().then(function (stateData: any) {
+      console.log(stateData);
+    });
+  }
+
+  function subscribeToEvents() {
+    const upgradeToast = toast.loading(
+      "Your transaction is being processed..."
+    );
+
+    const zilliqa = new Zilliqa("https://dev-api.zilliqa.com");
+    const subscriber = zilliqa.subscriptionBuilder.buildEventLogSubscriptions(
+      "wss://dev-ws.zilliqa.com",
+      {
+        addresses: [contractAddress],
+      }
+    );
+
+    subscriber.emitter.on(StatusType.SUBSCRIBE_EVENT_LOG, (event: any) => {
+      console.log("Subscribed: ", event);
+    });
+
+    subscriber.emitter.on(MessageType.EVENT_LOG, (event: any) => {
+      console.log("get new event log: ", event);
+      if ("value" in event) {
+        console.log(event["value"][0]["event_logs"][0]["params"][0]["value"]);
+        console.log(event["value"][0]["event_logs"][0]["params"][1]["value"]);
+        subscriber.stop();
+        toast.success(
+          "Transaction was confirmed: pokliči api na nodejs da zakluči " +
+            event["value"][0]["event_logs"][0]["_eventname"],
+          { id: upgradeToast }
+        );
+      }
+    });
+
+    subscriber.emitter.on(MessageType.UNSUBSCRIBE, (event: any) => {
+      console.log("Unsubscribed: ", event);
+    });
+    subscriber.start();
+  }
+
+  function MintYourNft(mintAddress: any) {
+    console.log("car");
+    subscribeToEvents();
+    debugger;
+    const mintContract = window.zilPay.contracts.at(contractAddress);
+    try {
+      mintContract.call(
+        "Mint",
+        [
+          {
+            vname: "to",
+            type: "ByStr20",
+            value: walletId,
+          },
+          {
+            vname: "token_uri",
+            type: "String",
+            value: "",
+          },
+        ],
+        {
+          version: 21823489, // For mainnet, it is 65537
+          // For testnet, it is 21823489
+          amount: new BN(0),
+          gasPrice: units.toQa("2000", units.Units.Li),
+          gasLimit: Long.fromNumber(8000),
+        }
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  }
 
   return (
     <div className="flex h-screen items-center justify-center  bg-gradient-to-tr from-slate-800 via-slate-600  to-primary">
@@ -31,10 +124,10 @@ function MintNfts() {
               </div>
               <div>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Hic
-                  amet mollitia omnis libero culpa, sint recusandae sequi unde
-                  nostrum excepturi sapiente ipsa, possimus quia minima? Esse
-                  cumque mollitia fugit quisquam.
+                  Welcome to DEM minting site! If you are on the mint list,
+                  please enter your base 16 wallet address and press confirm to
+                  get your new hero NFT. If you are not on the mint list and
+                  want to be, contact me on discord: Klančar#5359
                 </p>
               </div>
 
