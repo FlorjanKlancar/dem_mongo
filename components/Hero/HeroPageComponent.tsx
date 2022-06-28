@@ -1,9 +1,7 @@
-import Image from "next/image";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
-import Logo from "../../public/assets/Logo.png";
 import { heroActions } from "../../store/hero-slice";
 
 function HeroPageComponent() {
@@ -54,23 +52,13 @@ function HeroPageComponent() {
       });
   }
 
-  async function onloadInitHeros() {
-    ContractObject = loadContract(ContractAddressHeros);
+  async function onInitFetch(value: string) {
+    ContractObject = loadContract(
+      value === "heros" ? ContractAddressHeros : ContractAddressWeapons
+    );
     if (ContractObject) {
       ContractObject.getState().then(function (stateData: any) {
         ContractState = stateData;
-        //alert("Contract State Loaded Successfully!")
-        loadGallery();
-      });
-    }
-  }
-
-  async function onloadInitWeapons() {
-    ContractObject = loadContract(ContractAddressWeapons);
-    if (ContractObject) {
-      ContractObject.getState().then(function (stateData: any) {
-        ContractState = stateData;
-        //alert("Contract State Loaded Successfully!")
         loadGallery();
       });
     }
@@ -83,14 +71,13 @@ function HeroPageComponent() {
   };
 
   useEffect(() => {
-    onloadInitHeros();
+    onInitFetch("heros");
   }, []);
 
   const changeInventoryViewHandler = (value: string) => {
-    debugger;
+    setPreviewNft({});
     setInventoryView(value);
-    if (value == "heros") onloadInitHeros();
-    else if (value == "weapons") onloadInitWeapons();
+    onInitFetch(value);
   };
 
   return (
@@ -152,7 +139,11 @@ function HeroPageComponent() {
                 <img
                   src={previewNft.resources[0].uri}
                   alt="Hero_icon.png"
-                  className="h-[400px] w-full object-cover object-top"
+                  className={`${
+                    inventoryView === "heros"
+                      ? "h-[400px] w-full object-top"
+                      : "h-[400px] w-[200px]"
+                  }  object-cover `}
                 />
               </figure>
               <div className="card-body">
@@ -167,11 +158,15 @@ function HeroPageComponent() {
                 </p>
               </div>
 
-              <div className="card-actions mx-5 mb-4 justify-end">
-                <button className="primary_button" onClick={setHeroImage}>
-                  Select this hero
-                </button>
-              </div>
+              {inventoryView === "heros" ? (
+                <div className="card-actions mx-5 mb-4 justify-end">
+                  <button className="primary_button" onClick={setHeroImage}>
+                    Select this hero
+                  </button>
+                </div>
+              ) : (
+                <div></div>
+              )}
             </div>
           ) : (
             <div className="card relative w-96 bg-base-100 shadow-xl ">

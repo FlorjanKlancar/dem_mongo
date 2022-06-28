@@ -101,7 +101,8 @@ function ConnectWalletButton() {
   }
 
   return (
-    <div>
+    <div className="indicator">
+      <span className="badge indicator-item badge-secondary"></span>
       <button onClick={WithdrawFunds} className="navbar_button">
         Get reward
       </button>
