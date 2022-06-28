@@ -1,34 +1,76 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+<div id="top"></div>
 
-## Getting Started
+<h3 align="center">NFT Mint</h3>
+  <p align="center">
+    This app is demo of browser strategy P2E game set in roman times.
+ 
+  </p>
+</div>
 
-First, run the development server:
+<h3>Vercel Deploy: https://dem-mongo.vercel.app/</h3>
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+<!-- TABLE OF CONTENTS -->
+<details>
+  <summary>Table of Contents</summary>
+  <ol>
+    <li>
+      <a href="#about-the-project">About The Project</a>
+      <ul>
+        <li><a href="#built-with">Built With</a></li>
+      </ul>
+    </li>
+    <li>
+      <a href="#getting-started">Getting Started</a>
+      <ul>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#information">Information</a></li>
+  </ol>
+</details>
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Built With
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+- [Next.js](https://nextjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [DaisyUI](https://daisyui.com/)
+- [Redux Toolkit](https://redux-toolkit.js.org/)
+- [MongoDB](https://www.mongodb.com/)
+- [NodeJS](https://nodejs.org/en/)
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+<p align="right">(<a href="#top">back to top</a>)</p>
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Information
 
-## Learn More
+### Main page of the browser game.
 
-To learn more about Next.js, take a look at the following resources:
+![image](https://user-images.githubusercontent.com/48727773/176166556-ca1df098-c25d-479f-a238-7a158c48eacd.png)
+At the top left corner we can see our currently equiped hero. At the moment it's the default one which doesn't give you any bonuses. Below the main menu you can see your resources storage and also the Warehouse/Granary max capacity which is larger every time you upgrade one of them. Below the resources bar it's the resources fields. Your production per hour gets higher everytime you upgrade one of them as well. By upgrading resources field/building you use your worker capacity which is 1 at the moment, meaning that you can upgrade only one field/building at the time.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Upgrade modal
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+![image](https://user-images.githubusercontent.com/48727773/176166596-074f1380-0fdf-4d7b-8786-2124cea203ab.png)
+Here you can see upgrade level information (Field name, field description, resources cost for upgrading etc.)
 
-## Deploy on Vercel
+### Upgrade in progress
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+![image](https://user-images.githubusercontent.com/48727773/176166842-dd3ad937-133b-406b-afca-6087ec318eaf.png)
+Here you can see your field/building is being upgraded, you can cancle this build meaning it will not refund your resources but it will cancle current build.
+Or you can finish it imediately by paying in zil.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Statistics page
+
+![image](https://user-images.githubusercontent.com/48727773/176166906-789b44ba-2290-4026-910c-c9cfb8aea32c.png)
+Here you can see all of the players statistics
+
+### Hero inventory
+
+![image](https://user-images.githubusercontent.com/48727773/176166945-d396db14-a793-47fa-b951-e2d7985bb162.png)
+This is Hero inventory page, here you can equip your NFT's (heros or weapons) to give you extra bonuses such as Energy recharge which will be used for queing up or extra attack/defense...
+
+### Equiped hero example
+
+![image](https://user-images.githubusercontent.com/48727773/176166996-33f1d566-b241-4313-9aac-dd99032eed58.png)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
