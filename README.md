@@ -3,7 +3,6 @@
 <h3 align="center">NFT Mint</h3>
   <p align="center">
     This app is demo of browser strategy P2E game set in roman times.
- 
   </p>
 </div>
 
@@ -41,6 +40,15 @@
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
+## Zilliqa contract information
+
+### NFT's
+We have two contracts for NFT's because we have 2 collections: Weapons and heros
+Heros: https://viewblock.io/zilliqa/address/zil179ncvcss3cnrew7egzg7aaftqyfnye40eln2cp?network=testnet
+Weapons: https://viewblock.io/zilliqa/address/zil14lduz0warxvnzrhm92hjnlac470y99fzxf8lr7?network=testnet
+
+### Contract for the upgrading buildings and Geting daily reward
+Contract: https://devex.zilliqa.com/address/0xfeb6b442f1166f3d2bfa9072e4515b2755de13cc?network=https://dev-api.zilliqa.com
 ## Information
 
 ### Main page of the browser game.
