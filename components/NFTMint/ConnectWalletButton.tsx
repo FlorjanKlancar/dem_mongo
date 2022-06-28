@@ -22,9 +22,6 @@ function ConnectWalletButton() {
 
   function getCurrentAccount() {
     window.zilPay.wallet.connect().then(function (connected: any) {
-      console.log(connected);
-      console.log(window.zilPay.wallet.net);
-      console.log(window.zilPay.wallet.defaultAccount);
       dispatch(zilWalletActions.setWallet(window.zilPay.wallet.defaultAccount));
 
       window.zilPay.wallet
