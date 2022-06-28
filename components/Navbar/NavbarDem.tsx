@@ -21,14 +21,14 @@ function NavbarDem() {
         <NavbarMobile />
       </div>
 
-      <div className="flex justify-between px-8 py-4">
+      <div className="flex justify-items-center px-8 py-4">
         <HeroCircle />
 
         <div className="m-auto mt-5 hidden w-3/4 justify-around rounded-2xl border-2 border-primary/50 bg-slate-800/80 p-3 md:flex lg:w-2/3 2xl:w-2/5">
           <Menu />
         </div>
 
-        <div className="flex flex-col justify-center space-y-3">
+        <div className="mt-5 flex flex-col space-y-3">
           <button className="navbar_button" onClick={signOutHandler}>
             Sign out
           </button>

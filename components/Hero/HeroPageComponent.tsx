@@ -1,5 +1,7 @@
 import Image from "next/image";
+import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import Logo from "../../public/assets/Logo.png";
 import { heroActions } from "../../store/hero-slice";
@@ -10,6 +12,7 @@ function HeroPageComponent() {
   const [previewNft, setPreviewNft] = useState<any>({});
 
   const dispatch = useDispatch();
+  const router = useRouter();
 
   var ContractAddress = "0xf1678662108e263cbbd94091eef52b01133266af";
   var ContractObject: any;
@@ -63,11 +66,18 @@ function HeroPageComponent() {
 
   const setHeroImage = () => {
     dispatch(heroActions.setHero(previewNft));
+    router.push("/resources");
+    toast.success("Successfully selected hero!");
   };
 
   useEffect(() => {
     onloadInit();
   }, []);
+
+  const changeInventoryViewHandler = (value: string) => {
+    setInventoryView(value);
+    //loadGallery(value) <---- kle bi glede na value fetchov drugačno dato gor pa bi mogl kr use delat pomoje
+  };
 
   return (
     <div className="mb-12 flex flex-col rounded-lg border-2 border-primary/80 bg-slate-800 px-6 py-4">
@@ -84,7 +94,7 @@ function HeroPageComponent() {
               inventoryView === "heros" ? " tab-active" : ""
             }  tab-lifted  tab-lg`}
             value="heros"
-            onClick={(e: any) => setInventoryView(e.target.value)}
+            onClick={(e: any) => changeInventoryViewHandler(e.target.value)}
           >
             Heros
           </button>
@@ -93,13 +103,13 @@ function HeroPageComponent() {
               inventoryView === "weapons" ? " tab-active" : ""
             }  tab-lifted  tab-lg`}
             value="weapons"
-            onClick={(e: any) => setInventoryView(e.target.value)}
+            onClick={(e: any) => changeInventoryViewHandler(e.target.value)}
           >
             Weapons
           </button>
         </div>
         <div className="tabs">
-          <a className="tab tab-active tab-lifted tab-lg">My Collection</a>
+          <a className="tab tab-lifted tab-active tab-lg">My Collection</a>
           <div
             className="tooltip-top tooltip"
             data-tip="Market is in development"
