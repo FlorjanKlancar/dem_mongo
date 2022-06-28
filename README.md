@@ -43,8 +43,8 @@
 ## Zilliqa contract information
 
 ### NFT's
-We have two contracts for NFT's because we have 2 collections: Weapons and heros
-Heros: https://viewblock.io/zilliqa/address/zil179ncvcss3cnrew7egzg7aaftqyfnye40eln2cp?network=testnet
+We have two contracts for NFT's because we have 2 collections: Weapons and heros </br>
+Heros: https://viewblock.io/zilliqa/address/zil179ncvcss3cnrew7egzg7aaftqyfnye40eln2cp?network=testnet </br>
 Weapons: https://viewblock.io/zilliqa/address/zil14lduz0warxvnzrhm92hjnlac470y99fzxf8lr7?network=testnet
 
 ### Contract for the upgrading buildings and Geting daily reward
@@ -80,5 +80,12 @@ This is Hero inventory page, here you can equip your NFT's (heros or weapons) to
 ### Equiped hero example
 
 ![image](https://user-images.githubusercontent.com/48727773/176166996-33f1d566-b241-4313-9aac-dd99032eed58.png)
+
+### Roadmap for the future
+
+Create a token on the zilliqa blockchain, and use this token for the in-game payments and rewards. </br>
+Create a upgrade Weapons mechanism with combining the metadata of previous NFT's. </br>
+Expand the game functionality (add clans, clan rewards, map, add npc's, ...)
+
 
 <p align="right">(<a href="#top">back to top</a>)</p>
