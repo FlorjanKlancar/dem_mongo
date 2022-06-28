@@ -142,7 +142,7 @@ function HeroPageComponent() {
                   className={`${
                     inventoryView === "heros"
                       ? "h-[400px] w-full object-top"
-                      : "h-[400px] w-[200px]"
+                      : "h-[250px] w-[100px]"
                   }  object-cover `}
                 />
               </figure>
