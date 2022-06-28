@@ -56,8 +56,8 @@ Here you can see upgrade level information (Field name, field description, resou
 ### Upgrade in progress
 
 ![image](https://user-images.githubusercontent.com/48727773/176166842-dd3ad937-133b-406b-afca-6087ec318eaf.png)
-Here you can see your field/building is being upgraded, you can cancle this build meaning it will not refund your resources but it will cancle current build.
-Or you can finish it imediately by paying in zil.
+Here you can see your field/building is being upgraded, you can cancel this build meaning it will not refund your resources but it will cancel current build.
+Or you can finish it immediately by paying in zil.
 
 ### Statistics page
 
