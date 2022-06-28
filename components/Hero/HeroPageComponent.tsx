@@ -14,7 +14,8 @@ function HeroPageComponent() {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  var ContractAddress = "0xf1678662108e263cbbd94091eef52b01133266af";
+  var ContractAddressHeros = "0xf1678662108e263cbbd94091eef52b01133266af";
+  var ContractAddressWeapons = "0xAfDbC13dDD1999310efB2Aaf29ffb8Af9E429522";
   var ContractObject: any;
   var ContractState: any;
 
@@ -30,7 +31,7 @@ function HeroPageComponent() {
   function loadGallery() {
     let tokenOwners = ContractState.token_owners;
     let tokenUris = ContractState.token_uris;
-
+    setMyNfts([]);
     for (let i in tokenOwners) {
       if (window.zilPay.wallet.defaultAccount.base16 == tokenOwners[i]) {
         getNftData(tokenUris[i]);
@@ -53,8 +54,19 @@ function HeroPageComponent() {
       });
   }
 
-  async function onloadInit() {
-    ContractObject = loadContract(ContractAddress);
+  async function onloadInitHeros() {
+    ContractObject = loadContract(ContractAddressHeros);
+    if (ContractObject) {
+      ContractObject.getState().then(function (stateData: any) {
+        ContractState = stateData;
+        //alert("Contract State Loaded Successfully!")
+        loadGallery();
+      });
+    }
+  }
+
+  async function onloadInitWeapons() {
+    ContractObject = loadContract(ContractAddressWeapons);
     if (ContractObject) {
       ContractObject.getState().then(function (stateData: any) {
         ContractState = stateData;
@@ -71,12 +83,14 @@ function HeroPageComponent() {
   };
 
   useEffect(() => {
-    onloadInit();
+    onloadInitHeros();
   }, []);
 
   const changeInventoryViewHandler = (value: string) => {
+    debugger;
     setInventoryView(value);
-    //loadGallery(value) <---- kle bi glede na value fetchov drugačno dato gor pa bi mogl kr use delat pomoje
+    if (value == "heros") onloadInitHeros();
+    else if (value == "weapons") onloadInitWeapons();
   };
 
   return (
