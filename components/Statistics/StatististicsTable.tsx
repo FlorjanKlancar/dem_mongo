@@ -10,6 +10,7 @@ type StatististicsTableProps = {
 
 function StatististicsTable({ players, ranks }: StatististicsTableProps) {
   const { data: session }: any = useSession();
+
   return (
     <div className="w-full overflow-x-auto">
       <table className="table w-full">
@@ -27,7 +28,7 @@ function StatististicsTable({ players, ranks }: StatististicsTableProps) {
             <tr key={player._id}>
               <td>
                 <div className="flex items-center space-x-3">
-                  {player._id == session.user.uid && (
+                  {player.userId == session.user.uid && (
                     <div>
                       <ChevronDoubleRightIcon className="h-5 w-5 text-primary" />
                     </div>
