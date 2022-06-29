@@ -37,20 +37,22 @@
 - [Redux Toolkit](https://redux-toolkit.js.org/)
 - [MongoDB](https://www.mongodb.com/)
 - [NodeJS](https://nodejs.org/en/)
+- [NextAuth](https://next-auth.js.org/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
 
 ## Zilliqa contract information
 
 ### NFT's
+
 We have two contracts for NFT's because we have 2 collections: Weapons and heros </br>
 Heros: https://viewblock.io/zilliqa/address/zil179ncvcss3cnrew7egzg7aaftqyfnye40eln2cp?network=testnet </br>
 Weapons: https://viewblock.io/zilliqa/address/zil14lduz0warxvnzrhm92hjnlac470y99fzxf8lr7?network=testnet
 
 ### Contract for the upgrading buildings and Geting daily reward
+
 Contract: https://devex.zilliqa.com/address/0xfeb6b442f1166f3d2bfa9072e4515b2755de13cc?network=https://dev-api.zilliqa.com
+
 ## Information
 
 ### Main page of the browser game.
@@ -88,6 +90,5 @@ This is Hero inventory page, here you can equip your NFT's (heros or weapons) to
 Create a token on the zilliqa blockchain, and use this token for the in-game payments and rewards. </br>
 Create a upgrade Weapons mechanism with combining the metadata of previous NFT's. </br>
 Expand the game functionality (add clans, clan rewards, map, add npc's, ...)
-
 
 <p align="right">(<a href="#top">back to top</a>)</p>
