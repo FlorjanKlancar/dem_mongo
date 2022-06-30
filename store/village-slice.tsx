@@ -86,6 +86,10 @@ const villageSlice = createSlice({
     cancleBuilding(state) {
       state.currentlyBuilding = [];
     },
+
+    updateResourcesInRealTime(state, action) {
+      state.resourcesStorage = action.payload;
+    },
   },
 });
 
