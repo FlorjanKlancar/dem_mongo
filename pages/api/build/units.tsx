@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import axios from "axios";
-import type {NextApiRequest, NextApiResponse} from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,6 +16,7 @@ export default async function handler(
           const troops = req.body.troops;
 
           let errorResponse = "";
+          let successResponse = "";
 
           for (const troop of troops) {
             if (troop.unitAmount > 0) {
@@ -25,12 +26,14 @@ export default async function handler(
                 {
                   villageId,
                   buildingName,
-                  unitName: troop.unitName,
+                  unitId: troop.unitName,
                   unitAmount: troop.unitAmount,
                 }
               );
               if (response.status !== 200) {
                 errorResponse = response.data;
+              } else {
+                successResponse = response.data;
               }
             }
           }
@@ -38,10 +41,10 @@ export default async function handler(
           if (errorResponse.length) {
             res.status(400).send(errorResponse);
           } else {
-            res.status(200).send("Unit build request sent successfully!");
+            res.status(200).json(successResponse);
           }
-        } catch (error) {
-          console.log("error", error);
+        } catch (error: any) {
+          res.status(400).json(error.response.data);
         }
       }
       break;

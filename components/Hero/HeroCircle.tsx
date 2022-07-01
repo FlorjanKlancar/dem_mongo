@@ -2,14 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import toast from "react-hot-toast";
-import {useSelector} from "react-redux";
-import {RootState} from "../../types/storeModel";
+import { useSelector } from "react-redux";
+import { RootState } from "../../types/storeModel";
 
 function HeroCircle() {
-  const {hero}: any = useSelector((state: RootState) => state.hero);
-  const {zilWallet}: any = useSelector((state: RootState) => state.zilWallet);
-
-  console.log("zilWallet", zilWallet);
+  const { hero }: any = useSelector((state: RootState) => state.hero);
+  const { zilWallet }: any = useSelector((state: RootState) => state.zilWallet);
 
   return (
     <div className="avatar ">
