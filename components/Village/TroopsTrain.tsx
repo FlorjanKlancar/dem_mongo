@@ -1,17 +1,18 @@
-import { ClockIcon } from "@heroicons/react/outline";
+import {ClockIcon} from "@heroicons/react/outline";
 import axios from "axios";
 import dayjs from "dayjs";
 import Image from "next/image";
 import React from "react";
-import Countdown, { zeroPad } from "react-countdown";
-import { buildingModel } from "../../types/buildingModel";
-import { troopsInputModel } from "../../types/troopsInputModel";
+import Countdown, {zeroPad} from "react-countdown";
+import {buildingModel} from "../../types/buildingModel";
+import {troopsInputModel} from "../../types/troopsInputModel";
 import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
 import WheatImg from "../../public/assets/Wheat.png";
 import UpkeepImg from "../../public/assets/upkeep.png";
 import toast from "react-hot-toast";
+import {useSession} from "next-auth/react";
 
 type TroopsTrainProps = {
   building: buildingModel;
@@ -28,29 +29,26 @@ function TroopsTrain({
   gsUnits,
   village,
 }: TroopsTrainProps) {
+  const {data: session}: any = useSession();
+
   const buildUnitsHandler = async (e: any) => {
     e.preventDefault();
-    /*     const trainToast = toast.loading("Training...");
-    axios.post(
-      "/api/build/units",
-      {
-        villageId: user?.uid,
-        buildingName: building.type,
-        troops: troops,
-      },
-      { headers: { Authorization: `Bearer ${user?.accessToken}` } }
-    );
-    toast.success("Training started successfully!", { id: trainToast });
+    const trainToast = toast.loading("Training...");
+    axios.post("/api/build/units", {
+      villageId: session?.user.uid,
+      buildingName: building.type,
+      troops: troops,
+    });
+    toast.success("Training started successfully!", {id: trainToast});
 
     setTroops(
       troops.map((troop: troopsInputModel) => {
-        return { ...troop, unitAmount: 0 };
+        return {...troop, unitAmount: 0};
       })
-    ); */
+    );
   };
 
-  const renderer = ({ hours, minutes, seconds, completed }: any) => {
-    // Render a countdown
+  const renderer = ({hours, minutes, seconds}: any) => {
     return (
       <span>
         {zeroPad(hours)}:{zeroPad(minutes)}:{zeroPad(seconds)}
@@ -62,7 +60,7 @@ function TroopsTrain({
     e.preventDefault();
 
     let data: any = [...troops];
-    data[index] = { unitName: e.target.name, unitAmount: +e.target.value };
+    data[index] = {unitName: e.target.name, unitAmount: +e.target.value};
 
     setTroops(data);
   };
@@ -169,7 +167,7 @@ function TroopsTrain({
                         <span className="label-text-alt">
                           Current amount{" "}
                           {village.units.map((unit: any) => {
-                            if (val === unit.name) {
+                            if (val.unitName === unit.name) {
                               return unit.amount;
                             }
                           })}
