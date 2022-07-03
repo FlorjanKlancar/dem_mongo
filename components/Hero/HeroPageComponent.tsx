@@ -1,8 +1,9 @@
-import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import axios from "axios";
+import {useRouter} from "next/router";
+import React, {useEffect, useState} from "react";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { heroActions } from "../../store/hero-slice";
+import {useDispatch} from "react-redux";
+import {heroActions} from "../../store/hero-slice";
 
 function HeroPageComponent() {
   const [inventoryView, setInventoryView] = useState("heros");
@@ -64,8 +65,9 @@ function HeroPageComponent() {
     }
   }
 
-  const setHeroImage = () => {
+  const setHeroImage = async () => {
     dispatch(heroActions.setHero(previewNft));
+
     router.push("/resources");
     toast.success("Successfully selected hero!");
   };

@@ -1,11 +1,11 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
 import NavbarDem from "../../components/Navbar/NavbarDem";
 import StatisticsTableSkeleton from "../../components/skeletons/StatisticsTableSkeleton";
 import StatististicsTable from "../../components/Statistics/StatististicsTable";
 import VillageWrapper from "../../components/Wrapper/VillageWrapper";
-import { RootState } from "../../types/storeModel";
+import {RootState} from "../../types/storeModel";
 
 function StatisticsView() {
   const [players, setPlayers] = useState([]);
@@ -24,23 +24,26 @@ function StatisticsView() {
     fetchStatistics();
   }, []);
 
-  const { loading } = useSelector((state: RootState) => state.loading);
+  const {loading} = useSelector((state: RootState) => state.loading);
 
-  return loading ? (
+  return (
     <>
       <NavbarDem />
-      <StatisticsTableSkeleton />
-    </>
-  ) : (
-    <>
-      <NavbarDem />
-      <VillageWrapper>
-        {players.length ? (
-          <StatististicsTable players={players} />
-        ) : (
+      {loading ? (
+        <>
           <StatisticsTableSkeleton />
-        )}
-      </VillageWrapper>
+        </>
+      ) : (
+        <>
+          <VillageWrapper>
+            {players.length ? (
+              <StatististicsTable players={players} />
+            ) : (
+              <StatisticsTableSkeleton />
+            )}
+          </VillageWrapper>
+        </>
+      )}
     </>
   );
 }

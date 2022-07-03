@@ -1,15 +1,16 @@
 import React from "react";
-import { ChevronDoubleRightIcon } from "@heroicons/react/outline";
-import { useSession } from "next-auth/react";
+import {ChevronDoubleRightIcon} from "@heroicons/react/outline";
+import {useSession} from "next-auth/react";
 import dayjs from "dayjs";
+import Link from "next/link";
 
 type StatististicsTableProps = {
   players: any;
   ranks?: any;
 };
 
-function StatististicsTable({ players, ranks }: StatististicsTableProps) {
-  const { data: session }: any = useSession();
+function StatististicsTable({players, ranks}: StatististicsTableProps) {
+  const {data: session}: any = useSession();
 
   return (
     <div className="w-full overflow-x-auto">
@@ -63,7 +64,9 @@ function StatististicsTable({ players, ranks }: StatististicsTableProps) {
                 {dayjs(player.createdAt).format("DD-MM-YYYY")}
               </th>
               <th>
-                <button className="btn btn-ghost btn-xs">details</button>
+                <Link href={`/statistics/${player.userId}`}>
+                  <button className="btn btn-ghost btn-xs">details</button>
+                </Link>
               </th>
             </tr>
           ))}

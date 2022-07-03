@@ -1,20 +1,20 @@
-import React, { useEffect } from "react";
-import { DatabaseIcon, CogIcon } from "@heroicons/react/outline";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../types/storeModel";
-import { MAX_LEVEL_BUILDINGS } from "../../gsVariables";
+import React, {useEffect} from "react";
+import {DatabaseIcon, CogIcon} from "@heroicons/react/outline";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../types/storeModel";
+import {MAX_LEVEL_BUILDINGS} from "../../gsVariables";
 import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
 import WheatImg from "../../public/assets/Wheat.png";
 import Image from "next/image";
-import { villageActions } from "../../store/village-slice";
+import {villageActions} from "../../store/village-slice";
 
 type VillageWrapperProps = {
   children: React.ReactNode;
 };
 
-function VillageWrapper({ children }: VillageWrapperProps) {
+function VillageWrapper({children}: VillageWrapperProps) {
   const dispatch = useDispatch();
 
   const resourcesRedux = useSelector(
@@ -24,7 +24,7 @@ function VillageWrapper({ children }: VillageWrapperProps) {
   const buildersRedux = useSelector(
     (state: RootState) => state.village.currentlyBuilding
   );
-  const { gsBuildings }: any = useSelector(
+  const {gsBuildings}: any = useSelector(
     (state: RootState) => state.gsBuildings
   );
 
@@ -148,7 +148,7 @@ function VillageWrapper({ children }: VillageWrapperProps) {
               </div>
             </div>
             <div className="text-center text-xs ">
-              {warehouseMaxStorage.level + 1 < MAX_LEVEL_BUILDINGS
+              {warehouseMaxStorage.level < MAX_LEVEL_BUILDINGS
                 ? `Next upgrade: ${warehouseNextLevel}`
                 : "Max level"}
             </div>
@@ -192,7 +192,7 @@ function VillageWrapper({ children }: VillageWrapperProps) {
               </div>
             </div>
             <div className="text-center text-xs ">
-              {granaryLevel.level + 1 < MAX_LEVEL_BUILDINGS
+              {granaryLevel.level < MAX_LEVEL_BUILDINGS
                 ? `Next upgrade: ${granaryNextLevel}`
                 : "Max level"}
             </div>

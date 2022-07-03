@@ -2,7 +2,7 @@ import React from "react";
 
 function StatisticsTableSkeleton() {
   return (
-    <div className="w-full overflow-x-auto">
+    <div className="mt-15 w-full  lg:px-8 xl:px-52 2xl:px-96">
       <table className="table w-full">
         <thead>
           <tr>
