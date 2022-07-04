@@ -38,7 +38,6 @@ function Menu() {
       image: "https://cdn-icons-png.flaticon.com/512/3903/3903967.png",
       title: "Queue",
       link: "/queue",
-      disabled: true,
     },
   ];
 
