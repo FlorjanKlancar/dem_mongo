@@ -26,21 +26,26 @@ function StatisticsView() {
 
   const { loading } = useSelector((state: RootState) => state.loading);
 
-  return loading ? (
+  return (
     <>
       <NavbarDem />
-      <StatisticsTableSkeleton />
-    </>
-  ) : (
-    <>
-      <NavbarDem />
-      <VillageWrapper>
-        {players.length ? (
-          <StatististicsTable players={players} />
-        ) : (
+      {loading ? (
+        <>
           <StatisticsTableSkeleton />
-        )}
-      </VillageWrapper>
+        </>
+      ) : (
+        <>
+          <VillageWrapper>
+            {players.length ? (
+              <>
+                <StatististicsTable players={players} />
+              </>
+            ) : (
+              <StatisticsTableSkeleton />
+            )}
+          </VillageWrapper>
+        </>
+      )}
     </>
   );
 }

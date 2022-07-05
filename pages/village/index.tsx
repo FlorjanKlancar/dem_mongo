@@ -1,3 +1,5 @@
+import { GetServerSideProps } from "next";
+import { getSession } from "next-auth/react";
 import React from "react";
 import { useSelector } from "react-redux";
 import NavbarDem from "../../components/Navbar/NavbarDem";
@@ -28,3 +30,21 @@ function VillageView() {
 }
 
 export default VillageView;
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  // Check if the user is authenticated on the server...
+  const session = await getSession(context);
+  if (!session) {
+    return {
+      redirect: {
+        permanent: false,
+        destination: "/login",
+      },
+    };
+  }
+  return {
+    props: {
+      session,
+    },
+  };
+};

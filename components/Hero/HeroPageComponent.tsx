@@ -1,3 +1,5 @@
+import axios from "axios";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -5,6 +7,8 @@ import { useDispatch } from "react-redux";
 import { heroActions } from "../../store/hero-slice";
 
 function HeroPageComponent() {
+  const { data: session }: any = useSession();
+
   const [inventoryView, setInventoryView] = useState("heros");
   const [MyNfts, setMyNfts] = useState<any>([]);
   const [previewNft, setPreviewNft] = useState<any>({});
@@ -64,8 +68,12 @@ function HeroPageComponent() {
     }
   }
 
-  const setHeroImage = () => {
+  const setHeroImage = async () => {
     dispatch(heroActions.setHero(previewNft));
+
+    await axios.put(`/api/user/${session?.user.uid}`, {
+      heroIcon: previewNft.resources[0].uri,
+    });
     router.push("/resources");
     toast.success("Successfully selected hero!");
   };

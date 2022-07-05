@@ -63,8 +63,6 @@ function UpgradeBuildingPage({ building }: VillageTypeProps) {
     } else {
       toast.error("Unable to upgrade...", { id: upgradeToast });
     }
-
-    toast.success("Upgrade started successfully!", { id: upgradeToast });
   };
 
   const checkResources = async (resourceNextLevelInfo: any) => {

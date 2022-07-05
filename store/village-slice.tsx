@@ -78,13 +78,22 @@ const villageSlice = createSlice({
       state.updatedAt = 0;
     },
 
-    addBuildingNow(state, action: any) {
+    addBuildingNow(state, action) {
       state.currentlyBuilding = action.payload.currentlyBuilding;
       state.resourcesStorage = action.payload.resourcesStorage;
     },
 
     cancleBuilding(state) {
       state.currentlyBuilding = [];
+    },
+
+    updateResourcesInRealTime(state, action) {
+      state.resourcesStorage = action.payload;
+    },
+
+    addBuildUnitsNow(state, action) {
+      state.unitTrainQueue = action.payload.unitTrainQueue;
+      state.resourcesStorage = action.payload.resourcesStorage;
     },
   },
 });

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useEffect, useState} from "react";
 import {
   Zilliqa,
   BN,
@@ -8,8 +8,8 @@ import {
   MessageType,
 } from "@zilliqa-js/zilliqa";
 import toast from "react-hot-toast";
-import { useDispatch } from "react-redux";
-import { zilWalletActions } from "../../store/zilWallet-slice";
+import {useDispatch} from "react-redux";
+import {zilWalletActions} from "../../store/zilWallet-slice";
 
 declare global {
   interface Window {

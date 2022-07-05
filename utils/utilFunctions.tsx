@@ -1,6 +1,7 @@
 import axios from "axios";
 import { gsBuildingsActions } from "../store/gsBuildings-slice";
 import { gsUnitsActions } from "../store/gsUnits-slice";
+import { heroActions } from "../store/hero-slice";
 import { loadingActions } from "../store/loading-slice";
 import { villageActions } from "../store/village-slice";
 
@@ -19,6 +20,14 @@ export const initializeDataFetch = async (
     dispatch(
       gsBuildingsActions.initializeGsBuildings({
         gsBuildings: response.data.buildingsResponse,
+      })
+    );
+
+    const responseUser = await axios.get(`/api/user/${userId}`);
+    console.log("responseUser", responseUser);
+    dispatch(
+      heroActions.setHero({
+        resources: [{ uri: responseUser.data.user.heroIcon }],
       })
     );
   }

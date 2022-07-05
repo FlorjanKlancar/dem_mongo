@@ -1,19 +1,22 @@
-import React from "react";
-import { DatabaseIcon, CogIcon } from "@heroicons/react/outline";
-import { useSelector } from "react-redux";
-import { RootState } from "../../types/storeModel";
-import { MAX_LEVEL_BUILDINGS } from "../../gsVariables";
+import React, {useEffect} from "react";
+import {DatabaseIcon, CogIcon} from "@heroicons/react/outline";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../types/storeModel";
+import {MAX_LEVEL_BUILDINGS} from "../../gsVariables";
 import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
 import WheatImg from "../../public/assets/Wheat.png";
 import Image from "next/image";
+import {villageActions} from "../../store/village-slice";
 
 type VillageWrapperProps = {
   children: React.ReactNode;
 };
 
-function VillageWrapper({ children }: VillageWrapperProps) {
+function VillageWrapper({children}: VillageWrapperProps) {
+  const dispatch = useDispatch();
+
   const resourcesRedux = useSelector(
     (state: RootState) => state.village.resourcesStorage
   );
@@ -21,7 +24,7 @@ function VillageWrapper({ children }: VillageWrapperProps) {
   const buildersRedux = useSelector(
     (state: RootState) => state.village.currentlyBuilding
   );
-  const { gsBuildings }: any = useSelector(
+  const {gsBuildings}: any = useSelector(
     (state: RootState) => state.gsBuildings
   );
 
@@ -95,6 +98,39 @@ function VillageWrapper({ children }: VillageWrapperProps) {
         : MAX_LEVEL_BUILDINGS
     ].granaryResourceLimit;
 
+  const countResourcesRealTime = (resourcesRedux: any) => {
+    const updatedResourcesCalculation = {
+      woodAmount:
+        resourcesMaxStorage > resourcesRedux.woodAmount
+          ? village.woodProductionPerH / 3600 + resourcesRedux.woodAmount
+          : resourcesMaxStorage,
+      clayAmount:
+        resourcesMaxStorage > resourcesRedux.clayAmount
+          ? village.clayProductionPerH / 3600 + resourcesRedux.clayAmount
+          : resourcesMaxStorage,
+      ironAmount:
+        resourcesMaxStorage > resourcesRedux.ironAmount
+          ? village.ironProductionPerH / 3600 + resourcesRedux.ironAmount
+          : resourcesMaxStorage,
+      wheatAmount:
+        resourcesMaxStorage > resourcesRedux.wheatAmount
+          ? village.wheatProductionPerH / 3600 + resourcesRedux.wheatAmount
+          : resourcesMaxStorage,
+    };
+
+    dispatch(
+      villageActions.updateResourcesInRealTime(updatedResourcesCalculation)
+    );
+  };
+
+  useEffect(() => {
+    const id = setInterval(() => countResourcesRealTime(resourcesRedux), 1000);
+
+    return () => {
+      clearInterval(id);
+    };
+  }, [resourcesRedux]);
+
   return (
     <div className="mt-5 px-6 sm:px-12 md:px-20 ">
       <div className="resource_bar">
@@ -112,7 +148,7 @@ function VillageWrapper({ children }: VillageWrapperProps) {
               </div>
             </div>
             <div className="text-center text-xs ">
-              {warehouseMaxStorage.level + 1 < MAX_LEVEL_BUILDINGS
+              {warehouseMaxStorage.level < MAX_LEVEL_BUILDINGS
                 ? `Next upgrade: ${warehouseNextLevel}`
                 : "Max level"}
             </div>
@@ -156,7 +192,7 @@ function VillageWrapper({ children }: VillageWrapperProps) {
               </div>
             </div>
             <div className="text-center text-xs ">
-              {granaryLevel.level + 1 < MAX_LEVEL_BUILDINGS
+              {granaryLevel.level < MAX_LEVEL_BUILDINGS
                 ? `Next upgrade: ${granaryNextLevel}`
                 : "Max level"}
             </div>
