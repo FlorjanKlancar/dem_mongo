@@ -5,6 +5,7 @@ import store from "../store";
 import { Toaster } from "react-hot-toast";
 import { SessionProvider, useSession } from "next-auth/react";
 import { initializeDataFetch } from "../utils/utilFunctions";
+import { io } from "socket.io-client";
 
 let firstLoad = true;
 
@@ -20,6 +21,12 @@ function MyApp({ Component, pageProps }: any) {
       console.log("firstLoad", firstLoad);
       initializeDataFetch(session.user.uid, dispatch, true);
       firstLoad = false;
+
+      const socket = io("http://localhost:5000");
+      socket.on("connect", () => console.log(socket.id));
+      socket.on("connect_error", () => {
+        setTimeout(() => socket.connect(), 5000);
+      });
     }
   }, [session]);
 
