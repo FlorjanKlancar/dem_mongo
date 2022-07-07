@@ -95,6 +95,10 @@ const villageSlice = createSlice({
       state.unitTrainQueue = action.payload.unitTrainQueue;
       state.resourcesStorage = action.payload.resourcesStorage;
     },
+
+    addUnitsToQueue(state, action) {
+      state.units = action.payload;
+    },
   },
 });
 

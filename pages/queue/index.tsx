@@ -3,7 +3,7 @@ import { getSession } from "next-auth/react";
 import React from "react";
 import { useSelector } from "react-redux";
 import NavbarDem from "../../components/Navbar/NavbarDem";
-import QueueTable from "../../components/Queue/QueueTable";
+import QueuePage from "../../components/Queue/QueuePage";
 import VillageWrapper from "../../components/Wrapper/VillageWrapper";
 import { RootState } from "../../types/storeModel";
 
@@ -18,7 +18,7 @@ function QueueView() {
       ) : (
         <>
           <VillageWrapper>
-            <QueueTable />
+            <QueuePage />
           </VillageWrapper>
         </>
       )}

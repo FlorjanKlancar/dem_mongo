@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps }: any) {
       initializeDataFetch(session.user.uid, dispatch, true);
       firstLoad = false;
 
-      const socket = io("http://localhost:5000");
+      const socket = io(`${process.env.NEXT_PUBLIC_SOCKET_IO_URL}`);
       socket.on("connect", () => console.log(socket.id));
       socket.on("connect_error", () => {
         setTimeout(() => socket.connect(), 5000);
