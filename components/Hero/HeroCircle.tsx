@@ -23,7 +23,8 @@ function HeroCircle() {
           <Image
             src={`${
               hero.resources
-                ? hero?.resources[0].uri
+                ? hero?.resources[0]?.uri ??
+                  "https://wallpaperaccess.com/full/167765.jpg"
                 : "https://wallpaperaccess.com/full/167765.jpg"
             }`}
             objectFit="cover"
