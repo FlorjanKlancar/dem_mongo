@@ -3,10 +3,19 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { villageActions } from "../../store/village-slice";
 import { RootState } from "../../types/storeModel";
-import { XIcon } from "@heroicons/react/outline";
+import { unitModel } from "../../types/unitModel";
+import SelectUnitCard from "./SelectUnitCard";
+import SelectedUnitCard from "./SelectedUnitCard";
+import socket from "../../lib/socket";
+import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
+import { useRouter } from "next/router";
+import { queueActions } from "../../store/queue-slice";
 
 function QueuePage() {
+  const { data: session }: any = useSession();
   const dispatch = useDispatch();
+  const router = useRouter();
 
   const unitsArray: any = useSelector(
     (state: RootState) => state.village.units
@@ -14,7 +23,7 @@ function QueuePage() {
   const { gsUnits }: any = useSelector((state: RootState) => state.gsUnits);
 
   const [villageCurrentUnits, setVillageCurrentUnits] =
-    useState<any>(unitsArray);
+    useState<unitModel[]>(unitsArray);
   const [selectedSquad, setSelectedSquad] = useState<any>([]);
 
   const handleChange = (e: any, i: number) => {
@@ -38,7 +47,7 @@ function QueuePage() {
     setSelectedSquad((selectedSquad: any) => [...selectedSquad, selectedUnit]);
 
     setVillageCurrentUnits(
-      villageCurrentUnits.map((unit: any) => {
+      villageCurrentUnits.map((unit: unitModel) => {
         if (unit._id === unitId) {
           return { ...unit, amount: 0 };
         }
@@ -48,9 +57,9 @@ function QueuePage() {
 
     dispatch(
       villageActions.addUnitsToQueue(
-        unitsArray.map((unit: any) => {
+        unitsArray.map((unit: unitModel) => {
           if (unit._id === unitId) {
-            return { ...unit, amount: unit.amount - selectedUnit.amount };
+            return { ...unit, amount: unit.amount - selectedUnit!.amount };
           } else return unit;
         })
       )
@@ -59,12 +68,12 @@ function QueuePage() {
 
   const removeUnitsHandler = (unitName: string, unitAmount: number) => {
     setSelectedSquad(
-      selectedSquad.filter((unit: any) => unit.name !== unitName)
+      selectedSquad.filter((unit: unitModel) => unit.name !== unitName)
     );
 
     dispatch(
       villageActions.addUnitsToQueue(
-        unitsArray.map((unit: any) => {
+        unitsArray.map((unit: unitModel) => {
           if (unit.name === unitName) {
             return { ...unit, amount: unit.amount + unitAmount };
           } else return unit;
@@ -73,8 +82,21 @@ function QueuePage() {
     );
   };
 
-  console.log("selectedsquad", selectedSquad);
-  console.log("units a", unitsArray);
+  const queueUpHandler = () => {
+    const queueToast = toast.loading("Adding to queue...");
+
+    socket.emit("addUserToQueue", { userId: session.user.uid, selectedSquad });
+    socket.on("queueResponse", ({ response }) => {
+      if (response.status === 200) {
+        dispatch(queueActions.setUserInQueue(true));
+        toast.success(response.msg, { id: queueToast });
+        router.push("/resources");
+      } else {
+        toast.error(response.msg, { id: queueToast });
+      }
+    });
+  };
+
   return (
     <div className="mb-12 flex flex-col rounded-lg border-2 border-primary/80 bg-slate-800 ">
       <div>
@@ -92,228 +114,90 @@ function QueuePage() {
         </div>
       </div>
 
-      <div className="mt-4 grid grid-cols-2 ">
+      <div className="mt-4 grid grid-cols-2 divide-x-2 divide-primary/80 pb-8">
         <div className="flex flex-col space-y-5 px-8    ">
-          <div>Select your units</div>
+          <div className="text-center text-lg font-semibold text-primary">
+            Select your units
+          </div>
 
           <form className="flex w-full flex-col">
-            {unitsArray.map((unit: any) => {
-              if (unit.amount > 0)
-                return (
-                  <div key={unit._id}>
-                    {gsUnits.map((gsUnit: any, i: number) => {
-                      if (gsUnit.unitName === unit.name) {
-                        return (
-                          <div key={gsUnit.unitName}>
-                            <div className="card rounded-box flex flex-col  bg-base-300">
-                              <div className="flex h-20 flex-row items-center justify-around">
-                                <div>
-                                  <img
-                                    src={gsUnit.unitIcon}
-                                    className="h-8 w-8"
-                                  />
-                                </div>
-                                <div>{unit.name}</div>
-                                <div className="text-primary">
-                                  Alive: {unit.amount}
-                                </div>
-                              </div>
-
-                              <div className="flex h-20 flex-row items-center justify-around">
-                                Attack def descr of unit
-                              </div>
+            {!unitsArray.length ? (
+              <div className="text-center  text-sm text-slate-400">
+                No units available
+              </div>
+            ) : (
+              unitsArray.map((unit: any) => {
+                if (unit.amount > 0)
+                  return (
+                    <div key={unit._id}>
+                      {gsUnits.map((gsUnit: any, i: number) => {
+                        if (gsUnit.unitName === unit.name) {
+                          return (
+                            <div key={gsUnit.unitName}>
+                              <SelectUnitCard
+                                gsUnit={gsUnit}
+                                villageCurrentUnits={villageCurrentUnits}
+                                handleChange={handleChange}
+                                unitsArray={unitsArray}
+                                i={i}
+                                submitHandler={submitHandler}
+                                unit={unit}
+                              />
                             </div>
-
-                            <div className="mt-2 flex flex-col items-center justify-center space-y-3">
-                              <div className="btn-group flex w-full justify-center">
-                                <button
-                                  className="btn w-24"
-                                  type="button"
-                                  name={unit.name}
-                                  value={villageCurrentUnits[i].amount - 1}
-                                  onClick={(e: any) => handleChange(e, i)}
-                                  disabled={villageCurrentUnits[i].amount === 0}
-                                >
-                                  -
-                                </button>
-                                <div>
-                                  <input
-                                    type="number"
-                                    className="input input-ghost w-24 text-center"
-                                    name={unit.name}
-                                    autoComplete="off"
-                                    min={0}
-                                    max={unitsArray[i].amount}
-                                    value={villageCurrentUnits[i].amount}
-                                    onChange={(e: any) => handleChange(e, i)}
-                                  />
-                                </div>
-                                <button
-                                  className="btn w-24"
-                                  type="button"
-                                  name={unit.name}
-                                  value={villageCurrentUnits[i].amount + 1}
-                                  onClick={(e: any) => handleChange(e, i)}
-                                  disabled={
-                                    villageCurrentUnits[i].amount ===
-                                    unitsArray[i].amount
-                                  }
-                                >
-                                  +
-                                </button>
-                              </div>
-
-                              <button
-                                className="text-sm text-slate-400 underline decoration-slate-400 underline-offset-2"
-                                name={unit.name}
-                                value={unitsArray[i].amount}
-                                onClick={(e: any) => handleChange(e, i)}
-                                type="button"
-                              >
-                                Click to select all available units
-                              </button>
-
-                              <div>
-                                <button
-                                  className="secondary_button"
-                                  type="submit"
-                                  onClick={(e: any) =>
-                                    submitHandler(e, unit._id)
-                                  }
-                                  disabled={villageCurrentUnits[i].amount === 0}
-                                >
-                                  Add to squad
-                                </button>
-                              </div>
-                            </div>
-                            <div className="divider"></div>
-                          </div>
-                        );
-                      }
-                    })}
-                  </div>
-                );
-            })}
+                          );
+                        }
+                      })}
+                    </div>
+                  );
+              })
+            )}
           </form>
         </div>
 
         <div>
-          <div>Currently selected units</div>
-          <div className="mt-4 flex flex-col space-y-3 px-4">
-            {selectedSquad.map((unit: any) => (
-              <div
-                key={unit.name}
-                className="card rounded-box flex flex-col  bg-base-300"
-              >
-                {gsUnits.map((gsUnit: any) => {
-                  if (gsUnit.unitName === unit.name) {
-                    return (
-                      <div
-                        key={unit.name}
-                        className="flex h-20 flex-row items-center justify-around"
-                      >
-                        <div>
-                          <img src={gsUnit.unitIcon} className="h-8 w-8" />
-                        </div>
-                        <div>{unit.name}</div>
-                        <div className="text-primary">
-                          Selected: {unit.amount}
-                        </div>
-                        <div>
-                          <button
-                            type="button"
-                            onClick={() =>
-                              removeUnitsHandler(gsUnit.unitName, unit.amount)
-                            }
-                          >
-                            <XIcon className="h-4 w-4 text-red-600" />
-                          </button>
-                        </div>
-                      </div>
-                    );
-                  }
-                })}
-              </div>
-            ))}
+          <div className="text-center text-lg font-semibold text-primary">
+            Currently selected units
           </div>
-          {/*        
-                        <div className="card rounded-box flex flex-col  bg-base-300">
-                          <div className="flex h-20 flex-row items-center justify-around">
-                            <div>
-                              <img src={gsUnit.unitIcon} className="h-8 w-8" />
-                            </div>
-                            <div>{unit.name}</div>
-                            <div className="text-primary">
-                              Alive: {unit.amount}
-                            </div>
-                          </div>
-
-                          <div className="flex h-20 flex-row items-center justify-around">
-                            Attack def descr of unit
-                          </div>
+          <div className="mt-4 flex flex-col space-y-3 px-4">
+            {!selectedSquad.length ? (
+              <div className="text-center  text-sm text-slate-400">
+                No units selected
+              </div>
+            ) : (
+              selectedSquad.map((unit: any) => (
+                <div
+                  key={unit.name}
+                  className="card rounded-box flex flex-col  bg-base-300"
+                >
+                  {gsUnits.map((gsUnit: any) => {
+                    if (gsUnit.unitName === unit.name) {
+                      return (
+                        <div key={unit.name}>
+                          <SelectedUnitCard
+                            gsUnit={gsUnit}
+                            unit={unit}
+                            removeUnitsHandler={removeUnitsHandler}
+                          />
                         </div>
-
-                        <div className="mt-2 flex flex-col items-center justify-center space-y-3">
-                          <div className="btn-group flex w-full justify-center">
-                            <button
-                              className="btn w-24"
-                              type="button"
-                              name={unit.name}
-                              value={villageCurrentUnits[i].amount - 1}
-                              onClick={(e: any) => handleChange(e, i)}
-                              disabled={villageCurrentUnits[i].amount === 0}
-                            >
-                              -
-                            </button>
-                            <div>
-                              <input
-                                type="number"
-                                className="input input-ghost w-24 text-center"
-                                name={unit.name}
-                                autoComplete="off"
-                                min={0}
-                                max={unitsArray[i].amount}
-                                value={villageCurrentUnits[i].amount}
-                                onChange={(e: any) => handleChange(e, i)}
-                              />
-                            </div>
-                            <button
-                              className="btn w-24"
-                              type="button"
-                              name={unit.name}
-                              value={villageCurrentUnits[i].amount + 1}
-                              onClick={(e: any) => handleChange(e, i)}
-                              disabled={
-                                villageCurrentUnits[i].amount ===
-                                unitsArray[i].amount
-                              }
-                            >
-                              +
-                            </button>
-                          </div>
-
-                          <button
-                            className="text-sm text-slate-400 underline decoration-slate-400 underline-offset-2"
-                            name={unit.name}
-                            value={unitsArray[i].amount}
-                            onClick={(e: any) => handleChange(e, i)}
-                            type="button"
-                          >
-                            Click to select all available units
-                          </button>
-
-                          <div>
-                            <button
-                              className="secondary_button"
-                              type="submit"
-                              onClick={(e: any) => submitHandler(e, unit._id)}
-                            >
-                              Add to squad
-                            </button>
-                          </div>
-                        </div>
-                        <div className="divider"></div>
-                      </div> */}
+                      );
+                    }
+                  })}
+                </div>
+              ))
+            )}
+            {selectedSquad.length ? (
+              <div className="px-12">
+                <button
+                  className="secondary_button w-full"
+                  onClick={queueUpHandler}
+                >
+                  Queue up!
+                </button>
+              </div>
+            ) : (
+              ""
+            )}
+          </div>
         </div>
       </div>
     </div>

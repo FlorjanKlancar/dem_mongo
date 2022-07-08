@@ -5,6 +5,7 @@ import villageSlice from "./village-slice";
 import loadingSlice from "./loading-slice";
 import zilWalletSlice from "./zilWallet-slice";
 import heroSlice from "./hero-slice";
+import queueSlice from "./queue-slice";
 
 const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ const store = configureStore({
     loading: loadingSlice.reducer,
     zilWallet: zilWalletSlice.reducer,
     hero: heroSlice.reducer,
+    queue: queueSlice.reducer,
   },
 });
 

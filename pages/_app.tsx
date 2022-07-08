@@ -6,6 +6,8 @@ import { Toaster } from "react-hot-toast";
 import { SessionProvider, useSession } from "next-auth/react";
 import { initializeDataFetch } from "../utils/utilFunctions";
 import { io } from "socket.io-client";
+import socket from "../lib/socket";
+import { queueActions } from "../store/queue-slice";
 
 let firstLoad = true;
 
@@ -21,14 +23,14 @@ function MyApp({ Component, pageProps }: any) {
       console.log("firstLoad", firstLoad);
       initializeDataFetch(session.user.uid, dispatch, true);
       firstLoad = false;
-
-      const socket = io(`${process.env.NEXT_PUBLIC_SOCKET_IO_URL}`);
-      socket.on("connect", () => console.log(socket.id));
-      socket.on("connect_error", () => {
-        setTimeout(() => socket.connect(), 5000);
-      });
     }
   }, [session]);
+
+  useEffect(() => {
+    socket.on("battleResponse", (data) => {
+      dispatch(queueActions.setUserInQueue(false));
+    });
+  }, [socket]);
 
   return (
     <div className="relative">

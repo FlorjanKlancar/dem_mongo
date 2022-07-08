@@ -14,6 +14,9 @@ function NavbarDem() {
   };
 
   const { zilWallet } = useSelector((state: RootState) => state.zilWallet);
+  const queue = useSelector((state: RootState) => state.queue);
+
+  console.log("queue", queue);
 
   return (
     <>
@@ -36,6 +39,11 @@ function NavbarDem() {
             <ConnectWalletButton />
           ) : (
             <DisconnectWalletButton />
+          )}
+          {queue.userInQueue ? (
+            <button className="navbar_button">{queue.timeInQueue}</button>
+          ) : (
+            <></>
           )}
         </div>
       </div>

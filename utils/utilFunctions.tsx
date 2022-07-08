@@ -24,7 +24,7 @@ export const initializeDataFetch = async (
     );
 
     const responseUser = await axios.get(`/api/user/${userId}`);
-    console.log("responseUser", responseUser);
+
     dispatch(
       heroActions.setHero({
         resources: [{ uri: responseUser.data.user.heroIcon }],
