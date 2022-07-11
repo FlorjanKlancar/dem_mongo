@@ -30,3 +30,16 @@ html {
 .secondary_button {
   @apply btn bg-primary text-white hover:bg-primary/70 hover:text-slate-200;
 }
+
+@media screen and (min-width: 320px) and (max-width: 767px) and (orientation: portrait) {
+  html {
+    transform: rotate(-90deg);
+    transform-origin: left top;
+    width: 100vh;
+    height: 100vw;
+    overflow-x: hidden;
+    position: absolute;
+    top: 100%;
+    left: 0;
+  }
+}
