@@ -1,26 +1,26 @@
 import Image from "next/image";
-import React, {useState} from "react";
-import {useDispatch, useSelector} from "react-redux";
-import {villageActions} from "../../store/village-slice";
-import {RootState} from "../../types/storeModel";
-import {unitModel} from "../../types/unitModel";
+import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { villageActions } from "../../store/village-slice";
+import { RootState } from "../../types/storeModel";
+import { unitModel } from "../../types/unitModel";
 import SelectUnitCard from "./SelectUnitCard";
 import SelectedUnitCard from "./SelectedUnitCard";
 import socket from "../../lib/socket";
-import {useSession} from "next-auth/react";
+import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
-import {useRouter} from "next/router";
-import {queueActions} from "../../store/queue-slice";
+import { useRouter } from "next/router";
+import { queueActions } from "../../store/queue-slice";
 
 function QueuePage() {
-  const {data: session}: any = useSession();
+  const { data: session }: any = useSession();
   const dispatch = useDispatch();
   const router = useRouter();
 
   const unitsArray: any = useSelector(
     (state: RootState) => state.village.units
   );
-  const {gsUnits}: any = useSelector((state: RootState) => state.gsUnits);
+  const { gsUnits }: any = useSelector((state: RootState) => state.gsUnits);
   const queue = useSelector((state: RootState) => state.queue);
 
   const [villageCurrentUnits, setVillageCurrentUnits] =
@@ -50,7 +50,7 @@ function QueuePage() {
     setVillageCurrentUnits(
       villageCurrentUnits.map((unit: unitModel) => {
         if (unit._id === unitId) {
-          return {...unit, amount: 0};
+          return { ...unit, amount: 0 };
         }
         return unit;
       })
@@ -60,7 +60,7 @@ function QueuePage() {
       villageActions.updateUnitsState(
         unitsArray.map((unit: unitModel) => {
           if (unit._id === unitId) {
-            return {...unit, amount: unit.amount - selectedUnit!.amount};
+            return { ...unit, amount: unit.amount - selectedUnit!.amount };
           } else return unit;
         })
       )
@@ -76,7 +76,7 @@ function QueuePage() {
       villageActions.updateUnitsState(
         unitsArray.map((unit: unitModel) => {
           if (unit.name === unitName) {
-            return {...unit, amount: unit.amount + unitAmount};
+            return { ...unit, amount: unit.amount + unitAmount };
           } else return unit;
         })
       )
@@ -86,15 +86,16 @@ function QueuePage() {
   const queueUpHandler = () => {
     const queueToast = toast.loading("Adding to queue...");
 
-    socket.emit("addUserToQueue", {userId: session.user.uid, selectedSquad});
-    socket.on("queueResponse", ({response}) => {
+    socket.emit("addUserToQueue", { userId: session.user.uid, selectedSquad });
+    socket.on("queueResponse", ({ response }) => {
       if (response.status === 200) {
         dispatch(queueActions.setUserInQueue(true));
         dispatch(queueActions.setSelectedSquad(selectedSquad));
-        toast.success(response.msg, {id: queueToast});
+
         router.push("/resources");
+        toast.success(response.msg, { id: queueToast });
       } else {
-        toast.error(response.msg, {id: queueToast});
+        toast.error(response.msg, { id: queueToast });
       }
     });
   };

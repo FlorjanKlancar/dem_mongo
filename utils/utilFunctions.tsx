@@ -1,10 +1,10 @@
 import axios from "axios";
-import {battleReportsActions} from "../store/battleReports-slice";
-import {gsBuildingsActions} from "../store/gsBuildings-slice";
-import {gsUnitsActions} from "../store/gsUnits-slice";
-import {heroActions} from "../store/hero-slice";
-import {loadingActions} from "../store/loading-slice";
-import {villageActions} from "../store/village-slice";
+import { battleReportsActions } from "../store/battleReports-slice";
+import { gsBuildingsActions } from "../store/gsBuildings-slice";
+import { gsUnitsActions } from "../store/gsUnits-slice";
+import { heroActions } from "../store/hero-slice";
+import { loadingActions } from "../store/loading-slice";
+import { villageActions } from "../store/village-slice";
 
 export const initializeDataFetch = async (
   userId: string,
@@ -16,7 +16,7 @@ export const initializeDataFetch = async (
   if (firstLoad) {
     const response = await axios.get(`/api/initialize`);
     dispatch(
-      gsUnitsActions.initializeGsUnits({gsUnits: response.data.unitsResponse})
+      gsUnitsActions.initializeGsUnits({ gsUnits: response.data.unitsResponse })
     );
     dispatch(
       gsBuildingsActions.initializeGsBuildings({
@@ -25,18 +25,21 @@ export const initializeDataFetch = async (
     );
 
     const responseUser = await axios.get(`/api/user/${userId}`);
-    const getUnReadReports = await axios.get(`/api/battle/${userId}`);
-
-    dispatch(
-      battleReportsActions.setBattleReports(getUnReadReports.data.newReports)
-    );
 
     dispatch(
       heroActions.setHero({
-        resources: [{uri: responseUser.data.user.heroIcon}],
+        resources: [{ uri: responseUser.data.user.heroIcon }],
       })
     );
   }
+  const getUnReadReports = await axios.get(`/api/battle/${userId}`);
+
+  dispatch(
+    battleReportsActions.setBattleReports({
+      unreadBattleReports: getUnReadReports.data.newReports,
+      battleReports: getUnReadReports.data.battles,
+    })
+  );
 
   dispatch(
     villageActions.setVillage({

@@ -1,7 +1,8 @@
-import {createSlice} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 
 const battleReportsInitialState = {
-  battleReports: 0,
+  unreadBattleReports: 0,
+  battleReports: [],
 };
 
 const battleReportsSlice = createSlice({
@@ -9,7 +10,9 @@ const battleReportsSlice = createSlice({
   initialState: () => battleReportsInitialState,
   reducers: {
     setBattleReports(state, action) {
-      state.battleReports = state.battleReports + action.payload;
+      state.unreadBattleReports =
+        state.unreadBattleReports + action.payload.unreadBattleReports;
+      state.battleReports = action.payload.battleReports;
     },
   },
 });

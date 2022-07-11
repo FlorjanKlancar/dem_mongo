@@ -1,41 +1,41 @@
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import NavbarMobile from "./NavbarMobile";
 import Menu from "./Menu";
-import {signOut, useSession} from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import ConnectWalletButton from "../NFTMint/ConnectWalletButton";
 import DisconnectWalletButton from "../NFTMint/DisconnectWalletButton";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../types/storeModel";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../types/storeModel";
 import HeroCircle from "../Hero/HeroCircle";
-import {queueActions} from "../../store/queue-slice";
-import {XIcon} from "@heroicons/react/outline";
+import { queueActions } from "../../store/queue-slice";
+import { XIcon } from "@heroicons/react/outline";
 import socket from "../../lib/socket";
 import toast from "react-hot-toast";
-import {villageActions} from "../../store/village-slice";
+import { villageActions } from "../../store/village-slice";
 
 function NavbarDem() {
   const dispatch = useDispatch();
-  const {data: session}: any = useSession();
+  const { data: session }: any = useSession();
 
   const signOutHandler = async () => {
     await signOut();
   };
 
-  const {zilWallet} = useSelector((state: RootState) => state.zilWallet);
+  const { zilWallet } = useSelector((state: RootState) => state.zilWallet);
   const queue = useSelector((state: RootState) => state.queue);
 
   const cancelQueueHandler = () => {
     const queueToast = toast.loading("Removing from queue...");
 
-    socket.emit("cancelUserFromQueue", {userId: session.user.uid});
+    socket.emit("cancelUserFromQueue", { userId: session.user.uid });
 
-    socket.on("cancelResponse", ({response}) => {
+    socket.on("cancelResponse", ({ response }) => {
       if (response.status === 200) {
         dispatch(queueActions.setUserInQueue(false));
         dispatch(villageActions.updateUnitsState(response.updateUnits));
-        toast.success(response.msg, {id: queueToast});
+        toast.success(response.msg, { id: queueToast });
       } else {
-        toast.error(response.msg, {id: queueToast});
+        toast.error(response.msg, { id: queueToast });
       }
     });
   };
