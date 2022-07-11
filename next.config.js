@@ -8,6 +8,7 @@ const nextConfig = {
       "wallpaperaccess.com",
       "cdn-icons-png.flaticon.com",
       "ipfs.io",
+      "www.nationalgallery.org.uk",
     ],
   },
 };

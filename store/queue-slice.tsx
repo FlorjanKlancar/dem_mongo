@@ -1,8 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 
 const queueInitialState = {
   userInQueue: false,
   timeInQueue: 0,
+  selectedSquad: [],
 };
 
 const queueSlice = createSlice({
@@ -14,6 +15,9 @@ const queueSlice = createSlice({
     },
     setTimeInQueue(state) {
       state.timeInQueue = state.timeInQueue + 1;
+    },
+    setSelectedSquad(state, action) {
+      state.selectedSquad = action.payload;
     },
   },
 });

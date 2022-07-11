@@ -1,26 +1,27 @@
 import axios from "axios";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { getSession, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import {GetServerSideProps, GetServerSidePropsContext} from "next";
+import {getSession, useSession} from "next-auth/react";
+import {useRouter} from "next/router";
 import React from "react";
-import { useSelector } from "react-redux";
+import {useSelector} from "react-redux";
 import NavbarDem from "../../components/Navbar/NavbarDem";
 import ResourcesField from "../../components/Resources/ResourcesField";
 import VillageSkeleton from "../../components/skeletons/VillageSkeleton";
 import VillageInfoWrapper from "../../components/Wrapper/VillageInfoWrapper";
 import VillageWrapper from "../../components/Wrapper/VillageWrapper";
-import { RootState } from "../../types/storeModel";
+import {RootState} from "../../types/storeModel";
 
 function ResourcesView() {
   const router = useRouter();
-  const { data: session, status } = useSession({
+  const {data: session, status} = useSession({
     required: true,
     onUnauthenticated() {
       router.push("/login");
     },
   });
 
-  const { loading } = useSelector((state: RootState) => state.loading);
+  console.log("session", session);
+  const {loading} = useSelector((state: RootState) => state.loading);
 
   return loading ? (
     <>

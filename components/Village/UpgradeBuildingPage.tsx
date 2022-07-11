@@ -1,34 +1,33 @@
 import axios from "axios";
-import { GetServerSidePropsContext } from "next";
 import Image from "next/image";
-import React, { useEffect, useState } from "react";
-import { buildingModel } from "../../types/buildingModel";
+import React, {useEffect, useState} from "react";
+import {buildingModel} from "../../types/buildingModel";
 import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
 import WheatImg from "../../public/assets/Wheat.png";
-import { ClockIcon, PlusIcon } from "@heroicons/react/outline";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../types/storeModel";
+import {ClockIcon, PlusIcon} from "@heroicons/react/outline";
+import {useDispatch, useSelector} from "react-redux";
+import {RootState} from "../../types/storeModel";
 import toast from "react-hot-toast";
-import { useRouter } from "next/router";
-import { MAX_LEVEL_BUILDINGS } from "../../gsVariables";
-import { troopsInputModel } from "../../types/troopsInputModel";
+import {useRouter} from "next/router";
+import {MAX_LEVEL_BUILDINGS} from "../../gsVariables";
+import {troopsInputModel} from "../../types/troopsInputModel";
 import TroopsTrain from "../../components/Village/TroopsTrain";
-import { useSession } from "next-auth/react";
-import { villageActions } from "../../store/village-slice";
+import {useSession} from "next-auth/react";
+import {villageActions} from "../../store/village-slice";
 
 type VillageTypeProps = {
   building: buildingModel;
 };
 
-function UpgradeBuildingPage({ building }: VillageTypeProps) {
+function UpgradeBuildingPage({building}: VillageTypeProps) {
   const router = useRouter();
-  const { data: session }: any = useSession();
+  const {data: session}: any = useSession();
   const dispatch = useDispatch();
 
   const village = useSelector((state: RootState) => state.village);
-  const { gsUnits }: any = useSelector((state: RootState) => state.gsUnits);
+  const {gsUnits}: any = useSelector((state: RootState) => state.gsUnits);
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const [troops, setTroops] = useState<troopsInputModel[]>(
@@ -59,9 +58,9 @@ function UpgradeBuildingPage({ building }: VillageTypeProps) {
         })
       );
 
-      toast.success("Upgrade started successfully!", { id: upgradeToast });
+      toast.success("Upgrade started successfully!", {id: upgradeToast});
     } else {
-      toast.error("Unable to upgrade...", { id: upgradeToast });
+      toast.error("Unable to upgrade...", {id: upgradeToast});
     }
   };
 

@@ -1,4 +1,4 @@
-import { configureStore } from "@reduxjs/toolkit";
+import {configureStore} from "@reduxjs/toolkit";
 import gsBuildingsSlice from "./gsBuildings-slice";
 import gsUnitsSlice from "./gsUnits-slice";
 import villageSlice from "./village-slice";
@@ -6,6 +6,7 @@ import loadingSlice from "./loading-slice";
 import zilWalletSlice from "./zilWallet-slice";
 import heroSlice from "./hero-slice";
 import queueSlice from "./queue-slice";
+import battleReportsSlice from "./battleReports-slice";
 
 const store = configureStore({
   reducer: {
@@ -16,6 +17,7 @@ const store = configureStore({
     zilWallet: zilWalletSlice.reducer,
     hero: heroSlice.reducer,
     queue: queueSlice.reducer,
+    battleReports: battleReportsSlice.reducer,
   },
 });
 

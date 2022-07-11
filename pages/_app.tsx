@@ -1,20 +1,21 @@
 import "../styles/globals.css";
-import { useEffect } from "react";
-import { Provider, useDispatch } from "react-redux";
+import {useEffect} from "react";
+import {Provider, useDispatch} from "react-redux";
 import store from "../store";
-import { Toaster } from "react-hot-toast";
-import { SessionProvider, useSession } from "next-auth/react";
-import { initializeDataFetch } from "../utils/utilFunctions";
-import { io } from "socket.io-client";
+import {Toaster} from "react-hot-toast";
+import {SessionProvider, useSession} from "next-auth/react";
+import {initializeDataFetch} from "../utils/utilFunctions";
+import {io} from "socket.io-client";
 import socket from "../lib/socket";
-import { queueActions } from "../store/queue-slice";
+import {queueActions} from "../store/queue-slice";
+import {battleReportsActions} from "../store/battleReports-slice";
 
 let firstLoad = true;
 
-function MyApp({ Component, pageProps }: any) {
+function MyApp({Component, pageProps}: any) {
   const dispatch = useDispatch();
 
-  const { data: session }: any = useSession();
+  const {data: session}: any = useSession();
 
   useEffect(() => {
     if (!session) return;
@@ -27,8 +28,12 @@ function MyApp({ Component, pageProps }: any) {
   }, [session]);
 
   useEffect(() => {
+    if (!session) return;
     socket.on("battleResponse", (data) => {
-      dispatch(queueActions.setUserInQueue(false));
+      if (data.response) {
+        dispatch(queueActions.setUserInQueue(false));
+        initializeDataFetch(session.user.uid, dispatch);
+      }
     });
   }, [socket]);
 
@@ -42,7 +47,7 @@ function MyApp({ Component, pageProps }: any) {
 
 function MyAppWithProvider({
   Component,
-  pageProps: { session, ...pageProps },
+  pageProps: {session, ...pageProps},
 }: any) {
   return (
     <SessionProvider session={session} refetchInterval={5 * 60}>
