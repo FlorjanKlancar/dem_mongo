@@ -1,4 +1,5 @@
 import axios from "axios";
+import { battleReportsActions } from "../store/battleReports-slice";
 import { gsBuildingsActions } from "../store/gsBuildings-slice";
 import { gsUnitsActions } from "../store/gsUnits-slice";
 import { heroActions } from "../store/hero-slice";
@@ -24,13 +25,21 @@ export const initializeDataFetch = async (
     );
 
     const responseUser = await axios.get(`/api/user/${userId}`);
-    console.log("responseUser", responseUser);
+
     dispatch(
       heroActions.setHero({
         resources: [{ uri: responseUser.data.user.heroIcon }],
       })
     );
   }
+  const getUnReadReports = await axios.get(`/api/battle/${userId}`);
+
+  dispatch(
+    battleReportsActions.setBattleReports({
+      unreadBattleReports: getUnReadReports.data.newReports,
+      battleReports: getUnReadReports.data.battles,
+    })
+  );
 
   dispatch(
     villageActions.setVillage({

@@ -17,10 +17,10 @@ function VillageInfoTroops() {
         </div>
 
         <div className="mt-2 flex w-full flex-col space-y-2">
-          {villageUnits.map((unit: unitModel) => (
-            <div key={unit.name}>
+          {villageUnits.map((unit: unitModel, i: number) => (
+            <div key={i}>
               {unit.amount ? (
-                gsUnits.map((gsUnit: any, i) => {
+                gsUnits.map((gsUnit: any, i: number) => {
                   if (gsUnit.unitName === unit.name) {
                     return (
                       <div

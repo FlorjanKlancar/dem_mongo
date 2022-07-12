@@ -1,4 +1,4 @@
-import { StaticImageData } from "next/image";
+import {StaticImageData} from "next/image";
 
 export interface MenuItemModel {
   image: StaticImageData | string;
@@ -6,4 +6,5 @@ export interface MenuItemModel {
   logo?: boolean;
   link: string;
   disabled?: boolean;
+  hasNotifications?: boolean;
 }

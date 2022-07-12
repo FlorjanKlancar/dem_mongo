@@ -12,8 +12,6 @@ type StatististicsTableProps = {
 function StatististicsTable({ players, ranks }: StatististicsTableProps) {
   const { data: session }: any = useSession();
 
-  console.log("players", players);
-
   return (
     <div className="w-full overflow-x-auto">
       <table className="table w-full">

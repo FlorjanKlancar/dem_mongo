@@ -1,24 +1,28 @@
+import axios from "axios";
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
 import React from "react";
 import { useSelector } from "react-redux";
 import NavbarDem from "../../components/Navbar/NavbarDem";
-import QueuePage from "../../components/Queue/QueuePage";
+import ReportsPage from "../../components/Reports/ReportsPage";
 import VillageWrapper from "../../components/Wrapper/VillageWrapper";
 import { RootState } from "../../types/storeModel";
 
-function QueueView() {
+function Reports() {
   const { loading } = useSelector((state: RootState) => state.loading);
+  const { battleReports } = useSelector(
+    (state: RootState) => state.battleReports
+  );
 
   return (
     <>
       <NavbarDem />
       {loading ? (
-        <>Loading</>
+        <>Skeleton</>
       ) : (
         <>
           <VillageWrapper>
-            <QueuePage />
+            <ReportsPage battles={battleReports} />
           </VillageWrapper>
         </>
       )}
@@ -26,11 +30,11 @@ function QueueView() {
   );
 }
 
-export default QueueView;
+export default Reports;
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   // Check if the user is authenticated on the server...
-  const session = await getSession(context);
+  const session: any = await getSession(context);
   if (!session) {
     return {
       redirect: {
@@ -39,6 +43,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
+
   return {
     props: {
       session,

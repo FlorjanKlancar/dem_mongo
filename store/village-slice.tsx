@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {createSlice} from "@reduxjs/toolkit";
 
 const villageInitialSlice = {
   clayProductionPerH: 0,
@@ -94,6 +94,10 @@ const villageSlice = createSlice({
     addBuildUnitsNow(state, action) {
       state.unitTrainQueue = action.payload.unitTrainQueue;
       state.resourcesStorage = action.payload.resourcesStorage;
+    },
+
+    updateUnitsState(state, action) {
+      state.units = action.payload;
     },
   },
 });
