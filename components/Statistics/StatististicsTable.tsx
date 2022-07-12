@@ -44,7 +44,7 @@ function StatististicsTable({ players, ranks }: StatististicsTableProps) {
                   </div>
                   <div>
                     <div className="font-bold">
-                      {player.userFields[0].displayName ?? player._id}
+                      {player.userFields[0]?.displayName ?? player._id}
                     </div>
                     <span className="badge badge-sm badge-ghost">Romans</span>
                   </div>
