@@ -2,7 +2,8 @@
 
 <h3 align="center">NFT Mint</h3>
   <p align="center">
-    This app is demo of browser strategy P2E game set in roman times.
+    This app is demo of browser strategy P2E game set in roman times. </br>
+    Discord contacts: Klančar#5359, Floky Huan#2876
   </p>
 </div>
 

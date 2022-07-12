@@ -1,12 +1,14 @@
-import React, { useState } from "react";
+import React, {useState} from "react";
 import TitleImg from "../../public/assets/Napis.png";
 import LoginBackgroundImg from "../../public/assets/Ozadje_01.png";
 import LogoImg from "../../public/assets/Logo.png";
 import Image from "next/image";
-import { useRouter } from "next/router";
-import { signIn } from "next-auth/react";
+import {useRouter} from "next/router";
+import {signIn} from "next-auth/react";
+import googleSignIn from "../../public/assets/btn_google_light_normal.svg";
+import mySvg from "../../public/assets/btn_google_light_normal.svg";
 
-function NewLogin({ providers }: any) {
+function NewLogin({providers}: any) {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [passwordOne, setPasswordOne] = useState("");
@@ -28,7 +30,7 @@ function NewLogin({ providers }: any) {
   return (
     <div className="flex h-screen items-center justify-center">
       <div className="flex h-full items-center justify-center p-5">
-        <div className="relative flex h-[676px] w-full flex-col items-center justify-center bg-slate-800 md:w-[568px]">
+        <div className="relative flex h-[690px] w-full flex-col items-center justify-center bg-slate-800 md:w-[568px]">
           <Image
             src={LoginBackgroundImg}
             layout="fill"
@@ -100,12 +102,13 @@ function NewLogin({ providers }: any) {
               <div key={provider.name}>
                 <div className="mx-12">
                   <button
-                    className="mt-2 w-full cursor-pointer bg-primary p-2 text-lg font-bold text-white hover:bg-primary/80"
+                    className="mt-2 flex w-full cursor-pointer items-center justify-center border-2 border-primary p-1 text-lg font-bold text-white hover:bg-primary/80"
                     onClick={() =>
-                      signIn(provider.id, { callbackUrl: "/resources" })
+                      signIn(provider.id, {callbackUrl: "/resources"})
                     }
                   >
-                    Sign in with {provider.name}
+                    <Image src={googleSignIn} />
+                    <span className="pl-2">Sign in with {provider.name}</span>
                   </button>
                 </div>
               </div>
