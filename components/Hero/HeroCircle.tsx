@@ -2,12 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import toast from "react-hot-toast";
-import {useSelector} from "react-redux";
-import {RootState} from "../../types/storeModel";
+import { useSelector } from "react-redux";
+import { RootState } from "../../types/storeModel";
 
 function HeroCircle() {
-  const {hero}: any = useSelector((state: RootState) => state.hero);
-  const {zilWallet}: any = useSelector((state: RootState) => state.zilWallet);
+  const { hero }: any = useSelector((state: RootState) => state.hero);
+  const { zilWallet }: any = useSelector((state: RootState) => state.zilWallet);
 
   return (
     <div className="avatar w-[250px]">
@@ -22,7 +22,7 @@ function HeroCircle() {
         >
           <Image
             src={`${
-              hero.resources
+              hero?.resources
                 ? hero?.resources[0]?.uri ??
                   "https://wallpaperaccess.com/full/167765.jpg"
                 : "https://wallpaperaccess.com/full/167765.jpg"

@@ -25,7 +25,9 @@ export default async function handler(
             return res.status(404).send("Village not found!");
           }
         } catch (error) {
-          console.log("error", error);
+          res.status(500).send({ error: "failed to fetch data" });
+
+          throw new Error("Internal Server Error");
         }
       }
 

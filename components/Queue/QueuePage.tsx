@@ -100,8 +100,6 @@ function QueuePage() {
     });
   };
 
-  console.log("queue", queue);
-
   return (
     <div className="mb-12 flex flex-col rounded-lg border-2 border-primary/80 bg-slate-800 ">
       <div>

@@ -1,9 +1,8 @@
-import Image from "next/image";
 import Head from "next/head";
-import { getProviders, signIn } from "next-auth/react";
+import { getProviders } from "next-auth/react";
 import { GetServerSideProps } from "next";
 import { providerModel } from "../../types/providerModel";
-import LoginComponent from "../../components/Auth/LoginComponent";
+import NewLogin from "../../components/Auth/NewLogin";
 
 type LoginProps = {
   providers: providerModel[];
@@ -16,7 +15,8 @@ function Login({ providers }: LoginProps) {
         <title>DEM Login</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <LoginComponent providers={providers} />
+
+      <NewLogin providers={providers} isRegisterPage={false} />
     </div>
   );
 }

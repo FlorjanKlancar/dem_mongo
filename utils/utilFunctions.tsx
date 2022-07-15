@@ -11,54 +11,60 @@ export const initializeDataFetch = async (
   dispatch: any,
   firstLoad?: boolean
 ) => {
-  const village = await axios.get(`/api/village/${userId}`);
+  try {
+    const village = await axios.get(`/api/village/${userId}`);
 
-  if (firstLoad) {
-    const response = await axios.get(`/api/initialize`);
+    if (firstLoad) {
+      const response = await axios.get(`/api/initialize`);
+      dispatch(
+        gsUnitsActions.initializeGsUnits({
+          gsUnits: response.data.unitsResponse,
+        })
+      );
+      dispatch(
+        gsBuildingsActions.initializeGsBuildings({
+          gsBuildings: response.data.buildingsResponse,
+        })
+      );
+
+      const responseUser = await axios.get(`/api/user/${userId}`);
+
+      dispatch(
+        heroActions.setHero({
+          resources: [{ uri: responseUser.data.user.heroIcon }],
+        })
+      );
+    }
+    const getUnReadReports = await axios.get(`/api/battle/${userId}`);
+
     dispatch(
-      gsUnitsActions.initializeGsUnits({ gsUnits: response.data.unitsResponse })
-    );
-    dispatch(
-      gsBuildingsActions.initializeGsBuildings({
-        gsBuildings: response.data.buildingsResponse,
+      battleReportsActions.setBattleReports({
+        unreadBattleReports: getUnReadReports.data.newReports,
+        battleReports: getUnReadReports.data.battles,
       })
     );
 
-    const responseUser = await axios.get(`/api/user/${userId}`);
-
     dispatch(
-      heroActions.setHero({
-        resources: [{ uri: responseUser.data.user.heroIcon }],
+      villageActions.setVillage({
+        id: village.data._id,
+        population: village.data.population,
+        resourceFields: village.data.resourceFields,
+        resourcesStorage: village.data.resourcesStorage,
+        villageBuildings: village.data.villageBuildings,
+        woodProductionPerH: village.data.woodProductionPerH,
+        clayProductionPerH: village.data.clayProductionPerH,
+        ironProductionPerH: village.data.ironProductionPerH,
+        wheatProductionPerH: village.data.wheatProductionPerH,
+        currentlyBuilding: village.data.currentlyBuilding,
+        units: village.data.units,
+        unitTrainQueue: village.data.unitTrainQueue,
+        createdAt: village.data.createdAt,
+        updatedAt: village.data.updatedAt,
       })
     );
+
+    dispatch(loadingActions.setLoading(false));
+  } catch (e: any) {
+    console.error("error", e);
   }
-  const getUnReadReports = await axios.get(`/api/battle/${userId}`);
-
-  dispatch(
-    battleReportsActions.setBattleReports({
-      unreadBattleReports: getUnReadReports.data.newReports,
-      battleReports: getUnReadReports.data.battles,
-    })
-  );
-
-  dispatch(
-    villageActions.setVillage({
-      id: village.data._id,
-      population: village.data.population,
-      resourceFields: village.data.resourceFields,
-      resourcesStorage: village.data.resourcesStorage,
-      villageBuildings: village.data.villageBuildings,
-      woodProductionPerH: village.data.woodProductionPerH,
-      clayProductionPerH: village.data.clayProductionPerH,
-      ironProductionPerH: village.data.ironProductionPerH,
-      wheatProductionPerH: village.data.wheatProductionPerH,
-      currentlyBuilding: village.data.currentlyBuilding,
-      units: village.data.units,
-      unitTrainQueue: village.data.unitTrainQueue,
-      createdAt: village.data.createdAt,
-      updatedAt: village.data.updatedAt,
-    })
-  );
-
-  dispatch(loadingActions.setLoading(false));
 };
