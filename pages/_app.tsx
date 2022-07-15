@@ -18,7 +18,7 @@ function MyApp({ Component, pageProps }: any) {
   useEffect(() => {
     if (!session) return;
 
-    if (firstLoad) {
+    if (firstLoad && session.user.uid) {
       console.log("firstLoad", firstLoad);
       initializeDataFetch(session.user.uid, dispatch, true);
       firstLoad = false;

@@ -1,21 +1,21 @@
-import {ArrowNarrowLeftIcon} from "@heroicons/react/outline";
+import { ArrowNarrowLeftIcon } from "@heroicons/react/outline";
 import dayjs from "dayjs";
-import {useSession} from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
-import {useSelector} from "react-redux";
-import {battleReportModel} from "../../types/battleReportModel";
-import {RootState} from "../../types/storeModel";
-import {unitModel} from "../../types/unitModel";
+import { useSelector } from "react-redux";
+import { battleReportModel } from "../../types/battleReportModel";
+import { RootState } from "../../types/storeModel";
+import { unitModel } from "../../types/unitModel";
 import SelectedUnitCard from "../Queue/SelectedUnitCard";
 
 type BattleReportProps = {
   singleBattle: battleReportModel;
 };
 
-function BattleReport({singleBattle}: BattleReportProps) {
-  const {data: session}: any = useSession();
-  const {gsUnits}: any = useSelector((state: RootState) => state.gsUnits);
+function BattleReport({ singleBattle }: BattleReportProps) {
+  const { data: session }: any = useSession();
+  const { gsUnits }: any = useSelector((state: RootState) => state.gsUnits);
 
   const yourTroops =
     session.user.uid === singleBattle.playerOne
@@ -26,7 +26,6 @@ function BattleReport({singleBattle}: BattleReportProps) {
       ? singleBattle.unitsPlayerOne
       : singleBattle.unitsPlayerTwo;
 
-  console.log("singleBattle", singleBattle, yourTroops);
   return (
     <div className="mb-12 flex flex-col px-4">
       <div className="flex	 items-center justify-between ">
