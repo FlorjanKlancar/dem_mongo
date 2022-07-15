@@ -9,6 +9,7 @@ import googleSignIn from "../../public/assets/btn_google_light_normal.svg";
 import ProviderButton from "./ProviderButton";
 import { providerModel } from "../../types/providerModel";
 import axios from "axios";
+import Spinner from "../Widgets/Spinner";
 
 type LoginComponentProps = {
   providers?: any;
@@ -21,6 +22,7 @@ function NewLogin({ providers, isRegisterPage }: LoginComponentProps) {
   const [passwordOne, setPasswordOne] = useState("");
   const [passwordTwo, setPasswordTwo] = useState("");
   const [error, setError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
   const submitHandler = async (e: any) => {
     e.preventDefault();
@@ -52,6 +54,7 @@ function NewLogin({ providers, isRegisterPage }: LoginComponentProps) {
     }
 
     try {
+      setIsLoading(true);
       const response: any = await axios.post("/api/auth/register", {
         email,
         password: passwordOne,
@@ -67,8 +70,11 @@ function NewLogin({ providers, isRegisterPage }: LoginComponentProps) {
 
         router.push("/new-user");
       }
+
+      setIsLoading(false);
     } catch (e: any) {
       setError(e.response.data);
+      setIsLoading(false);
     }
   };
 
@@ -192,7 +198,21 @@ function NewLogin({ providers, isRegisterPage }: LoginComponentProps) {
                     </div>
                   </>
                 ) : (
-                  <button className="login_button">Register</button>
+                  <button
+                    className="login_button"
+                    disabled={isLoading ? true : false}
+                  >
+                    {!isLoading ? (
+                      "Register"
+                    ) : (
+                      <>
+                        Loading
+                        <span className="ml-2">
+                          <Spinner size={5} />
+                        </span>
+                      </>
+                    )}
+                  </button>
                 )}
               </div>
             </form>

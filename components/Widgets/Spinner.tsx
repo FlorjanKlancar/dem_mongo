@@ -8,10 +8,14 @@ const override = css`
   margin: 0 auto;
 `;
 
-function Spinner() {
+type SpinnerProps = {
+  size?: number;
+};
+
+function Spinner({ size = 20 }: SpinnerProps) {
   return (
     <div className="sweet-loading">
-      <SyncLoader color="#cda37c" css={override} size={20} />
+      <SyncLoader color="#cda37c" css={override} size={size} />
     </div>
   );
 }

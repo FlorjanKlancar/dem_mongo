@@ -39,5 +39,5 @@ html {
 }
 
 .login_button {
-  @apply mt-2 flex h-[58px] w-[320px]  cursor-pointer items-center justify-center border-2 border-primary p-1 text-lg font-semibold text-white hover:bg-primary/80;
+  @apply mt-2 flex h-[58px] w-[320px]  cursor-pointer items-center justify-center border-2 border-primary p-1 text-lg font-semibold text-white hover:bg-primary/80 disabled:cursor-not-allowed disabled:border-slate-500 disabled:bg-primary/50;
 }
