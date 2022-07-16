@@ -2,19 +2,19 @@ import mongoose from "mongoose";
 
 const QueueSchema = new mongoose.Schema(
   {
-    id: { type: String },
-    userId: { type: String },
+    id: {type: String},
+    userId: {type: String},
     unitsInQueue: [
       {
-        level: { type: Number },
-        amount: { type: Number },
-        name: { type: String },
+        level: {type: Number},
+        amount: {type: Number},
+        name: {type: String},
       },
     ],
-    elo: { type: Number },
-    socketId: { type: String },
+    elo: {type: Number},
+    socketId: {type: String},
   },
-  { timestamps: true }
+  {timestamps: true}
 );
 
-export default mongoose.model("Queue", QueueSchema);
+export default mongoose?.models?.Queue || mongoose.model("Queue", QueueSchema);

@@ -1,5 +1,7 @@
 import axios from "axios";
-import { NextApiRequest, NextApiResponse } from "next";
+import {NextApiRequest, NextApiResponse} from "next";
+import {getAllBuildings} from "../../../utils/gsBuildingsFunctions";
+import {getAllUnits} from "../../../utils/gsUnitsFunctions";
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,17 +12,12 @@ export default async function handler(
     case "GET": {
       {
         try {
-          const buildingsResponse = await axios.get(
-            `${process.env.NODE_JS_URI}/gsBuildings`
-          );
-
-          const unitsResponse = await axios.get(
-            `${process.env.NODE_JS_URI}/gsUnits`
-          );
+          const gsBuildings = await getAllBuildings();
+          const gsUnits = await getAllUnits();
 
           res.status(200).json({
-            buildingsResponse: buildingsResponse.data,
-            unitsResponse: unitsResponse.data,
+            buildingsResponse: gsBuildings,
+            unitsResponse: gsUnits,
           });
         } catch (error) {
           console.log("error", error);

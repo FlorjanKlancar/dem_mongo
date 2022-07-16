@@ -23,5 +23,5 @@
     "pages/api/gameFunctions/index.js",
     "utils/mongodb.js"
   ],
-  "exclude": ["node_modules, lib, _middleware.js"]
+  "exclude": ["node_modules, lib"]
 }

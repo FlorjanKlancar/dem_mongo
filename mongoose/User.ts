@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const UserSchema = new mongoose.Schema({
-  id: { type: Number },
+  id: {type: Number},
   displayName: {
     type: String,
     maxlength: 20,
@@ -59,4 +59,4 @@ UserSchema.methods.comparePassword = async function (
   return isMatch;
 };
 
-export default mongoose.models.User || mongoose.model("User", UserSchema);
+export default mongoose?.models?.User || mongoose.model("User", UserSchema);

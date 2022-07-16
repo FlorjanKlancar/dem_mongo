@@ -29,4 +29,5 @@ const BattleSchema = new mongoose.Schema(
   {timestamps: true}
 );
 
-export default mongoose.model("Battle", BattleSchema);
+export default mongoose?.models?.Battle ||
+  mongoose.model("Battle", BattleSchema);

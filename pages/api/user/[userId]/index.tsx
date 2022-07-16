@@ -1,5 +1,5 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
+import {NextApiRequest, NextApiResponse} from "next";
+import {getUserById, updateUser} from "../../../../utils/userInfoFunctions";
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,22 +10,20 @@ export default async function handler(
 
     case "PUT":
       {
-        const { userId } = req.query;
-        const { heroIcon, displayName } = req.body;
+        const {userId} = req.query;
+        const {heroIcon, displayName} = req.body;
 
         if (userId) {
-          const response = await axios.put(
-            `${process.env.NODE_JS_URI}/user/${userId}`,
-            {
-              heroIcon,
-              displayName,
-            }
+          const updatedUser = await updateUser(
+            userId.toString(),
+            displayName,
+            heroIcon
           );
 
-          if (response.status === 200) {
-            res.status(200).send(response.data);
+          if (updatedUser.status === 200) {
+            res.status(updatedUser.status).send(updatedUser.updatedUser);
           } else {
-            res.status(400).send("Error");
+            res.status(updatedUser.status).send(updatedUser.msg);
           }
         } else res.status(400).send("Parameters missing");
       }
@@ -33,15 +31,13 @@ export default async function handler(
 
     case "GET":
       {
-        const { userId } = req.query;
+        const {userId} = req.query;
 
         if (userId) {
-          const response = await axios.get(
-            `${process.env.NODE_JS_URI}/user/${userId}`
-          );
+          const getUser = await getUserById(userId.toString());
 
-          if (response.status === 200) {
-            res.status(200).send(response.data);
+          if (getUser.status === 200) {
+            res.status(200).send(getUser);
           } else {
             res.status(400).send("Error");
           }

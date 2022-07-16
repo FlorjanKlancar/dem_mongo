@@ -1,5 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import axios from "axios";
+import {NextApiRequest, NextApiResponse} from "next";
+import {
+  createVillage,
+  getVillageById,
+} from "../../../../utils/villageFunctions";
 
 export default async function handler(
   req: NextApiRequest,
@@ -9,45 +12,48 @@ export default async function handler(
     default:
     case "GET":
       {
-        let { id } = req.query;
+        let {id} = req.query;
+        console.log("id", id);
         if (!id) {
-          res.status(404).send("No id!");
+          return res.status(500).send("Missing id");
         }
 
         try {
-          const response = await axios.get(
-            `${process.env.NODE_JS_URI}/village/${id}`
-          );
+          const response = await getVillageById(id.toString());
 
           if (response.status === 200) {
-            return res.status(200).json(response.data);
+            return res.status(response.status).json(response.villageResponse);
           } else {
-            return res.status(404).send("Village not found!");
+            return res.status(response.status).send(response.msg);
           }
         } catch (error) {
-          res.status(500).send({ error: "failed to fetch data" });
+          res.status(500).send({error: "failed to fetch data"});
 
           throw new Error("Internal Server Error");
         }
       }
-
       break;
 
     case "POST":
       {
-        const { id } = req.query;
+        const {id} = req.query;
 
-        const response = await axios.post(
-          `${process.env.NODE_JS_URI}/village`,
-          {
-            userId: id,
+        if (!id) {
+          return res.status(500).send("Missing id");
+        }
+
+        try {
+          const response = await createVillage(id.toString());
+
+          if (response.status === 201) {
+            res.status(response.status).json(response.village);
+          } else {
+            res.status(response.status).json(response.msg);
           }
-        );
+        } catch (e: any) {
+          res.status(500).send({error: "failed to fetch data"});
 
-        if (response.status === 201) {
-          res.status(201).send(response.data);
-        } else {
-          res.status(400).send("Error");
+          throw new Error("Internal Server Error");
         }
       }
       break;
