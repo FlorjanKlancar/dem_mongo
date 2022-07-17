@@ -4,12 +4,12 @@ import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
 import WheatImg from "../../public/assets/Wheat.png";
-import { ClockIcon, PlusIcon } from "@heroicons/react/outline";
+import {ClockIcon, PlusIcon} from "@heroicons/react/outline";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useSession } from "next-auth/react";
-import { useDispatch } from "react-redux";
-import { villageActions } from "../../store/village-slice";
+import {useSession} from "next-auth/react";
+import {useDispatch} from "react-redux";
+import {villageActions} from "../../store/village-slice";
 
 type NewBuildingModalProps = {
   gsBuildings: any;
@@ -24,7 +24,7 @@ function NewBuildingModal({
   setOpen,
   village,
 }: NewBuildingModalProps) {
-  const { data: session }: any = useSession();
+  const {data: session}: any = useSession();
   const dispatch = useDispatch();
 
   const filterBuildings = gsBuildings.filter(
@@ -32,7 +32,7 @@ function NewBuildingModal({
   );
 
   const buildHandler = async (building: any) => {
-    const { type } = building;
+    const {type} = building;
 
     setOpen(false);
     const upgradeToast = toast.loading("Upgrading...");
@@ -46,14 +46,14 @@ function NewBuildingModal({
     if (response.status === 200) {
       dispatch(
         villageActions.addBuildingNow({
-          currentlyBuilding: [response.data.currentlyBuilding],
-          resourcesStorage: response.data.resourcesStorageMinus,
+          currentlyBuilding: [response.villageResponse.currentlyBuilding],
+          resourcesStorage: response.villageResponse.resourcesStorageMinus,
         })
       );
 
-      toast.success("Upgrade started successfully!", { id: upgradeToast });
+      toast.success("Upgrade started successfully!", {id: upgradeToast});
     } else {
-      toast.error("Unable to upgrade...", { id: upgradeToast });
+      toast.error("Unable to upgrade...", {id: upgradeToast});
     }
   };
 

@@ -53,8 +53,8 @@ function UpgradeBuildingPage({building}: VillageTypeProps) {
     if (response.status === 200) {
       dispatch(
         villageActions.addBuildingNow({
-          currentlyBuilding: [response.data.currentlyBuilding],
-          resourcesStorage: response.data.resourcesStorageMinus,
+          currentlyBuilding: [response.villageResponse.currentlyBuilding],
+          resourcesStorage: response.villageResponse.resourcesStorageMinus,
         })
       );
 

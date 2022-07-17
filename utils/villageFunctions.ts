@@ -38,7 +38,7 @@ const getVillageById = async (userId: string) => {
   const villageResponse = await Village.findOne({userId: userId});
 
   if (!villageResponse) {
-    return {status: 404, msg: "Your village already exists!"};
+    return {status: 400, msg: "Your village already exists!"};
   } else {
     const updatedResources = await updateResourcesToDate(
       villageResponse,

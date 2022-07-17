@@ -44,6 +44,6 @@ export async function getServerSideProps({params}: GetServerSidePropsContext) {
     if (response.status !== 200) {
       return {notFound: true};
     }
-    return {props: {battleReport: response.data}};
+    return {props: {battleReport: response.villageResponse}};
   }
 }

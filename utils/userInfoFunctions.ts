@@ -22,6 +22,7 @@ const getUserById = async (userId: string) => {
 
   return {
     status: 200,
+    user,
     villageResponse: villages[getUserPositionOnLadder],
     positionOnLadder: getUserPositionOnLadder + 1,
   };

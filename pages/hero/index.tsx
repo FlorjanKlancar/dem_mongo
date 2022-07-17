@@ -1,10 +1,10 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import React, {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
 import HeroPageComponent from "../../components/Hero/HeroPageComponent";
 import NavbarDem from "../../components/Navbar/NavbarDem";
 import VillageWrapper from "../../components/Wrapper/VillageWrapper";
-import { RootState } from "../../types/storeModel";
+import {RootState} from "../../types/storeModel";
 
 function HeroPage() {
   const [players, setPlayers] = useState([]);
@@ -12,14 +12,14 @@ function HeroPage() {
   const fetchStatistics = async () => {
     const playersResponse = await axios.get("/api/statistics");
 
-    setPlayers(playersResponse.data);
+    setPlayers(playersResponse.villageResponse);
   };
 
   useEffect(() => {
     fetchStatistics();
   }, []);
 
-  const { loading } = useSelector((state: RootState) => state.loading);
+  const {loading} = useSelector((state: RootState) => state.loading);
 
   return loading ? (
     <>

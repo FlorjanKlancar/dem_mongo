@@ -18,10 +18,10 @@ const initializeDataFetch = async (
   firstLoad?: boolean
 ) => {
   try {
-    const village = await axios.get(`/api/village/${userId}`);
+    const village: any = await axios.get(`/api/village/${userId}`);
 
     if (firstLoad) {
-      const response = await axios.get(`/api/initialize`);
+      const response: any = await axios.get(`/api/initialize`);
       dispatch(
         gsUnitsActions.initializeGsUnits({
           gsUnits: response.data.unitsResponse,
@@ -33,7 +33,7 @@ const initializeDataFetch = async (
         })
       );
 
-      const responseUser = await axios.get(`/api/user/${userId}`);
+      const responseUser: any = await axios.get(`/api/user/${userId}`);
 
       dispatch(
         heroActions.setHero({
@@ -41,7 +41,7 @@ const initializeDataFetch = async (
         })
       );
     }
-    const getUnReadReports = await axios.get(`/api/battle/${userId}`);
+    const getUnReadReports: any = await axios.get(`/api/battle/${userId}`);
 
     dispatch(
       battleReportsActions.setBattleReports({

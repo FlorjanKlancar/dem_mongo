@@ -13,7 +13,7 @@ export default async function handler(
     case "GET":
       {
         let {id} = req.query;
-        console.log("id", id);
+
         if (!id) {
           return res.status(500).send("Missing id");
         }
