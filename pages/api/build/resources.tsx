@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import axios from "axios";
-import type { NextApiRequest, NextApiResponse } from "next";
+import type {NextApiRequest, NextApiResponse} from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -18,7 +18,7 @@ export default async function handler(
           const cancleJob = req.body.cancleJob;
           const forceFinishJob = req.body.forceFinishJob;
 
-          const response = await axios.post(
+          const response: any = await axios.post(
             `${process.env.NODE_JS_URI}/build/buildings`,
             {
               villageId,

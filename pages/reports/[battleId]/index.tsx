@@ -37,7 +37,7 @@ export async function getServerSideProps({params}: GetServerSidePropsContext) {
   const battleId = params!.battleId;
 
   if (battleId) {
-    const response = await axios.get(
+    const response: any = await axios.get(
       `${process.env.NODE_JS_URI}/battle/${battleId}`
     );
 

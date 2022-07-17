@@ -1,19 +1,19 @@
 import axios from "axios";
-import { GetServerSidePropsContext } from "next";
+import {GetServerSidePropsContext} from "next";
 import React from "react";
-import { useSelector } from "react-redux";
+import {useSelector} from "react-redux";
 import NavbarDem from "../../../components/Navbar/NavbarDem";
 import UserDetailsPage from "../../../components/Statistics/UserDetailsPage";
 import VillageWrapper from "../../../components/Wrapper/VillageWrapper";
-import { RootState } from "../../../types/storeModel";
-import { userDetailsProps } from "../../../types/userDetailsModel";
+import {RootState} from "../../../types/storeModel";
+import {userDetailsProps} from "../../../types/userDetailsModel";
 
 function UserDetails({
   user,
   villageResponse,
   positionOnLadder,
 }: userDetailsProps) {
-  const { loading } = useSelector((state: RootState) => state.loading);
+  const {loading} = useSelector((state: RootState) => state.loading);
 
   return (
     <>
@@ -35,18 +35,16 @@ function UserDetails({
 
 export default UserDetails;
 
-export async function getServerSideProps({
-  params,
-}: GetServerSidePropsContext) {
+export async function getServerSideProps({params}: GetServerSidePropsContext) {
   const userId = params!.userId;
 
   if (userId) {
-    const response = await axios.get(
+    const response: any = await axios.get(
       `${process.env.NODE_JS_URI}/user/${userId}`
     );
 
     if (response.status !== 200) {
-      return { notFound: true };
+      return {notFound: true};
     }
     return {
       props: {

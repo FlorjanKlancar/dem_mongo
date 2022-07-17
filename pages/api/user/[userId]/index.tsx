@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import {NextApiRequest, NextApiResponse} from "next";
 import axios from "axios";
 
 export default async function handler(
@@ -10,11 +10,11 @@ export default async function handler(
 
     case "PUT":
       {
-        const { userId } = req.query;
-        const { heroIcon, displayName } = req.body;
+        const {userId} = req.query;
+        const {heroIcon, displayName} = req.body;
 
         if (userId) {
-          const response = await axios.put(
+          const response: any = await axios.put(
             `${process.env.NODE_JS_URI}/user/${userId}`,
             {
               heroIcon,
@@ -33,10 +33,10 @@ export default async function handler(
 
     case "GET":
       {
-        const { userId } = req.query;
+        const {userId} = req.query;
 
         if (userId) {
-          const response = await axios.get(
+          const response: any = await axios.get(
             `${process.env.NODE_JS_URI}/user/${userId}`
           );
 

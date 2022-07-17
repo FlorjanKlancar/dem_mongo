@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 
 const UserSchema = new mongoose.Schema({
-  id: { type: Number },
+  id: {type: Number},
   displayName: {
     type: String,
     maxlength: 20,
@@ -16,7 +16,6 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    unique: true,
   },
   image: {
     type: String,
@@ -38,8 +37,10 @@ const UserSchema = new mongoose.Schema({
 UserSchema.pre("save", async function () {
   if (!this.isModified("password")) return;
 
-  const salt = await bcrypt.genSalt(10);
-  this.password = (await bcrypt.hash(this.password as any, salt)) as any;
+  if (this.password) {
+    const salt = await bcrypt.genSalt(10);
+    this.password = (await bcrypt.hash(this.password as any, salt)) as any;
+  }
 });
 
 /* UserSchema.methods.createJWT = function () {

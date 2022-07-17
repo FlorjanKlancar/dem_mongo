@@ -13,7 +13,7 @@ export default async function handler(
         const {userId} = req.query;
 
         if (userId) {
-          const response = await axios.get(
+          const response: any = await axios.get(
             `${process.env.NODE_JS_URI}/battle/user/${userId}`
           );
 

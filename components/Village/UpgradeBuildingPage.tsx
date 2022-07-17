@@ -43,7 +43,7 @@ function UpgradeBuildingPage({building}: VillageTypeProps) {
   const upgradeHandler = async () => {
     router.push("/village");
     const upgradeToast = toast.loading("Upgrading...");
-    const response = await axios.post(`/api/build/resources`, {
+    const response: any = await axios.post(`/api/build/resources`, {
       villageId: session.user.uid,
       buildingName: building.type,
       fieldId: selectedBuilding.id,

@@ -1,25 +1,25 @@
 import axios from "axios";
 import Image from "next/image";
-import React, { useState } from "react";
+import React, {useState} from "react";
 import toast from "react-hot-toast";
-import { useDispatch, useSelector } from "react-redux";
-import { MAX_LEVEL_RESOURCES } from "../../gsVariables";
-import { resourceField } from "../../types/resourceField";
-import { RootState } from "../../types/storeModel";
-import { CogIcon, LibraryIcon } from "@heroicons/react/outline";
+import {useDispatch, useSelector} from "react-redux";
+import {MAX_LEVEL_RESOURCES} from "../../gsVariables";
+import {resourceField} from "../../types/resourceField";
+import {RootState} from "../../types/storeModel";
+import {CogIcon, LibraryIcon} from "@heroicons/react/outline";
 import ResourcesMaxLevelModal from "./ResourcesMaxLevelModal";
 import ResourcesModal from "./ResourcesModal";
 import Modal from "../Modal/Modal";
 import Link from "next/link";
-import { useSession } from "next-auth/react";
-import { villageActions } from "../../store/village-slice";
+import {useSession} from "next-auth/react";
+import {villageActions} from "../../store/village-slice";
 
 function ResourcesField() {
-  const { data: session }: any = useSession();
+  const {data: session}: any = useSession();
   const dispatch = useDispatch();
 
   const village: any = useSelector((state: RootState) => state.village);
-  const { gsBuildings } = useSelector((state: RootState) => state.gsBuildings);
+  const {gsBuildings} = useSelector((state: RootState) => state.gsBuildings);
 
   const [clickedResource, setClickedResource] = useState<any>({});
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
@@ -52,7 +52,7 @@ function ResourcesField() {
   const upgradeHandler = async () => {
     setOpen(false);
     const upgradeToast = toast.loading("Upgrading...");
-    const response = await axios.post(`api/build/resources`, {
+    const response: any = await axios.post(`api/build/resources`, {
       villageId: session.user.uid,
       buildingName: clickedResource.type,
       fieldId: clickedResource.id,
@@ -67,9 +67,9 @@ function ResourcesField() {
         })
       );
 
-      toast.success("Upgrade started successfully!", { id: upgradeToast });
+      toast.success("Upgrade started successfully!", {id: upgradeToast});
     } else {
-      toast.error("Unable to upgrade...", { id: upgradeToast });
+      toast.error("Unable to upgrade...", {id: upgradeToast});
     }
   };
 

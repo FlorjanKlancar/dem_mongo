@@ -1,5 +1,5 @@
 import axios from "axios";
-import { NextApiRequest, NextApiResponse } from "next";
+import {NextApiRequest, NextApiResponse} from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,11 +10,11 @@ export default async function handler(
     case "GET": {
       {
         try {
-          const buildingsResponse = await axios.get(
+          const buildingsResponse: any = await axios.get(
             `${process.env.NODE_JS_URI}/gsBuildings`
           );
 
-          const unitsResponse = await axios.get(
+          const unitsResponse: any = await axios.get(
             `${process.env.NODE_JS_URI}/gsUnits`
           );
 
