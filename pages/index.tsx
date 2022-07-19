@@ -1,7 +1,5 @@
-import {useSession} from "next-auth/react";
-import {useRouter} from "next/router";
-import React, {useEffect} from "react";
-import {useDispatch} from "react-redux";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 
 function RootPage() {
   const router = useRouter();

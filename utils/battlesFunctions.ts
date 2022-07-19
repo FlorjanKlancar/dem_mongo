@@ -1,6 +1,6 @@
 import Battle from "../mongoose/Battle";
 
-const getBattlesByUserId = async (userId: string) => {
+const getBattlesForUser = async (userId: string) => {
   const battles = await Battle.find({
     $or: [
       {
@@ -10,11 +10,24 @@ const getBattlesByUserId = async (userId: string) => {
         playerTwo: userId,
       },
     ],
-  }).sort({createdAt: -1});
+  }).sort({ createdAt: -1 });
 
   const filterUnReadBattles = battles.filter((battle) => battle.newReport);
 
-  return {battles, newReports: filterUnReadBattles.length};
+  return { battles, newReports: filterUnReadBattles.length };
 };
 
-export {getBattlesByUserId};
+const getBattleById = async (battleId: string) => {
+  const battle = await Battle.findOneAndUpdate(
+    {
+      _id: battleId,
+    },
+    {
+      newReport: false,
+    }
+  );
+
+  return battle;
+};
+
+export { getBattlesForUser, getBattleById };

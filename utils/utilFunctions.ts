@@ -2,15 +2,84 @@ import axios from "axios";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration.js";
 import Village from "../mongoose/Village";
-import {battleReportsActions} from "../store/battleReports-slice";
-import {gsBuildingsActions} from "../store/gsBuildings-slice";
-import {gsUnitsActions} from "../store/gsUnits-slice";
-import {heroActions} from "../store/hero-slice";
-import {loadingActions} from "../store/loading-slice";
-import {villageActions} from "../store/village-slice";
-import {getBuildingById} from "./gsBuildingsFunctions";
+import { battleReportsActions } from "../store/battleReports-slice";
+import { gsBuildingsActions } from "../store/gsBuildings-slice";
+import { gsUnitsActions } from "../store/gsUnits-slice";
+import { heroActions } from "../store/hero-slice";
+import { loadingActions } from "../store/loading-slice";
+import { villageActions } from "../store/village-slice";
+import { getBuildingById } from "./gsBuildingsFunctions";
+
+type createUpdatedObjectProps = {
+  buildingName: string;
+  currentlyBuildingLevel: number;
+  fieldId: number;
+  endBuildTime: Date;
+  isBuilding: boolean;
+  villageObject: any;
+};
 
 dayjs.extend(duration);
+
+const createUpdatedObject = async ({
+  buildingName,
+  currentlyBuildingLevel,
+  fieldId,
+  endBuildTime,
+  isBuilding,
+  villageObject,
+}: createUpdatedObjectProps) => {
+  const getBuildingNextLevel = getBuildingById(buildingName);
+  console.log("getBuildingNextLevel", getBuildingNextLevel);
+
+  let updatedObjectTemp = {};
+
+  /*  const iteration =
+    isBuilding       ? villageObject.villageBuildings
+      : villageObject.resourceFields;
+
+  updatedObjectTemp = iteration.map((item: any) => {
+    if (item.id === fieldId) {
+      return {
+        gridPosition: item.gridPosition,
+        description: item.description,
+        id: item.id,
+        type: item.type,
+        level: currentlyBuildingLevel,
+        imageGrid: getBuildingNextLevel.image
+          ? getBuildingNextLevel.image
+          : buildingObject.image,
+        ...(isBuilding === true && {
+          type: buildingName,
+        }),
+        ...(buildingObject.description && {
+          description: buildingObject.description,
+        }),
+      };
+    } else {
+      return item;
+    }
+  }); */
+
+  return updatedObjectTemp;
+};
+
+const checkForBuildingUpdate = async (village: any) => {
+  const serverTime = dayjs().toDate();
+
+  const checkEndBuildingTimes = village.currentlyBuilding.map(
+    (building: any) => {
+      if (building.endBuildTime < serverTime) {
+        await createUpdatedObject(building);
+        console.log("end build for", serverTime, building);
+      } else {
+        console.log("still building", serverTime);
+      }
+    }
+  );
+
+  return village;
+};
 
 const initializeDataFetch = async (
   userId: string,
@@ -37,7 +106,7 @@ const initializeDataFetch = async (
 
       dispatch(
         heroActions.setHero({
-          resources: [{uri: responseUser.data.user.heroIcon}],
+          resources: [{ uri: responseUser.data.user.heroIcon }],
         })
       );
     }
@@ -144,11 +213,15 @@ async function updateResourcesToDate(villageObject: any, villageId: string) {
         : wheatCalculation,
   };
 
-  const village = await Village.findOne({_id: villageId});
+  const village = await Village.findOne({ _id: villageId });
   village.resourcesStorage = updateStorageWith;
+  if (village.currentlyBuilding.length) {
+    const response = await checkForBuildingUpdate(village);
+  }
+
   village.save();
 
   return updateStorageWith;
 }
 
-export {initializeDataFetch, updateResourcesToDate};
+export { initializeDataFetch, updateResourcesToDate };

@@ -1,6 +1,6 @@
-import {NextApiRequest, NextApiResponse} from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 import axios from "axios";
-import {getBattlesByUserId} from "../../../../utils/battlesFunctions";
+import { getBattlesForUser } from "../../../../utils/battlesFunctions";
 
 export default async function handler(
   req: NextApiRequest,
@@ -11,17 +11,17 @@ export default async function handler(
 
     case "GET":
       {
-        const {userId} = req.query;
+        const { userId } = req.query;
 
         if (!userId) {
           return res.status(400).send("Missing userId");
         }
 
-        const {battles, newReports} = await getBattlesByUserId(
+        const { battles, newReports } = await getBattlesForUser(
           userId.toString()
         );
 
-        res.status(200).json({battles, newReports});
+        res.status(200).json({ battles, newReports });
       }
       break;
   }
