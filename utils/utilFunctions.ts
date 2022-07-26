@@ -68,7 +68,7 @@ const checkForBuildingUpdate = async (village: any) => {
   const serverTime = dayjs().toDate();
 
   const checkEndBuildingTimes = village.currentlyBuilding.map(
-    (building: any) => {
+    async (building: any) => {
       if (building.endBuildTime < serverTime) {
         await createUpdatedObject(building);
         console.log("end build for", serverTime, building);
