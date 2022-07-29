@@ -2,21 +2,24 @@ import { CogIcon } from "@heroicons/react/outline";
 import Image from "next/image";
 import Link from "next/link";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import { buildingModel } from "../../types/buildingModel";
 import { resourceField } from "../../types/resourceField";
-import { RootState } from "../../types/storeModel";
+import { villageModel } from "../../types/villageModel";
 import Modal from "../Modal/Modal";
 import NewBuildingModal from "./NewBuildingModal";
 
-function VillageField() {
-  const village: any = useSelector((state: RootState) => state.village);
+type VillageFieldProps = {
+  villageData: villageModel;
+  gsBuildings: buildingModel[];
+};
+
+function VillageField({ villageData, gsBuildings }: VillageFieldProps) {
   const [open, setOpen] = useState(false);
   const [clickedResourceId, setClickedResourceId] = useState<number>(0);
-  const { gsBuildings } = useSelector((state: RootState) => state.gsBuildings);
 
   return (
     <div className="grid max-h-[500px] w-full grid-cols-4 sm:grid-cols-4 md:w-9/12">
-      {village.villageBuildings.map((resource: resourceField) => (
+      {villageData.villageBuildings.map((resource: resourceField) => (
         <div
           key={resource.id}
           onClick={
@@ -58,8 +61,8 @@ function VillageField() {
                 <div></div>
               )}
 
-              {village.currentlyBuilding.length &&
-              village.currentlyBuilding[0].fieldId === resource.id ? (
+              {villageData.currentlyBuilding.length &&
+              villageData.currentlyBuilding[0].fieldId === resource.id ? (
                 <div className="absolute top-2 left-2 animate-spin text-black">
                   <CogIcon className="h-6 w-6" />
                 </div>
@@ -76,7 +79,7 @@ function VillageField() {
           gsBuildings={gsBuildings}
           clickedResourceId={clickedResourceId}
           setOpen={setOpen}
-          village={village}
+          village={villageData}
         />
       </Modal>
     </div>

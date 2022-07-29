@@ -8,7 +8,10 @@ import { gsUnitsActions } from "../store/gsUnits-slice";
 import { heroActions } from "../store/hero-slice";
 import { loadingActions } from "../store/loading-slice";
 import { villageActions } from "../store/village-slice";
-import { getBuildingById } from "./gsBuildingsFunctions";
+import { getBattlesForUser } from "./battlesFunctions";
+import { getAllBuildings, getBuildingById } from "./gsBuildingsFunctions";
+import { getAllUnits } from "./gsUnitsFunctions";
+import { getUserById } from "./userInfoFunctions";
 
 type createUpdatedObjectProps = {
   buildingName: string;
@@ -89,7 +92,7 @@ const initializeDataFetch = async (
   try {
     const village: any = await axios.get(`/api/village/${userId}`);
 
-    if (firstLoad) {
+    /*     if (firstLoad) {
       const response: any = await axios.get(`/api/initialize`);
       dispatch(
         gsUnitsActions.initializeGsUnits({
@@ -109,7 +112,7 @@ const initializeDataFetch = async (
           resources: [{ uri: responseUser.data.user.heroIcon }],
         })
       );
-    }
+    } */
     const getUnReadReports: any = await axios.get(`/api/battle/${userId}`);
 
     dispatch(
@@ -175,7 +178,7 @@ async function updateResourcesToDate(villageObject: any, villageId: string) {
 
   const granaryMaxResourcesForCurrentLevel = findGranaryInVillage
     ? granaryAllLevels.levels[0][`${findGranaryInVillage.level}`]
-        .warehouseResourceLimit
+        .granaryResourceLimit
     : 800;
 
   const date1 = dayjs(serverTime);
@@ -224,4 +227,44 @@ async function updateResourcesToDate(villageObject: any, villageId: string) {
   return updateStorageWith;
 }
 
-export { initializeDataFetch, updateResourcesToDate };
+const fetchSettings = async () => {
+  console.log("FETCH SETTINGS");
+
+  try {
+    const gsBuildings = await getAllBuildings();
+    const gsUnits = await getAllUnits();
+
+    if (!gsBuildings || !gsUnits) {
+      return null;
+    }
+
+    return { gsBuildings, gsUnits };
+  } catch (e: any) {
+    console.error("error", e);
+  }
+};
+
+const dispatchFetchedSettings = (
+  dispatch: any,
+  gsUnits: any,
+  gsBuildings: any
+) => {
+  console.log("TRIGGER DISPATCH");
+  dispatch(
+    gsUnitsActions.initializeGsUnits({
+      gsUnits,
+    })
+  );
+  dispatch(
+    gsBuildingsActions.initializeGsBuildings({
+      gsBuildings,
+    })
+  );
+};
+
+export {
+  initializeDataFetch,
+  updateResourcesToDate,
+  fetchSettings,
+  dispatchFetchedSettings,
+};

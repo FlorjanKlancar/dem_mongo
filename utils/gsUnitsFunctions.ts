@@ -6,4 +6,4 @@ const getAllUnits = async () => {
   return response;
 };
 
-export {getAllUnits};
+export { getAllUnits };

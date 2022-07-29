@@ -58,6 +58,15 @@ const upgradeBuilding = async (
   const village = await Village.findOne({ userId: villageId });
   const buildingNamePrefix = buildingName.split("_");
 
+  if (cancleJob) {
+    village.currentlyBuilding = village.currentlyBuilding.filter(
+      (building: any) => fieldId !== building.fieldId
+    );
+    await village.save();
+
+    return;
+  }
+
   /*     if (forceFinishJob && Object.keys(schedule.scheduledJobs).length !== 0) {
       var my_job = schedule.scheduledJobs[buildingName];
   

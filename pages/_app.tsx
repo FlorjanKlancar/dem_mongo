@@ -7,8 +7,7 @@ import { SessionProvider, useSession } from "next-auth/react";
 import { initializeDataFetch } from "../utils/utilFunctions";
 import socket from "../lib/socket";
 import { queueActions } from "../store/queue-slice";
-
-let firstLoad = true;
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 function MyApp({ Component, pageProps }: any) {
   const dispatch = useDispatch();
@@ -17,12 +16,6 @@ function MyApp({ Component, pageProps }: any) {
 
   useEffect(() => {
     if (!session) return;
-
-    if (firstLoad && session.user.uid) {
-      console.log("firstLoad", firstLoad);
-      initializeDataFetch(session.user.uid, dispatch, true);
-      firstLoad = false;
-    }
   }, [session]);
 
   useEffect(() => {
@@ -43,15 +36,25 @@ function MyApp({ Component, pageProps }: any) {
   );
 }
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 0,
+    },
+  },
+});
+
 function MyAppWithProvider({
   Component,
   pageProps: { session, ...pageProps },
 }: any) {
   return (
     <SessionProvider session={session} refetchInterval={5 * 60}>
-      <Provider store={store}>
-        <MyApp Component={Component} pageProps={pageProps} />
-      </Provider>
+      <QueryClientProvider client={queryClient}>
+        <Provider store={store}>
+          <MyApp Component={Component} pageProps={pageProps} />
+        </Provider>
+      </QueryClientProvider>
     </SessionProvider>
   );
 }

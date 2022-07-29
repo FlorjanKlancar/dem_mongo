@@ -1,13 +1,16 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../types/storeModel";
 import { unitModel } from "../../types/unitModel";
 import { Scrollbars } from "react-custom-scrollbars";
 
-function VillageInfoTroops() {
-  const villageUnits = useSelector((state: RootState) => state.village.units);
-  const { gsUnits } = useSelector((state: RootState) => state.gsUnits);
+type VillageInfoTroopsProps = {
+  villageInfoTroops: unitModel[];
+  gsUnits: unitModel[];
+};
 
+function VillageInfoTroops({
+  villageInfoTroops,
+  gsUnits,
+}: VillageInfoTroopsProps) {
   return (
     <div className="max-h-[260px] overflow-y-auto rounded-xl border-2 border-primary/80 bg-slate-800 p-2 text-center text-gray-200 sm:w-1/2 md:w-full">
       <Scrollbars style={{ height: 240 }} universal>
@@ -17,7 +20,7 @@ function VillageInfoTroops() {
         </div>
 
         <div className="mt-2 flex w-full flex-col space-y-2">
-          {villageUnits.map((unit: unitModel, i: number) => (
+          {villageInfoTroops.map((unit: unitModel, i: number) => (
             <div key={i}>
               {unit.amount ? (
                 gsUnits.map((gsUnit: any, i: number) => {

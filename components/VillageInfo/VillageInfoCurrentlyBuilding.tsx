@@ -6,40 +6,50 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../types/storeModel";
 import dayjs from "dayjs";
 import Countdown, { zeroPad } from "react-countdown";
-import { useSession } from "next-auth/react";
 import { initializeDataFetch } from "../../utils/utilFunctions";
-import { villageActions } from "../../store/village-slice";
 import { Zilliqa } from "@zilliqa-js/zilliqa";
 import { BN, Long, units } from "@zilliqa-js/zilliqa";
 import { StatusType, MessageType } from "@zilliqa-js/zilliqa";
+import { villageModel } from "../../types/villageModel";
+import { buildingModel } from "../../types/buildingModel";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNextAuth } from "../../hooks/useNextAuth";
 
 const contractAddress = "0xfeb6b442f1166f3d2bfa9072e4515b2755de13cc";
 
-function VillageInfoCurrentlyBuilding() {
-  const { data: session }: any = useSession();
+type VillageInfoCurrentlyBuildingProps = {
+  villageData: villageModel;
+  gsBuildings: buildingModel[];
+};
+
+function VillageInfoCurrentlyBuilding({
+  villageData,
+  gsBuildings,
+}: VillageInfoCurrentlyBuildingProps) {
+  const { session }: any = useNextAuth();
+  const queryClient = useQueryClient();
   const dispatch = useDispatch();
 
-  const village: any = useSelector((state: RootState) => state.village);
-  const { gsBuildings }: any = useSelector(
-    (state: RootState) => state.gsBuildings
-  );
   const { zilWallet } = useSelector((state: RootState) => state.zilWallet);
 
   const cancelHandler = async () => {
-    const response = await axios.post(`api/build/resources`, {
+    const response = await axios.post(`api/build/buildings`, {
       villageId: session.user.uid,
-      buildingName: village.currentlyBuilding[0].buildingId,
+      buildingName: villageData.currentlyBuilding[0].buildingId,
+      fieldId: villageData.currentlyBuilding[0].fieldId,
       cancleJob: true,
     });
-
-    if (response.status === 200) {
-      dispatch(villageActions.cancleBuilding());
-
-      toast.success("Successfully canceled build!");
-    } else {
-      toast.error("Unable to cancel build...");
-    }
   };
+
+  const mutation = useMutation(cancelHandler, {
+    onError: (error: any) => {
+      toast.error(error);
+    },
+    onSuccess: () => {
+      toast.success("Successfully canceled build!");
+      queryClient.invalidateQueries(["village"]);
+    },
+  });
 
   const renderer = ({ hours, minutes, seconds, completed }: any) => {
     return (
@@ -94,9 +104,9 @@ function VillageInfoCurrentlyBuilding() {
 
         const response = await axios.post(`api/build/resources`, {
           villageId: session.user.uid,
-          buildingName: village.currentlyBuilding[0].buildingId,
-          fieldId: village.currentlyBuilding[0].fieldId,
-          isBuilding: village.currentlyBuilding[0].isBuilding,
+          buildingName: villageData.currentlyBuilding[0].buildingId,
+          fieldId: villageData.currentlyBuilding[0].fieldId,
+          isBuilding: villageData.currentlyBuilding[0].isBuilding,
           forceFinishJob: true,
         });
 
@@ -114,7 +124,7 @@ function VillageInfoCurrentlyBuilding() {
 
   return (
     <div>
-      {village.currentlyBuilding.length ? (
+      {villageData.currentlyBuilding.length ? (
         <div className="mt-5 rounded-lg border-2 border-primary/80 bg-slate-800 py-4 px-8 text-white">
           <div>Currently building:</div>
           <div className="mt-2 grid grid-cols-2 items-center justify-between gap-2 sm:flex">
@@ -122,7 +132,7 @@ function VillageInfoCurrentlyBuilding() {
               <div>
                 <button
                   className="flex rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-800 hover:text-slate-200"
-                  onClick={cancelHandler}
+                  onClick={() => mutation.mutate()}
                 >
                   Cancel
                   <XIcon className="mt-0.5 h-5 w-5" />
@@ -144,34 +154,30 @@ function VillageInfoCurrentlyBuilding() {
               )}
             </div>
             <div>
-              {village.currentlyBuilding[0].buildingId &&
+              {villageData.currentlyBuilding[0].buildingId &&
                 gsBuildings.map((building: any) => {
                   if (
-                    building.type === village.currentlyBuilding[0].buildingId
+                    building.type ===
+                    villageData.currentlyBuilding[0].buildingId
                   ) {
                     return <span key={building.name}>{building.name}</span>;
                   }
                 })}{" "}
-              - level {village.currentlyBuilding[0].currentlyBuildingLevel}
+              - level {villageData.currentlyBuilding[0].currentlyBuildingLevel}
             </div>
             <div className="grid grid-cols-2 items-center">
               <div className="w-20">Time left:</div>
               <div>
                 <Countdown
-                  date={village.currentlyBuilding[0].endBuildTime}
+                  date={villageData.currentlyBuilding[0].endBuildTime}
                   renderer={renderer}
                   zeroPadTime={2}
-                  onComplete={() =>
-                    setTimeout(
-                      () => initializeDataFetch(session.user.uid, dispatch),
-                      500
-                    )
-                  }
+                  onComplete={() => console.log("Completed")}
                 />
               </div>
               <div className="w-20">End time:</div>
               <div>
-                {dayjs(village.currentlyBuilding[0].endBuildTime).format(
+                {dayjs(villageData.currentlyBuilding[0].endBuildTime).format(
                   "HH:mm:ss"
                 )}
               </div>

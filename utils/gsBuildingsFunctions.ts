@@ -1,7 +1,7 @@
 import Building from "../mongoose/Building";
 
 const getBuildingById = async (buildingId: string) => {
-  const response = await Building.findOne({type: buildingId});
+  const response = await Building.findOne({ type: buildingId });
 
   return response;
 };
@@ -12,4 +12,4 @@ const getAllBuildings = async () => {
   return response;
 };
 
-export {getBuildingById, getAllBuildings};
+export { getBuildingById, getAllBuildings };

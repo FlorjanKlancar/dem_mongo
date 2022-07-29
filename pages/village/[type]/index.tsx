@@ -7,27 +7,51 @@ import NavbarDem from "../../../components/Navbar/NavbarDem";
 import VillageSkeleton from "../../../components/skeletons/VillageSkeleton";
 import VillageWrapper from "../../../components/Wrapper/VillageWrapper";
 import { getBuildingById } from "../../../utils/gsBuildingsFunctions";
+import { useNextAuth } from "../../../hooks/useNextAuth";
+import { useGameSettings } from "../../../hooks/useGameSettings";
+import { useUserVillage } from "../../../hooks/useUserVillage";
+import { useEffect } from "react";
 
 type VillageTypeProps = {
   building: buildingModel;
 };
 
 function VillageType({ building }: VillageTypeProps) {
-  const { loading } = useSelector((state: RootState) => state.loading);
+  const { session }: any = useNextAuth();
 
-  return loading ? (
-    <>
-      <NavbarDem />
-      <VillageSkeleton />
-    </>
-  ) : (
-    <>
-      <NavbarDem />
-      <VillageWrapper>
-        <UpgradeBuildingPage building={building} />
-      </VillageWrapper>
-    </>
-  );
+  const { data: gameSettingsData } = useGameSettings();
+  const {
+    data: villageData,
+    isLoading,
+    isError,
+  } = useUserVillage(session?.user?.uid ?? null);
+
+  if (isLoading)
+    return (
+      <>
+        <NavbarDem />
+        <VillageSkeleton />
+      </>
+    );
+
+  if (isError) return <div>Error: {isError}</div>;
+
+  if (gameSettingsData && villageData)
+    return (
+      <>
+        <NavbarDem />
+        <VillageWrapper
+          villageData={villageData}
+          gameSettings={gameSettingsData}
+        >
+          <UpgradeBuildingPage
+            building={building}
+            villageData={villageData}
+            gsUnits={gameSettingsData.unitsResponse}
+          />
+        </VillageWrapper>
+      </>
+    );
 }
 
 export default VillageType;
