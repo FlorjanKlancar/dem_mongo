@@ -1,33 +1,47 @@
-import axios from "axios";
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
 import React from "react";
-import { useSelector } from "react-redux";
 import NavbarDem from "../../components/Navbar/NavbarDem";
 import ReportsPage from "../../components/Reports/ReportsPage";
 import VillageWrapper from "../../components/Wrapper/VillageWrapper";
-import { RootState } from "../../types/storeModel";
+import { useGameSettings } from "../../hooks/useGameSettings";
+import { useNextAuth } from "../../hooks/useNextAuth";
+import { useReports } from "../../hooks/useReports";
+import { useUserVillage } from "../../hooks/useUserVillage";
 
 function Reports() {
-  const { loading } = useSelector((state: RootState) => state.loading);
-  const { battleReports } = useSelector(
-    (state: RootState) => state.battleReports
-  );
+  const { session }: any = useNextAuth();
+  const { data: gameSettingsData } = useGameSettings();
+  const { data: villageData } = useUserVillage(session.user.uid);
+  const {
+    data: reportsData,
+    isLoading,
+    isError,
+  } = useReports(session.user.uid);
 
-  return (
-    <>
-      <NavbarDem />
-      {loading ? (
-        <>Skeleton</>
-      ) : (
-        <>
-          <VillageWrapper>
-            <ReportsPage battles={battleReports} />
-          </VillageWrapper>
-        </>
-      )}
-    </>
-  );
+  if (isLoading)
+    return (
+      <>
+        <NavbarDem />
+        Skeleton
+      </>
+    );
+
+  if (isError) return <div>Error: {isError}</div>;
+
+  if (reportsData && villageData && gameSettingsData)
+    return (
+      <>
+        <NavbarDem />
+
+        <VillageWrapper
+          villageData={villageData}
+          gameSettings={gameSettingsData}
+        >
+          <ReportsPage battles={reportsData.battles} />
+        </VillageWrapper>
+      </>
+    );
 }
 
 export default Reports;

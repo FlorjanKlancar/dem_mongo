@@ -19,8 +19,6 @@ function VillageView() {
     isError,
   } = useUserVillage(session.user.uid);
 
-  console.log("gameSettingsData", gameSettingsData);
-
   if (isLoading)
     return (
       <>

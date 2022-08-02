@@ -1,8 +1,6 @@
 import { GetServerSidePropsContext } from "next";
 import { buildingModel } from "../../../types/buildingModel";
 import UpgradeBuildingPage from "../../../components/Village/UpgradeBuildingPage";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../types/storeModel";
 import NavbarDem from "../../../components/Navbar/NavbarDem";
 import VillageSkeleton from "../../../components/skeletons/VillageSkeleton";
 import VillageWrapper from "../../../components/Wrapper/VillageWrapper";
@@ -10,7 +8,6 @@ import { getBuildingById } from "../../../utils/gsBuildingsFunctions";
 import { useNextAuth } from "../../../hooks/useNextAuth";
 import { useGameSettings } from "../../../hooks/useGameSettings";
 import { useUserVillage } from "../../../hooks/useUserVillage";
-import { useEffect } from "react";
 
 type VillageTypeProps = {
   building: buildingModel;

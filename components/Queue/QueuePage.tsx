@@ -7,24 +7,24 @@ import { unitModel } from "../../types/unitModel";
 import SelectUnitCard from "./SelectUnitCard";
 import SelectedUnitCard from "./SelectedUnitCard";
 import socket from "../../lib/socket";
-import { useSession } from "next-auth/react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { queueActions } from "../../store/queue-slice";
 
-function QueuePage() {
-  const { data: session }: any = useSession();
+type QueuePageProps = {
+  gsUnits: unitModel[];
+  villageUnits: unitModel[];
+  userId: string;
+};
+
+function QueuePage({ gsUnits, villageUnits, userId }: QueuePageProps) {
   const dispatch = useDispatch();
   const router = useRouter();
 
-  const unitsArray: any = useSelector(
-    (state: RootState) => state.village.units
-  );
-  const { gsUnits }: any = useSelector((state: RootState) => state.gsUnits);
   const queue = useSelector((state: RootState) => state.queue);
 
   const [villageCurrentUnits, setVillageCurrentUnits] =
-    useState<unitModel[]>(unitsArray);
+    useState<unitModel[]>(villageUnits);
   const [selectedSquad, setSelectedSquad] = useState<any>([]);
 
   const handleChange = (e: any, i: number) => {
@@ -56,15 +56,15 @@ function QueuePage() {
       })
     );
 
-    dispatch(
+    /*   dispatch(
       villageActions.updateUnitsState(
-        unitsArray.map((unit: unitModel) => {
+        villageUnits.map((unit: unitModel) => {
           if (unit._id === unitId) {
             return { ...unit, amount: unit.amount - selectedUnit!.amount };
           } else return unit;
         })
       )
-    );
+    ); */
   };
 
   const removeUnitsHandler = (unitName: string, unitAmount: number) => {
@@ -72,7 +72,7 @@ function QueuePage() {
       selectedSquad.filter((unit: unitModel) => unit.name !== unitName)
     );
 
-    dispatch(
+    /*  dispatch(
       villageActions.updateUnitsState(
         unitsArray.map((unit: unitModel) => {
           if (unit.name === unitName) {
@@ -80,13 +80,13 @@ function QueuePage() {
           } else return unit;
         })
       )
-    );
+    ); */
   };
 
   const queueUpHandler = () => {
     const queueToast = toast.loading("Adding to queue...");
 
-    socket.emit("addUserToQueue", { userId: session.user.uid, selectedSquad });
+    socket.emit("addUserToQueue", { userId, selectedSquad });
     socket.on("queueResponse", ({ response }) => {
       if (response.status === 200) {
         dispatch(queueActions.setUserInQueue(true));
@@ -125,12 +125,12 @@ function QueuePage() {
             </div>
 
             <form className="flex w-full flex-col">
-              {!unitsArray.length ? (
+              {!villageUnits.length ? (
                 <div className="text-center  text-sm text-slate-400">
                   No units available
                 </div>
               ) : (
-                unitsArray.map((unit: any) => {
+                villageUnits.map((unit: any) => {
                   if (unit.amount > 0)
                     return (
                       <div key={unit._id}>
@@ -142,7 +142,7 @@ function QueuePage() {
                                   gsUnit={gsUnit}
                                   villageCurrentUnits={villageCurrentUnits}
                                   handleChange={handleChange}
-                                  unitsArray={unitsArray}
+                                  unitsArray={villageUnits}
                                   i={i}
                                   submitHandler={submitHandler}
                                   unit={unit}

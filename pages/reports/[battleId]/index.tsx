@@ -1,12 +1,12 @@
-import axios from "axios";
 import { GetServerSidePropsContext } from "next";
 import React from "react";
-import { useSelector } from "react-redux";
 import NavbarDem from "../../../components/Navbar/NavbarDem";
 import ReportsPage from "../../../components/Reports/ReportsPage";
 import VillageWrapper from "../../../components/Wrapper/VillageWrapper";
+import { useGameSettings } from "../../../hooks/useGameSettings";
+import { useNextAuth } from "../../../hooks/useNextAuth";
+import { useUserVillage } from "../../../hooks/useUserVillage";
 import { battleReportModel } from "../../../types/battleReportModel";
-import { RootState } from "../../../types/storeModel";
 import { getBattleById } from "../../../utils/battlesFunctions";
 
 type BattleIdPageProps = {
@@ -14,22 +14,37 @@ type BattleIdPageProps = {
 };
 
 function BattleIdPage({ battleReport }: BattleIdPageProps) {
-  const { loading } = useSelector((state: RootState) => state.loading);
+  const { session }: any = useNextAuth();
+  const { data: gameSettingsData } = useGameSettings();
+  const {
+    data: villageData,
+    isLoading,
+    isError,
+  } = useUserVillage(session.user.uid);
 
-  return (
-    <>
-      <NavbarDem />
-      {loading ? (
-        <>Skeleton</>
-      ) : (
-        <>
-          <VillageWrapper>
-            <ReportsPage singleBattle={battleReport} />
-          </VillageWrapper>
-        </>
-      )}
-    </>
-  );
+  if (isLoading)
+    return (
+      <>
+        <NavbarDem />
+        Skeleton
+      </>
+    );
+
+  if (isError) return <div>Error: {isError}</div>;
+
+  if (villageData && gameSettingsData)
+    return (
+      <>
+        <NavbarDem />
+
+        <VillageWrapper
+          villageData={villageData}
+          gameSettings={gameSettingsData}
+        >
+          <ReportsPage singleBattle={battleReport} />
+        </VillageWrapper>
+      </>
+    );
 }
 
 export default BattleIdPage;

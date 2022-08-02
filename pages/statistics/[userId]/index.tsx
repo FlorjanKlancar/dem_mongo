@@ -1,11 +1,11 @@
-import axios from "axios";
 import { GetServerSidePropsContext } from "next";
 import React from "react";
-import { useSelector } from "react-redux";
 import NavbarDem from "../../../components/Navbar/NavbarDem";
 import UserDetailsPage from "../../../components/Statistics/UserDetailsPage";
 import VillageWrapper from "../../../components/Wrapper/VillageWrapper";
-import { RootState } from "../../../types/storeModel";
+import { useGameSettings } from "../../../hooks/useGameSettings";
+import { useNextAuth } from "../../../hooks/useNextAuth";
+import { useUserVillage } from "../../../hooks/useUserVillage";
 import { userDetailsProps } from "../../../types/userDetailsModel";
 import { getUserById } from "../../../utils/userInfoFunctions";
 
@@ -14,24 +14,40 @@ function UserDetails({
   villageResponse,
   positionOnLadder,
 }: userDetailsProps) {
-  const { loading } = useSelector((state: RootState) => state.loading);
+  const { session }: any = useNextAuth();
+  const { data: gameSettingsData } = useGameSettings();
+  const {
+    data: villageData,
+    isLoading,
+    isError,
+  } = useUserVillage(session?.user?.uid ?? null);
 
-  return (
-    <>
-      <NavbarDem />
-      {loading ? (
-        <div>skeleton</div>
-      ) : (
-        <VillageWrapper>
+  if (isLoading)
+    return (
+      <>
+        <NavbarDem />
+        SKELETON
+      </>
+    );
+
+  if (isError) return <div>Error: {isError}</div>;
+
+  if (villageData && gameSettingsData)
+    return (
+      <>
+        <NavbarDem />
+        <VillageWrapper
+          villageData={villageData}
+          gameSettings={gameSettingsData}
+        >
           <UserDetailsPage
             user={user}
             villageResponse={villageResponse}
             positionOnLadder={positionOnLadder}
           />
         </VillageWrapper>
-      )}
-    </>
-  );
+      </>
+    );
 }
 
 export default UserDetails;
