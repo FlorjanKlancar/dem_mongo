@@ -9,7 +9,7 @@ dayjs.extend(duration);
 
 const updateVillageObject = async (
   building: currentlyBuildingModel,
-  villageObject: villageModel
+  villageObject: any
 ) => {
   const getBuildingNextLevel: buildingModel = await getBuildingById(
     building.buildingId
@@ -20,6 +20,10 @@ const updateVillageObject = async (
   const iteration = building.isBuilding
     ? villageObject.villageBuildings
     : villageObject.resourceFields;
+
+  const buildingNamePrefix: any =
+    !building.isBuilding && building.buildingId.split("_");
+  console.log("buildingNamePrefix", buildingNamePrefix);
 
   updatedObjectTemp = iteration.map((item: any) => {
     if (item.id === building.fieldId) {
@@ -45,7 +49,13 @@ const updateVillageObject = async (
   const update = {
     ...(building.isBuilding
       ? { villageBuildings: updatedObjectTemp }
-      : { resourceFields: updatedObjectTemp }),
+      : {
+          resourceFields: updatedObjectTemp,
+          [`${buildingNamePrefix[0]}ProductionPerH`]:
+            getBuildingNextLevel.levels[0][building.currentlyBuildingLevel]
+              .productionAdd +
+            villageObject[`${buildingNamePrefix[0]}ProductionPerH`],
+        }),
   };
 
   const village = await Village.findOneAndUpdate(

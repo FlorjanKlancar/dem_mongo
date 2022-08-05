@@ -5,48 +5,6 @@ import { getBuildingById } from "./gsBuildingsFunctions";
 import { updateVillageToDate } from "./utilFunctions";
 import { getVillageById } from "./villageFunctions";
 
-const createUpdatedObject = (
-  isBuilding: boolean,
-  buildingName: string,
-  fieldId: number,
-  villageObject: any,
-  getBuildingCurrentLevel: any,
-  getBuildingNextLevel: buildingModel,
-  buildingObject: buildingModel
-) => {
-  let updatedObjectTemp = {};
-
-  const iteration =
-    isBuilding === true
-      ? villageObject.villageBuildings
-      : villageObject.resourceFields;
-
-  updatedObjectTemp = iteration.map((item: any) => {
-    if (item.id === fieldId) {
-      return {
-        gridPosition: item.gridPosition,
-        description: item.description,
-        id: item.id,
-        type: item.type,
-        level: getBuildingCurrentLevel ? getBuildingCurrentLevel.level + 1 : 1,
-        imageGrid: getBuildingNextLevel.image
-          ? getBuildingNextLevel.image
-          : buildingObject.image,
-        ...(isBuilding === true && {
-          type: buildingName,
-        }),
-        ...(buildingObject.description && {
-          description: buildingObject.description,
-        }),
-      };
-    } else {
-      return item;
-    }
-  });
-
-  return updatedObjectTemp;
-};
-
 const upgradeBuilding = async (
   villageId: any,
   buildingName: string,
