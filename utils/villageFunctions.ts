@@ -1,8 +1,8 @@
-import {connectDB} from "../lib/mongodb";
+import { connectDB } from "../lib/mongodb";
 import Village from "../mongoose/Village";
-import {createUnits} from "./populateData/createUnits";
-import {newVillage} from "./populateData/createVillage";
-import {updateResourcesToDate} from "./utilFunctions";
+import { createUnits } from "./populateData/createUnits";
+import { newVillage } from "./populateData/createVillage";
+import { updateVillageToDate } from "./utilFunctions";
 
 connectDB();
 
@@ -11,7 +11,7 @@ const createVillage = async (userId: string) => {
     userId: userId,
   });
   if (checkVillages) {
-    return {status: 500, msg: "Your village already exists!"};
+    return { status: 500, msg: "Your village already exists!" };
   }
 
   const allUnits = createUnits.map((unit) => {
@@ -31,24 +31,21 @@ const createVillage = async (userId: string) => {
 
   village.save();
 
-  return {status: 201, village};
+  return { status: 201, village };
 };
 
 const getVillageById = async (userId: string) => {
-  const villageResponse = await Village.findOne({userId: userId});
-
-  if (!villageResponse) {
-    return {status: 400, msg: "Your village already exists!"};
+  if (!userId) {
+    return { status: 400, msg: "No userId" };
   } else {
-    const updatedResources = await updateResourcesToDate(
-      villageResponse,
-      villageResponse._id
-    );
+    await updateVillageToDate(userId.toString());
 
-    villageResponse.resourcesStorage = updatedResources;
+    const villageResponse = await Village.findOne({
+      userId: userId.toString(),
+    });
 
-    return {status: 200, villageResponse};
+    return { status: 200, villageResponse };
   }
 };
 
-export {createVillage, getVillageById};
+export { createVillage, getVillageById };

@@ -15,7 +15,6 @@ import toast from "react-hot-toast";
 import { useSession } from "next-auth/react";
 import { useDispatch } from "react-redux";
 import { villageActions } from "../../store/village-slice";
-import { initializeDataFetch } from "../../utils/utilFunctions";
 
 type TroopsTrainProps = {
   building: buildingModel;
@@ -268,13 +267,13 @@ function TroopsTrain({
                         date={unit.endThisBuild}
                         renderer={renderer}
                         zeroPadTime={2}
-                        onComplete={() =>
+                        /*  onComplete={() =>
                           setTimeout(
                             () =>
                               initializeDataFetch(session.user.uid, dispatch),
                             500
                           )
-                        }
+                        } */
                       />
                     </div>
                   </div>

@@ -1,154 +1,89 @@
-import axios from "axios";
 import dayjs from "dayjs";
 import duration from "dayjs/plugin/duration.js";
 import Village from "../mongoose/Village";
-import { battleReportsActions } from "../store/battleReports-slice";
-import { gsBuildingsActions } from "../store/gsBuildings-slice";
-import { gsUnitsActions } from "../store/gsUnits-slice";
-import { heroActions } from "../store/hero-slice";
-import { loadingActions } from "../store/loading-slice";
-import { villageActions } from "../store/village-slice";
-import { getBattlesForUser } from "./battlesFunctions";
-import { getAllBuildings, getBuildingById } from "./gsBuildingsFunctions";
-import { getAllUnits } from "./gsUnitsFunctions";
-import { getUserById } from "./userInfoFunctions";
-
-type createUpdatedObjectProps = {
-  buildingName: string;
-  currentlyBuildingLevel: number;
-  fieldId: number;
-  endBuildTime: Date;
-  isBuilding: boolean;
-  villageObject: any;
-};
+import { buildingModel, currentlyBuildingModel } from "../types/buildingModel";
+import { villageModel } from "../types/villageModel";
+import { getBuildingById } from "./gsBuildingsFunctions";
 
 dayjs.extend(duration);
 
-const createUpdatedObject = async ({
-  buildingName,
-  currentlyBuildingLevel,
-  fieldId,
-  endBuildTime,
-  isBuilding,
-  villageObject,
-}: createUpdatedObjectProps) => {
-  const getBuildingNextLevel = getBuildingById(buildingName);
-  console.log("getBuildingNextLevel", getBuildingNextLevel);
+const updateVillageObject = async (
+  building: currentlyBuildingModel,
+  villageObject: villageModel
+) => {
+  const getBuildingNextLevel: buildingModel = await getBuildingById(
+    building.buildingId
+  );
 
-  let updatedObjectTemp = {};
+  let updatedObjectTemp: any = [];
 
-  /*  const iteration =
-    isBuilding       ? villageObject.villageBuildings
-      : villageObject.resourceFields;
+  const iteration = building.isBuilding
+    ? villageObject.villageBuildings
+    : villageObject.resourceFields;
 
   updatedObjectTemp = iteration.map((item: any) => {
-    if (item.id === fieldId) {
+    if (item.id === building.fieldId) {
       return {
         gridPosition: item.gridPosition,
         description: item.description,
         id: item.id,
-        type: item.type,
-        level: currentlyBuildingLevel,
-        imageGrid: getBuildingNextLevel.image
-          ? getBuildingNextLevel.image
-          : buildingObject.image,
-        ...(isBuilding === true && {
-          type: buildingName,
-        }),
-        ...(buildingObject.description && {
-          description: buildingObject.description,
+        type: getBuildingNextLevel.type,
+        level: building.currentlyBuildingLevel,
+        imageGrid:
+          getBuildingNextLevel.levels[0][building.currentlyBuildingLevel]
+            .image ?? item.imageGrid,
+
+        ...(getBuildingNextLevel.description && {
+          description: getBuildingNextLevel.description,
         }),
       };
     } else {
       return item;
     }
-  }); */
+  });
 
-  return updatedObjectTemp;
-};
+  const update = {
+    ...(building.isBuilding
+      ? { villageBuildings: updatedObjectTemp }
+      : { resourceFields: updatedObjectTemp }),
+  };
 
-const checkForBuildingUpdate = async (village: any) => {
-  const serverTime = dayjs().toDate();
-
-  const checkEndBuildingTimes = village.currentlyBuilding.map(
-    async (building: any) => {
-      if (building.endBuildTime < serverTime) {
-        await createUpdatedObject(building);
-        console.log("end build for", serverTime, building);
-      } else {
-        console.log("still building", serverTime);
-      }
-    }
+  const village = await Village.findOneAndUpdate(
+    {
+      userId: villageObject.userId.toString(),
+    },
+    update
   );
 
   return village;
 };
 
-const initializeDataFetch = async (
-  userId: string,
-  dispatch: any,
-  firstLoad?: boolean
-) => {
-  try {
-    const village: any = await axios.get(`/api/village/${userId}`);
+const checkForBuildingUpdate = async (village: villageModel) => {
+  const serverTime = dayjs().toDate();
 
-    /*     if (firstLoad) {
-      const response: any = await axios.get(`/api/initialize`);
-      dispatch(
-        gsUnitsActions.initializeGsUnits({
-          gsUnits: response.data.unitsResponse,
-        })
-      );
-      dispatch(
-        gsBuildingsActions.initializeGsBuildings({
-          gsBuildings: response.data.buildingsResponse,
-        })
-      );
+  const mappedBuildQueue = await Promise.all(
+    village.currentlyBuilding
+      .map(async (building: currentlyBuildingModel) => {
+        console.log("servertime", serverTime);
+        if (building.endBuildTime < serverTime) {
+          await updateVillageObject(building, village);
 
-      const responseUser: any = await axios.get(`/api/user/${userId}`);
-
-      dispatch(
-        heroActions.setHero({
-          resources: [{ uri: responseUser.data.user.heroIcon }],
-        })
-      );
-    } */
-    const getUnReadReports: any = await axios.get(`/api/battle/${userId}`);
-
-    dispatch(
-      battleReportsActions.setBattleReports({
-        unreadBattleReports: getUnReadReports.data.newReports,
-        battleReports: getUnReadReports.data.battles,
+          return;
+        } else {
+          console.log("still building", serverTime);
+          return building;
+        }
       })
-    );
+      .filter((item: any) => item !== undefined)
+  );
 
-    dispatch(
-      villageActions.setVillage({
-        id: village.data._id,
-        population: village.data.population,
-        resourceFields: village.data.resourceFields,
-        resourcesStorage: village.data.resourcesStorage,
-        villageBuildings: village.data.villageBuildings,
-        woodProductionPerH: village.data.woodProductionPerH,
-        clayProductionPerH: village.data.clayProductionPerH,
-        ironProductionPerH: village.data.ironProductionPerH,
-        wheatProductionPerH: village.data.wheatProductionPerH,
-        currentlyBuilding: village.data.currentlyBuilding,
-        units: village.data.units,
-        unitTrainQueue: village.data.unitTrainQueue,
-        createdAt: village.data.createdAt,
-        updatedAt: village.data.updatedAt,
-      })
-    );
-
-    dispatch(loadingActions.setLoading(false));
-  } catch (e: any) {
-    console.error("error", e);
-  }
+  return mappedBuildQueue.includes(undefined) ? [] : mappedBuildQueue;
 };
 
-async function updateResourcesToDate(villageObject: any, villageId: string) {
+async function updateVillageToDate(userId: string) {
   const serverTime = dayjs().toDate();
+
+  const villageObject = await Village.findOne({ userId: userId });
 
   const lastVillageUpdateTime = villageObject.updatedAt;
   const villageWoodProduction = villageObject.woodProductionPerH;
@@ -156,20 +91,16 @@ async function updateResourcesToDate(villageObject: any, villageId: string) {
   const villageIronProduction = villageObject.ironProductionPerH;
   const villageWheatProduction = villageObject.wheatProductionPerH;
 
-  const findWarehouseInVillage = villageObject.villageBuildings.find(
-    (building: any) => building.type === "warehouse"
+  const findWarehouseInVillage: any = villageObject.villageBuildings.find(
+    (building: buildingModel) => building.type === "warehouse"
   );
 
-  const findGranaryInVillage = villageObject.villageBuildings.find(
-    (building: any) => building.type === "granary"
+  const findGranaryInVillage: any = villageObject.villageBuildings.find(
+    (building: buildingModel) => building.type === "granary"
   );
 
   const warehouseAllLevels: any = await getBuildingById("warehouse");
   const granaryAllLevels: any = await getBuildingById("granary");
-
-  if (!warehouseAllLevels || !granaryAllLevels) {
-    return "Warehouse and granary not found";
-  }
 
   const warehouseMaxResourcesForCurrentLevel = findWarehouseInVillage
     ? warehouseAllLevels.levels[0][`${findWarehouseInVillage.level}`]
@@ -188,14 +119,17 @@ async function updateResourcesToDate(villageObject: any, villageId: string) {
   const diffInH = dayjs.duration(diffInMS).asHours();
 
   const woodCalculation =
-    villageObject.resourcesStorage.woodAmount + villageWoodProduction * diffInH;
+    villageObject.resourcesStorage.woodAmount +
+    +villageWoodProduction * diffInH;
   const clayCalculation =
-    villageObject.resourcesStorage.clayAmount + villageClayProduction * diffInH;
+    villageObject.resourcesStorage.clayAmount +
+    +villageClayProduction * diffInH;
   const ironCalculation =
-    villageObject.resourcesStorage.ironAmount + villageIronProduction * diffInH;
+    villageObject.resourcesStorage.ironAmount +
+    +villageIronProduction * diffInH;
   const wheatCalculation =
     villageObject.resourcesStorage.wheatAmount +
-    villageWheatProduction * diffInH;
+    +villageWheatProduction * diffInH;
 
   const updateStorageWith = {
     woodAmount:
@@ -216,55 +150,18 @@ async function updateResourcesToDate(villageObject: any, villageId: string) {
         : wheatCalculation,
   };
 
-  const village = await Village.findOne({ _id: villageId });
-  village.resourcesStorage = updateStorageWith;
-  if (village.currentlyBuilding.length) {
-    const response = await checkForBuildingUpdate(village);
+  let currentlyBuildingResponse: any = [];
+
+  villageObject.resourcesStorage = updateStorageWith;
+  if (villageObject.currentlyBuilding.length) {
+    currentlyBuildingResponse = await checkForBuildingUpdate(villageObject);
+
+    villageObject.currentlyBuilding = currentlyBuildingResponse;
   }
 
-  village.save();
+  await villageObject.save();
 
-  return updateStorageWith;
+  return { updateStorageWith };
 }
 
-const fetchSettings = async () => {
-  console.log("FETCH SETTINGS");
-
-  try {
-    const gsBuildings = await getAllBuildings();
-    const gsUnits = await getAllUnits();
-
-    if (!gsBuildings || !gsUnits) {
-      return null;
-    }
-
-    return { gsBuildings, gsUnits };
-  } catch (e: any) {
-    console.error("error", e);
-  }
-};
-
-const dispatchFetchedSettings = (
-  dispatch: any,
-  gsUnits: any,
-  gsBuildings: any
-) => {
-  console.log("TRIGGER DISPATCH");
-  dispatch(
-    gsUnitsActions.initializeGsUnits({
-      gsUnits,
-    })
-  );
-  dispatch(
-    gsBuildingsActions.initializeGsBuildings({
-      gsBuildings,
-    })
-  );
-};
-
-export {
-  initializeDataFetch,
-  updateResourcesToDate,
-  fetchSettings,
-  dispatchFetchedSettings,
-};
+export { updateVillageToDate };

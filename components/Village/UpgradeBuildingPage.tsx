@@ -77,10 +77,10 @@ function UpgradeBuildingPage({
     onError: (error: any) => {
       toast.error(error);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       router.push("/village");
       toast.success("Upgrade started successfully!");
-      queryClient.invalidateQueries(["village"]);
+      await queryClient.invalidateQueries(["village"]);
     },
   });
 

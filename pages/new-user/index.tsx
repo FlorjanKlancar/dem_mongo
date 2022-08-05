@@ -1,17 +1,16 @@
 import axios from "axios";
-import {useSession} from "next-auth/react";
-import {useRouter} from "next/router";
-import React, {useEffect} from "react";
-import {useDispatch} from "react-redux";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React, { useEffect } from "react";
+import { useDispatch } from "react-redux";
 import Spinner from "../../components/Widgets/Spinner";
-import {initializeDataFetch} from "../../utils/utilFunctions";
 
 let firstLoad = true;
 
 function NewUser() {
   const dispatch = useDispatch();
   const router = useRouter();
-  const {data: session, status}: any = useSession({
+  const { data: session, status }: any = useSession({
     required: true,
     onUnauthenticated() {
       router.push("/login");
@@ -20,8 +19,6 @@ function NewUser() {
 
   const createNewVillage = async () => {
     const response = await axios.post(`/api/village/${session?.user?.uid}`);
-
-    initializeDataFetch(session.user.uid, dispatch, true);
 
     if (response.status === 201) {
       router.push("/resources");

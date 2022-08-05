@@ -4,7 +4,6 @@ import { Provider, useDispatch } from "react-redux";
 import store from "../store";
 import { Toaster } from "react-hot-toast";
 import { SessionProvider, useSession } from "next-auth/react";
-import { initializeDataFetch } from "../utils/utilFunctions";
 import socket from "../lib/socket";
 import { queueActions } from "../store/queue-slice";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -23,7 +22,6 @@ function MyApp({ Component, pageProps }: any) {
     socket.on("battleResponse", (data) => {
       if (data.response) {
         dispatch(queueActions.setUserInQueue(false));
-        initializeDataFetch(session.user.uid, dispatch);
       }
     });
   }, [socket]);

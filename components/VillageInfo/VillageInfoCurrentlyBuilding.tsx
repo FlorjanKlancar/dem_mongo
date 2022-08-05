@@ -6,7 +6,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../types/storeModel";
 import dayjs from "dayjs";
 import Countdown, { zeroPad } from "react-countdown";
-import { initializeDataFetch } from "../../utils/utilFunctions";
 import { Zilliqa } from "@zilliqa-js/zilliqa";
 import { BN, Long, units } from "@zilliqa-js/zilliqa";
 import { StatusType, MessageType } from "@zilliqa-js/zilliqa";
@@ -28,7 +27,6 @@ function VillageInfoCurrentlyBuilding({
 }: VillageInfoCurrentlyBuildingProps) {
   const { session }: any = useNextAuth();
   const queryClient = useQueryClient();
-  const dispatch = useDispatch();
 
   const { zilWallet } = useSelector((state: RootState) => state.zilWallet);
 
@@ -45,9 +43,9 @@ function VillageInfoCurrentlyBuilding({
     onError: (error: any) => {
       toast.error(error);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       toast.success("Successfully canceled build!");
-      queryClient.invalidateQueries(["village"]);
+      await queryClient.invalidateQueries(["village"]);
     },
   });
 
@@ -109,10 +107,6 @@ function VillageInfoCurrentlyBuilding({
           isBuilding: villageData.currentlyBuilding[0].isBuilding,
           forceFinishJob: true,
         });
-
-        if (response.status === 200) {
-          initializeDataFetch(session.user.uid, dispatch);
-        }
       }
     });
 
@@ -121,6 +115,8 @@ function VillageInfoCurrentlyBuilding({
     });
     subscriber.start();
   }
+
+  const invalidateHook = async () => {};
 
   return (
     <div>
@@ -172,7 +168,9 @@ function VillageInfoCurrentlyBuilding({
                   date={villageData.currentlyBuilding[0].endBuildTime}
                   renderer={renderer}
                   zeroPadTime={2}
-                  onComplete={() => console.log("Completed")}
+                  onComplete={async () =>
+                    await queryClient.invalidateQueries(["village"])
+                  }
                 />
               </div>
               <div className="w-20">End time:</div>

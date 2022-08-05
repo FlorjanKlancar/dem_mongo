@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
 import React from "react";
@@ -19,6 +20,7 @@ function ResourcesView() {
     isError,
   } = useUserVillage(session.user.uid);
 
+  const queryClient = useQueryClient();
   if (isLoading)
     return (
       <>
@@ -33,6 +35,7 @@ function ResourcesView() {
     return (
       <>
         <NavbarDem />
+
         <VillageWrapper
           villageData={villageData}
           gameSettings={gameSettingsData}

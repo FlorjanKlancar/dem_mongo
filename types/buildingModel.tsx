@@ -7,3 +7,11 @@ export interface buildingModel {
   isBuilding: boolean;
   group: string;
 }
+
+export interface currentlyBuildingModel {
+  buildingId: string;
+  currentlyBuildingLevel: number;
+  fieldId: number;
+  endBuildTime: Date;
+  isBuilding: boolean;
+}

@@ -27,7 +27,7 @@ function ResourcesField({ villageData, gsBuildings }: ResourcesFieldProps) {
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
 
-  const onResourceClickHandler = (id: string, level: number, type: string) => {
+  const onResourceClickHandler = (id: number, level: number, type: string) => {
     const resourceNextLevelInfo: any = Object.values(gsBuildings).find(
       (val: any) => {
         if (val.type === type) return val;
@@ -90,9 +90,9 @@ function ResourcesField({ villageData, gsBuildings }: ResourcesFieldProps) {
     onError: (error: any) => {
       toast.error(error);
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       /*   toast.success("Upgrade started successfully!"); */
-      queryClient.invalidateQueries(["village"]);
+      await queryClient.invalidateQueries(["village"]);
     },
   });
 

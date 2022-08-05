@@ -1,5 +1,3 @@
-// Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import axios from "axios";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { upgradeBuilding } from "../../../utils/buildFunctions";
 
@@ -33,24 +31,6 @@ export default async function handler(
           );
 
           return res.status(200).json(resp);
-
-          /*    const response = await axios.post(
-            `${process.env.NODE_JS_URI}/build/buildings`,
-            {
-              villageId,
-              buildingName,
-              fieldId,
-              isBuilding,
-              cancleJob,
-              forceFinishJob,
-            }
-          );
-
-          if (response.status === 200) {
-            res.status(200).json(response.villageResponse);
-          } else {
-            res.status(400).send("Error");
-          } */
         } catch (error) {
           console.log("error", error);
         }

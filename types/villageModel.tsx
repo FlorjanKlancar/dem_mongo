@@ -1,18 +1,11 @@
+import { currentlyBuildingModel } from "./buildingModel";
 import { resourceStorage } from "./resourceStorage";
 import { unitModel } from "./unitModel";
 
 export interface villageModel {
   clayProductionPerH: number;
   createdAt: Date;
-  currentlyBuilding: [
-    {
-      fieldId: string;
-      endBuildTime: Date;
-      currentlyBuildingLevel: number;
-      buildingId: string;
-      isBuilding: boolean;
-    }
-  ];
+  currentlyBuilding: currentlyBuildingModel[];
   elo: number;
   ironProductionPerH: number;
   population: number;
