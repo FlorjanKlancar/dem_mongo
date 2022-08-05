@@ -116,8 +116,6 @@ function VillageInfoCurrentlyBuilding({
     subscriber.start();
   }
 
-  const invalidateHook = async () => {};
-
   return (
     <div>
       {villageData.currentlyBuilding.length ? (

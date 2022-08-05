@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React from "react";
+import React, { Fragment } from "react";
 import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
@@ -71,8 +71,8 @@ function NewBuildingModal({
       </div>
 
       <div className="max-h-[500px] overflow-y-auto">
-        {filterBuildings.map((building: any) => (
-          <>
+        {filterBuildings.map((building: any, i: number) => (
+          <Fragment key={i}>
             <div key={building.type} className="grid grid-cols-3 gap-5 py-4">
               <div className="col-span-2">
                 <div>{building.name}</div>
@@ -145,7 +145,7 @@ function NewBuildingModal({
               </button>
             </div>
             <hr className="border-primary/80" />
-          </>
+          </Fragment>
         ))}
       </div>
     </div>
