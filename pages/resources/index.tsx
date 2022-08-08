@@ -1,4 +1,3 @@
-import { useQueryClient } from "@tanstack/react-query";
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
 import React from "react";
@@ -9,6 +8,7 @@ import VillageInfoWrapper from "../../components/Wrapper/VillageInfoWrapper";
 import VillageWrapper from "../../components/Wrapper/VillageWrapper";
 import { useGameSettings } from "../../hooks/useGameSettings";
 import { useNextAuth } from "../../hooks/useNextAuth";
+import { useQueue } from "../../hooks/useQueue";
 import { useUserVillage } from "../../hooks/useUserVillage";
 
 function ResourcesView() {
@@ -19,9 +19,11 @@ function ResourcesView() {
     isLoading,
     isError,
   } = useUserVillage(session.user.uid);
+  const { data: queueData, isLoading: queueIsLoading } = useQueue(
+    session.user.uid
+  );
 
-  const queryClient = useQueryClient();
-  if (isLoading)
+  if (isLoading && queueIsLoading)
     return (
       <>
         <NavbarDem />
@@ -31,10 +33,10 @@ function ResourcesView() {
 
   if (isError) return <div>Error: {isError}</div>;
 
-  if (gameSettingsData && villageData)
+  if (gameSettingsData && villageData && !queueIsLoading)
     return (
       <>
-        <NavbarDem />
+        <NavbarDem queueData={queueData} />
 
         <VillageWrapper
           villageData={villageData}

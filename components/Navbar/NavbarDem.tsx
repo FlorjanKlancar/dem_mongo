@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import NavbarMobile from "./NavbarMobile";
 import Menu from "./Menu";
 import { signOut } from "next-auth/react";
@@ -13,46 +13,21 @@ import socket from "../../lib/socket";
 import toast from "react-hot-toast";
 import { villageActions } from "../../store/village-slice";
 import { useNextAuth } from "../../hooks/useNextAuth";
+import { userInQueueModel } from "../../types/userInQueueModel";
+import dayjs from "dayjs";
+import { useQueryClient } from "@tanstack/react-query";
+import UserInQueueButton from "./UserInQueueButton";
 
-function NavbarDem() {
-  const dispatch = useDispatch();
-  const { session }: any = useNextAuth();
+type NavbarProps = {
+  queueData?: userInQueueModel;
+};
 
+function NavbarDem({ queueData }: NavbarProps) {
   const signOutHandler = async () => {
     await signOut();
   };
 
   const { zilWallet } = useSelector((state: RootState) => state.zilWallet);
-  const queue = useSelector((state: RootState) => state.queue);
-
-  const cancelQueueHandler = () => {
-    const queueToast = toast.loading("Removing from queue...");
-
-    socket.emit("cancelUserFromQueue", { userId: session.user.uid });
-
-    socket.on("cancelResponse", ({ response }) => {
-      if (response.status === 200) {
-        dispatch(queueActions.setUserInQueue(false));
-        dispatch(villageActions.updateUnitsState(response.updateUnits));
-        toast.success(response.msg, { id: queueToast });
-      } else {
-        toast.error(response.msg, { id: queueToast });
-      }
-    });
-  };
-
-  useEffect(() => {
-    if (queue.userInQueue) {
-      const id = setInterval(
-        () => dispatch(queueActions.setTimeInQueue()),
-        1000
-      );
-
-      return () => {
-        clearInterval(id);
-      };
-    }
-  }, [queue]);
 
   return (
     <>
@@ -76,21 +51,7 @@ function NavbarDem() {
           ) : (
             <DisconnectWalletButton />
           )}
-          {queue.userInQueue ? (
-            <div className="tooltip  tooltip-bottom" data-tip="Cancel queue">
-              <button
-                className="navbar_button flex w-full"
-                onClick={cancelQueueHandler}
-              >
-                <span className="w-3/4 lowercase">{queue.timeInQueue}s</span>
-                <span>
-                  <XIcon className="h-4 w-4 text-red-600" />
-                </span>
-              </button>
-            </div>
-          ) : (
-            <></>
-          )}
+          {queueData ? <UserInQueueButton queueData={queueData} /> : <></>}
         </div>
       </div>
     </>
