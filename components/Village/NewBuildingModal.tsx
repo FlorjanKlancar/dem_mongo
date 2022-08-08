@@ -7,9 +7,9 @@ import WheatImg from "../../public/assets/Wheat.png";
 import { ClockIcon, PlusIcon } from "@heroicons/react/outline";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useSession } from "next-auth/react";
 import { useDispatch } from "react-redux";
 import { villageActions } from "../../store/village-slice";
+import { useNextAuth } from "../../hooks/useNextAuth";
 
 type NewBuildingModalProps = {
   gsBuildings: any;
@@ -24,7 +24,7 @@ function NewBuildingModal({
   setOpen,
   village,
 }: NewBuildingModalProps) {
-  const { data: session }: any = useSession();
+  const { session }: any = useNextAuth();
   const dispatch = useDispatch();
 
   const filterBuildings = gsBuildings.filter(
@@ -66,7 +66,7 @@ function NewBuildingModal({
       </div>
       <div className="tabs flex items-center justify-items-center">
         <a className="tab tab-bordered tab-lg  w-1/3">Tab 1</a>
-        <a className="tab tab-active tab-bordered tab-lg">Tab 2</a>
+        <a className="tab tab-bordered tab-active tab-lg">Tab 2</a>
         <a className="tab tab-bordered tab-lg">Tab 3</a>
       </div>
 

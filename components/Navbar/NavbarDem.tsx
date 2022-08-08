@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import NavbarMobile from "./NavbarMobile";
 import Menu from "./Menu";
-import { signOut, useSession } from "next-auth/react";
+import { signOut } from "next-auth/react";
 import ConnectWalletButton from "../NFTMint/ConnectWalletButton";
 import DisconnectWalletButton from "../NFTMint/DisconnectWalletButton";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,10 +12,11 @@ import { XIcon } from "@heroicons/react/outline";
 import socket from "../../lib/socket";
 import toast from "react-hot-toast";
 import { villageActions } from "../../store/village-slice";
+import { useNextAuth } from "../../hooks/useNextAuth";
 
 function NavbarDem() {
   const dispatch = useDispatch();
-  const { data: session }: any = useSession();
+  const { session }: any = useNextAuth();
 
   const signOutHandler = async () => {
     await signOut();

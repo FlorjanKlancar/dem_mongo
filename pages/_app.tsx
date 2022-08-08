@@ -3,15 +3,16 @@ import { useEffect } from "react";
 import { Provider, useDispatch } from "react-redux";
 import store from "../store";
 import { Toaster } from "react-hot-toast";
-import { SessionProvider, useSession } from "next-auth/react";
+import { SessionProvider } from "next-auth/react";
 import socket from "../lib/socket";
 import { queueActions } from "../store/queue-slice";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useNextAuth } from "../hooks/useNextAuth";
 
 function MyApp({ Component, pageProps }: any) {
   const dispatch = useDispatch();
 
-  const { data: session }: any = useSession();
+  const { session }: any = useNextAuth();
 
   useEffect(() => {
     if (!session) return;

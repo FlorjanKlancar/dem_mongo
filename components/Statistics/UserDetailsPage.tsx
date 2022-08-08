@@ -8,18 +8,18 @@ import {
 import Link from "next/link";
 import Image from "next/image";
 import dayjs from "dayjs";
-import { useSession } from "next-auth/react";
 import Modal from "../Modal/Modal";
 import ChangeDisplayNameModal from "./ChangeDisplayNameModal";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { useNextAuth } from "../../hooks/useNextAuth";
 
 function UserDetailsPage({
   user,
   villageResponse,
   positionOnLadder,
 }: userDetailsProps) {
-  const { data: session }: any = useSession();
+  const { session }: any = useNextAuth();
 
   const [open, setOpen] = useState(false);
   const [displayName, setDisplayName] = useState(

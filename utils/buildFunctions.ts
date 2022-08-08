@@ -1,9 +1,9 @@
 import dayjs from "dayjs";
 import Village from "../mongoose/Village";
-import {buildingModel} from "../types/buildingModel";
-import {getBuildingById} from "./gsBuildingsFunctions";
-import {updateVillageObject, updateVillageToDate} from "./utilFunctions";
-import {getVillageById} from "./villageFunctions";
+import { currentlyBuildingModel } from "../types/buildingModel";
+import { getBuildingById } from "./gsBuildingsFunctions";
+import { updateVillageObject, updateVillageToDate } from "./utilFunctions";
+import { getVillageById } from "./villageFunctions";
 
 const upgradeBuilding = async (
   villageId: any,
@@ -13,38 +13,39 @@ const upgradeBuilding = async (
   cancleJob: boolean,
   forceFinishJob: boolean
 ) => {
-  const village = await Village.findOne({userId: villageId});
+  const village = await Village.findOne({ userId: villageId });
 
   if (cancleJob) {
     village.currentlyBuilding = village.currentlyBuilding.filter(
-      (building: any) => fieldId !== building.fieldId
+      (building: currentlyBuildingModel) => fieldId !== building.fieldId
     );
     await village.save();
 
     return;
   }
   if (forceFinishJob) {
-    const test = village.currentlyBuilding.filter(async (building: any) => {
-      if (fieldId !== building.fieldId) {
-        return await updateVillageObject(building, village);
-      }
-    });
+    const findBuilding = village.currentlyBuilding.find(
+      (building: currentlyBuildingModel) => building.fieldId === fieldId
+    );
 
-    console.log("test", test);
-    //await village.save();
+    await updateVillageObject(findBuilding, village);
+    village.currentlyBuilding = village.currentlyBuilding.filter(
+      (building: currentlyBuildingModel) => fieldId !== building.fieldId
+    );
+    await village.save();
 
     return;
   }
 
   const buildingObject = await getBuildingById(buildingName);
-  const {villageResponse: villageObject}: any = await getVillageById(villageId);
+  const { villageResponse: villageObject } = await getVillageById(villageId);
 
   if (!buildingObject) {
-    return {status: 404, msg: "Building not found!"};
+    return { status: 404, msg: "Building not found!" };
   }
 
   if (villageObject.currentlyBuilding.length) {
-    return {status: 400, msg: "Builders are currently unavailable!"};
+    return { status: 400, msg: "Builders are currently unavailable!" };
   }
 
   const getBuildingCurrentLevel = (
@@ -54,7 +55,7 @@ const upgradeBuilding = async (
   ).find((building: any) => building.id === fieldId);
 
   if (getBuildingCurrentLevel === undefined) {
-    return {status: 404, msg: "Building not found!"};
+    return { status: 404, msg: "Building not found!" };
   }
 
   const getBuildingNextLevel =
@@ -63,17 +64,17 @@ const upgradeBuilding = async (
     ];
 
   if (!getBuildingNextLevel) {
-    return {status: 400, msg: "Building is max level!"};
+    return { status: 400, msg: "Building is max level!" };
   }
 
   if (
     getBuildingCurrentLevel.type !== "empty_field" &&
     getBuildingCurrentLevel?.type !== buildingName
   ) {
-    return {status: 400, msg: "Wrong buildingId type in request!"};
+    return { status: 400, msg: "Wrong buildingId type in request!" };
   }
 
-  const {updateStorageWith: villageCurrentResources}: any =
+  const { updateStorageWith: villageCurrentResources }: any =
     await updateVillageToDate(villageObject.userId);
 
   const buildingBuildTime = getBuildingNextLevel.timeToBuild;
@@ -90,7 +91,7 @@ const upgradeBuilding = async (
     villageCurrentResources.ironAmount < buildingResourcesNeeded.iron ||
     villageCurrentResources.wheatAmount < buildingResourcesNeeded.wheat
   ) {
-    return {status: 400, msg: "Insufficient resources!"};
+    return { status: 400, msg: "Insufficient resources!" };
   }
 
   const endBuildTime = dayjs().add(buildingBuildTime, "s").toDate();
@@ -136,4 +137,4 @@ const upgradeBuilding = async (
   };
 };
 
-export {upgradeBuilding};
+export { upgradeBuilding };

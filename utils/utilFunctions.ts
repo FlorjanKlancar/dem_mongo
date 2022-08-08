@@ -23,7 +23,6 @@ const updateVillageObject = async (
 
   const buildingNamePrefix: any =
     !building.isBuilding && building.buildingId.split("_");
-  console.log("buildingNamePrefix", buildingNamePrefix);
 
   updatedObjectTemp = iteration.map((item: any) => {
     if (item.id === building.fieldId) {
@@ -46,7 +45,7 @@ const updateVillageObject = async (
     }
   });
 
-  const update = {
+  const constructUpdateVillageObject = {
     ...(building.isBuilding
       ? { villageBuildings: updatedObjectTemp }
       : {
@@ -62,7 +61,7 @@ const updateVillageObject = async (
     {
       userId: villageObject.userId.toString(),
     },
-    update
+    constructUpdateVillageObject
   );
 
   return village;
@@ -174,4 +173,4 @@ async function updateVillageToDate(userId: string) {
   return { updateStorageWith };
 }
 
-export { updateVillageToDate };
+export { updateVillageToDate, updateVillageObject };

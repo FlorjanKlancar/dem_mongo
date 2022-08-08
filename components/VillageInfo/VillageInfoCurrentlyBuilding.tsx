@@ -10,7 +10,10 @@ import { Zilliqa } from "@zilliqa-js/zilliqa";
 import { BN, Long, units } from "@zilliqa-js/zilliqa";
 import { StatusType, MessageType } from "@zilliqa-js/zilliqa";
 import { villageModel } from "../../types/villageModel";
-import { buildingModel } from "../../types/buildingModel";
+import {
+  buildingModel,
+  currentlyBuildingModel,
+} from "../../types/buildingModel";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useNextAuth } from "../../hooks/useNextAuth";
 
@@ -30,11 +33,15 @@ function VillageInfoCurrentlyBuilding({
 
   const { zilWallet } = useSelector((state: RootState) => state.zilWallet);
 
-  const cancelHandler = async () => {
-    const response = await axios.post(`api/build/buildings`, {
+  const cancelHandler = async (fieldId: number) => {
+    const getCanceledBuilding = villageData.currentlyBuilding.find(
+      (building: currentlyBuildingModel) => building.fieldId === fieldId
+    );
+
+    await axios.post(`api/build/buildings`, {
       villageId: session.user.uid,
-      buildingName: villageData.currentlyBuilding[0].buildingId,
-      fieldId: villageData.currentlyBuilding[0].fieldId,
+      buildingName: getCanceledBuilding!.buildingId,
+      fieldId: getCanceledBuilding!.fieldId,
       cancleJob: true,
     });
   };
@@ -57,8 +64,8 @@ function VillageInfoCurrentlyBuilding({
     );
   };
 
-  function upgradeInstantFinish() {
-    subscribeToEvents();
+  function upgradeInstantFinish(fieldId: number) {
+    subscribeToEvents(fieldId);
     const withdrawContract = window.zilPay.contracts.at(contractAddress);
     try {
       withdrawContract.call("PayForUpgrade", [], {
@@ -73,7 +80,7 @@ function VillageInfoCurrentlyBuilding({
     }
   }
 
-  function subscribeToEvents() {
+  function subscribeToEvents(fieldId: number) {
     const upgradeToast = toast.loading(
       "Your transaction is being processed..."
     );
@@ -99,14 +106,18 @@ function VillageInfoCurrentlyBuilding({
             event["value"][0]["event_logs"][0]["_eventname"],
           { id: upgradeToast }
         );
+        const getCompletedBuilding = villageData.currentlyBuilding.find(
+          (building: currentlyBuildingModel) => building.fieldId === fieldId
+        );
 
-        const response = await axios.post(`api/build/resources`, {
+        await axios.post(`api/build/buildings`, {
           villageId: session.user.uid,
-          buildingName: villageData.currentlyBuilding[0].buildingId,
-          fieldId: villageData.currentlyBuilding[0].fieldId,
-          isBuilding: villageData.currentlyBuilding[0].isBuilding,
+          buildingName: getCompletedBuilding!.buildingId,
+          fieldId: getCompletedBuilding!.fieldId,
+          isBuilding: getCompletedBuilding!.isBuilding,
           forceFinishJob: true,
         });
+        await queryClient.invalidateQueries(["village"]);
       }
     });
 
@@ -116,69 +127,82 @@ function VillageInfoCurrentlyBuilding({
     subscriber.start();
   }
 
+  const getBuildingInfoFromSettings = (
+    buildingId: string,
+    currentlyBuildingLevel: number
+  ) => {
+    const findBuilding = gsBuildings.find(
+      (building: buildingModel) => building.type === buildingId
+    );
+
+    return (
+      <div>
+        {findBuilding!.name} - level {currentlyBuildingLevel}
+      </div>
+    );
+  };
+
   return (
     <div>
       {villageData.currentlyBuilding.length ? (
         <div className="mt-5 rounded-lg border-2 border-primary/80 bg-slate-800 py-4 px-8 text-white">
           <div>Currently building:</div>
-          <div className="mt-2 grid grid-cols-2 items-center justify-between gap-2 sm:flex">
-            <div className="order-last flex space-x-3 sm:order-first">
-              <div>
-                <button
-                  className="flex rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-800 hover:text-slate-200"
-                  onClick={() => mutation.mutate()}
-                >
-                  Cancel
-                  <XIcon className="mt-0.5 h-5 w-5" />
-                </button>
-              </div>
 
-              {Object.keys(zilWallet).length ? (
-                <div>
-                  <button
-                    onClick={upgradeInstantFinish}
-                    className="flex rounded-lg bg-green-500 px-4 py-2 text-white hover:bg-green-800 hover:text-slate-200"
-                  >
-                    Finish
-                    <ThumbUpIcon className="mt-0.5 ml-1 h-5 w-5" />
-                  </button>
+          {villageData.currentlyBuilding.map(
+            (building: currentlyBuildingModel, i: number) => (
+              <div
+                key={i}
+                className="mt-2 grid grid-cols-2 items-center justify-between gap-2 sm:flex"
+              >
+                <div className="order-last flex space-x-3 sm:order-first">
+                  <div>
+                    <button
+                      className="flex rounded-lg bg-red-500 px-4 py-2 text-white hover:bg-red-800 hover:text-slate-200"
+                      onClick={() => mutation.mutate(building.fieldId)}
+                    >
+                      Cancel
+                      <XIcon className="mt-0.5 h-5 w-5" />
+                    </button>
+                  </div>
+
+                  {Object.keys(zilWallet).length ? (
+                    <div>
+                      <button
+                        onClick={() => upgradeInstantFinish(building.fieldId)}
+                        className="flex rounded-lg bg-green-500 px-4 py-2 text-white hover:bg-green-800 hover:text-slate-200"
+                      >
+                        Finish
+                        <ThumbUpIcon className="mt-0.5 ml-1 h-5 w-5" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div></div>
+                  )}
                 </div>
-              ) : (
-                <div></div>
-              )}
-            </div>
-            <div>
-              {villageData.currentlyBuilding[0].buildingId &&
-                gsBuildings.map((building: any) => {
-                  if (
-                    building.type ===
-                    villageData.currentlyBuilding[0].buildingId
-                  ) {
-                    return <span key={building.name}>{building.name}</span>;
-                  }
-                })}{" "}
-              - level {villageData.currentlyBuilding[0].currentlyBuildingLevel}
-            </div>
-            <div className="grid grid-cols-2 items-center">
-              <div className="w-20">Time left:</div>
-              <div>
-                <Countdown
-                  date={villageData.currentlyBuilding[0].endBuildTime}
-                  renderer={renderer}
-                  zeroPadTime={2}
-                  onComplete={async () =>
-                    await queryClient.invalidateQueries(["village"])
-                  }
-                />
-              </div>
-              <div className="w-20">End time:</div>
-              <div>
-                {dayjs(villageData.currentlyBuilding[0].endBuildTime).format(
-                  "HH:mm:ss"
+
+                {getBuildingInfoFromSettings(
+                  building.buildingId,
+                  building.currentlyBuildingLevel
                 )}
+
+                <div className="grid grid-cols-2 items-center">
+                  <div className="w-20">Time left:</div>
+                  <div>
+                    <Countdown
+                      date={building.endBuildTime}
+                      renderer={renderer}
+                      zeroPadTime={2}
+                      onComplete={async () =>
+                        await queryClient.invalidateQueries(["village"])
+                      }
+                    />
+                  </div>
+                  <div className="w-20">End time:</div>
+                  <div>{dayjs(building.endBuildTime).format("HH:mm:ss")}</div>
+                </div>
               </div>
-            </div>
-          </div>
+            )
+          )}
         </div>
       ) : (
         <div></div>

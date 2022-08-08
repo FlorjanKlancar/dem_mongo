@@ -12,9 +12,9 @@ import IronImg from "../../public/assets/Iron.png";
 import WheatImg from "../../public/assets/Wheat.png";
 import UpkeepImg from "../../public/assets/upkeep.png";
 import toast from "react-hot-toast";
-import { useSession } from "next-auth/react";
 import { useDispatch } from "react-redux";
 import { villageActions } from "../../store/village-slice";
+import { useNextAuth } from "../../hooks/useNextAuth";
 
 type TroopsTrainProps = {
   building: buildingModel;
@@ -31,7 +31,7 @@ function TroopsTrain({
   gsUnits,
   village,
 }: TroopsTrainProps) {
-  const { data: session }: any = useSession();
+  const { session }: any = useNextAuth();
   const dispatch = useDispatch();
 
   const buildUnitsHandler = async (e: any) => {
