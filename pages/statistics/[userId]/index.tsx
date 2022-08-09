@@ -26,7 +26,7 @@ function UserDetails({
     return (
       <>
         <NavbarDem />
-        SKELETON
+        skeleton
       </>
     );
 
