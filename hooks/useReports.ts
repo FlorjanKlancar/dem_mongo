@@ -1,13 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
-import { battleReportModel } from "../types/battleReportModel";
-import { villageModel } from "../types/villageModel";
+import { AxiosResponse } from "../types/axiosResponseModel";
 
 export const useReports = (userId: string) => {
-  return useQuery(
+  return useQuery<any>(
     ["reports", userId],
     async () => {
-      const response = await axios.get(`/api/battle/${userId}`);
+      const response: AxiosResponse = await axios.get(`/api/battle/${userId}`);
 
       return response.data;
     },

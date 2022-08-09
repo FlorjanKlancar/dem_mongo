@@ -17,17 +17,16 @@ import { userInQueueModel } from "../../types/userInQueueModel";
 import dayjs from "dayjs";
 import { useQueryClient } from "@tanstack/react-query";
 import UserInQueueButton from "./UserInQueueButton";
+import { useQueue } from "../../hooks/useQueue";
 
-type NavbarProps = {
-  queueData?: userInQueueModel;
-};
+function NavbarDem() {
+  const { session }: any = useNextAuth();
 
-function NavbarDem({ queueData }: NavbarProps) {
   const signOutHandler = async () => {
     await signOut();
   };
 
-  const { zilWallet } = useSelector((state: RootState) => state.zilWallet);
+  const { data: queueData } = useQueue(session?.user?.uid);
 
   return (
     <>
@@ -46,11 +45,8 @@ function NavbarDem({ queueData }: NavbarProps) {
           <button className="navbar_button" onClick={signOutHandler}>
             Sign out
           </button>
-          {!Object.keys(zilWallet).length ? (
-            <ConnectWalletButton />
-          ) : (
-            <DisconnectWalletButton />
-          )}
+          <button className="navbar_button">MOCK</button>
+
           {queueData ? <UserInQueueButton queueData={queueData} /> : <></>}
         </div>
       </div>

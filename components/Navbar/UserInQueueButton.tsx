@@ -27,7 +27,8 @@ function UserInQueueButton({ queueData }: any) {
       if (response.status === 200) {
         console.log("invalidating");
 
-        await queryClient.invalidateQueries(["queue", "village"]);
+        await queryClient.invalidateQueries(["village"]);
+        await queryClient.invalidateQueries(["queue"]);
         toast.success(response.msg, { id: queueToast });
       } else {
         toast.error(response.msg, { id: queueToast });
@@ -36,7 +37,7 @@ function UserInQueueButton({ queueData }: any) {
   };
 
   useEffect(() => {
-    if (timeInQueue) {
+    if (queueData && timeInQueue !== null) {
       const id = setInterval(() => setTimeInQueue(timeInQueue + 1), 1000);
 
       return () => {
@@ -44,8 +45,6 @@ function UserInQueueButton({ queueData }: any) {
       };
     }
   }, [timeInQueue]);
-
-  console.log({ timeInQueue, queueData });
 
   return (
     <div className="tooltip  tooltip-bottom" data-tip="Cancel queue">

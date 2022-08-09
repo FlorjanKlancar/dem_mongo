@@ -1,12 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { AxiosResponse } from "../types/axiosResponseModel";
 import { villageModel } from "../types/villageModel";
 
 export const useUserVillage = (villageId: string) => {
   return useQuery<villageModel>(
     ["village", villageId],
     async () => {
-      const response = await axios.get(`/api/village/${villageId}`);
+      const response: AxiosResponse = await axios.get(
+        `/api/village/${villageId}`
+      );
 
       return response.data;
     },

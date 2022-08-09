@@ -8,7 +8,6 @@ import VillageInfoWrapper from "../../components/Wrapper/VillageInfoWrapper";
 import VillageWrapper from "../../components/Wrapper/VillageWrapper";
 import { useGameSettings } from "../../hooks/useGameSettings";
 import { useNextAuth } from "../../hooks/useNextAuth";
-import { useQueue } from "../../hooks/useQueue";
 import { useUserVillage } from "../../hooks/useUserVillage";
 
 function ResourcesView() {
@@ -19,11 +18,8 @@ function ResourcesView() {
     isLoading,
     isError,
   } = useUserVillage(session.user.uid);
-  const { data: queueData, isLoading: queueIsLoading } = useQueue(
-    session.user.uid
-  );
 
-  if (isLoading && queueIsLoading)
+  if (isLoading)
     return (
       <>
         <NavbarDem />
@@ -33,10 +29,10 @@ function ResourcesView() {
 
   if (isError) return <div>Error: {isError}</div>;
 
-  if (gameSettingsData && villageData && !queueIsLoading)
+  if (gameSettingsData && villageData)
     return (
       <>
-        <NavbarDem queueData={queueData} />
+        <NavbarDem />
 
         <VillageWrapper
           villageData={villageData}

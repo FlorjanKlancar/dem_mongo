@@ -9,19 +9,22 @@ import SelectedUnitCard from "./SelectedUnitCard";
 import socket from "../../lib/socket";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
-import { queueActions } from "../../store/queue-slice";
+import { userInQueueModel } from "../../types/userInQueueModel";
 
 type QueuePageProps = {
   gsUnits: unitModel[];
   villageUnits: unitModel[];
   userId: string;
+  queueData: userInQueueModel | undefined;
 };
 
-function QueuePage({ gsUnits, villageUnits, userId }: QueuePageProps) {
-  const dispatch = useDispatch();
+function QueuePage({
+  gsUnits,
+  villageUnits,
+  userId,
+  queueData,
+}: QueuePageProps) {
   const router = useRouter();
-
-  const queue = useSelector((state: RootState) => state.queue);
 
   const [villageCurrentUnits, setVillageCurrentUnits] =
     useState<unitModel[]>(villageUnits);
@@ -55,32 +58,12 @@ function QueuePage({ gsUnits, villageUnits, userId }: QueuePageProps) {
         return unit;
       })
     );
-
-    /*   dispatch(
-      villageActions.updateUnitsState(
-        villageUnits.map((unit: unitModel) => {
-          if (unit._id === unitId) {
-            return { ...unit, amount: unit.amount - selectedUnit!.amount };
-          } else return unit;
-        })
-      )
-    ); */
   };
 
   const removeUnitsHandler = (unitName: string, unitAmount: number) => {
     setSelectedSquad(
       selectedSquad.filter((unit: unitModel) => unit.name !== unitName)
     );
-
-    /*  dispatch(
-      villageActions.updateUnitsState(
-        unitsArray.map((unit: unitModel) => {
-          if (unit.name === unitName) {
-            return { ...unit, amount: unit.amount + unitAmount };
-          } else return unit;
-        })
-      )
-    ); */
   };
 
   const queueUpHandler = () => {
@@ -89,9 +72,6 @@ function QueuePage({ gsUnits, villageUnits, userId }: QueuePageProps) {
     socket.emit("addUserToQueue", { userId, selectedSquad });
     socket.on("queueResponse", ({ response }) => {
       if (response.status === 200) {
-        dispatch(queueActions.setUserInQueue(true));
-        dispatch(queueActions.setSelectedSquad(selectedSquad));
-
         router.push("/resources");
         toast.success(response.msg, { id: queueToast });
       } else {
@@ -117,7 +97,7 @@ function QueuePage({ gsUnits, villageUnits, userId }: QueuePageProps) {
         </div>
       </div>
 
-      {!queue.userInQueue ? (
+      {!queueData ? (
         <div className="mt-4 grid grid-cols-2 divide-x-2 divide-primary/80 pb-8">
           <div className="flex flex-col space-y-5 px-8    ">
             <div className="text-center text-lg font-semibold text-primary">
@@ -212,7 +192,7 @@ function QueuePage({ gsUnits, villageUnits, userId }: QueuePageProps) {
             </div>
 
             <div>
-              {queue.selectedSquad.map((unit: unitModel, i: number) => (
+              {queueData?.unitsInQueue?.map((unit: unitModel, i: number) => (
                 <div key={i}>
                   {gsUnits.map((gsUnit: any) => {
                     if (gsUnit.unitName === unit.name) {

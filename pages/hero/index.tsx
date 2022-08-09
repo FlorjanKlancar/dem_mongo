@@ -25,7 +25,7 @@ function HeroPage() {
 
   if (isError) return <div>Error: {isError}</div>;
 
-  if (villageData && gameSettingsData)
+  if (gameSettingsData && villageData)
     return (
       <>
         <NavbarDem />

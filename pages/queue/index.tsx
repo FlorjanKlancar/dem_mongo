@@ -6,6 +6,7 @@ import QueuePage from "../../components/Queue/QueuePage";
 import VillageWrapper from "../../components/Wrapper/VillageWrapper";
 import { useGameSettings } from "../../hooks/useGameSettings";
 import { useNextAuth } from "../../hooks/useNextAuth";
+import { useQueue } from "../../hooks/useQueue";
 import { useUserVillage } from "../../hooks/useUserVillage";
 
 function QueueView() {
@@ -16,8 +17,11 @@ function QueueView() {
     isLoading,
     isError,
   } = useUserVillage(session.user.uid);
+  const { data: queueData, isLoading: queueIsLoading } = useQueue(
+    session?.user?.uid
+  );
 
-  if (isLoading)
+  if (isLoading && queueIsLoading)
     return (
       <>
         <NavbarDem />
@@ -27,7 +31,7 @@ function QueueView() {
 
   if (isError) return <div>Error: {isError}</div>;
 
-  if (villageData && gameSettingsData)
+  if (villageData && gameSettingsData && !queueIsLoading)
     return (
       <>
         <NavbarDem />
@@ -40,6 +44,7 @@ function QueueView() {
             villageUnits={villageData.units}
             gsUnits={gameSettingsData.unitsResponse}
             userId={session.user.uid}
+            queueData={queueData}
           />
         </VillageWrapper>
       </>
