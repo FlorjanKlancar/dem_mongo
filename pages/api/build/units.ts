@@ -1,6 +1,6 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
 import axios from "axios";
-import type {NextApiRequest, NextApiResponse} from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 export default async function handler(
   req: NextApiRequest,
@@ -31,9 +31,9 @@ export default async function handler(
                 }
               );
               if (response.status !== 200) {
-                errorResponse = response.data;
+                errorResponse = response.villageResponse;
               } else {
-                successResponse = response.data;
+                successResponse = response.villageResponse;
               }
             }
           }

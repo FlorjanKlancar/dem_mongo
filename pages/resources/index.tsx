@@ -1,42 +1,56 @@
-import axios from "axios";
-import { GetServerSideProps, GetServerSidePropsContext } from "next";
-import { getSession, useSession } from "next-auth/react";
-import { useRouter } from "next/router";
+import { GetServerSideProps } from "next";
+import { getSession } from "next-auth/react";
 import React from "react";
-import { useSelector } from "react-redux";
 import NavbarDem from "../../components/Navbar/NavbarDem";
 import ResourcesField from "../../components/Resources/ResourcesField";
 import VillageSkeleton from "../../components/skeletons/VillageSkeleton";
 import VillageInfoWrapper from "../../components/Wrapper/VillageInfoWrapper";
 import VillageWrapper from "../../components/Wrapper/VillageWrapper";
-import { RootState } from "../../types/storeModel";
+import { useGameSettings } from "../../hooks/useGameSettings";
+import { useNextAuth } from "../../hooks/useNextAuth";
+import { useUserVillage } from "../../hooks/useUserVillage";
 
 function ResourcesView() {
-  const router = useRouter();
-  const { data: session, status } = useSession({
-    required: true,
-    onUnauthenticated() {
-      router.push("/login");
-    },
-  });
+  const { session }: any = useNextAuth();
+  const { data: gameSettingsData } = useGameSettings();
+  const {
+    data: villageData,
+    isLoading,
+    isError,
+  } = useUserVillage(session.user.uid);
 
-  const { loading } = useSelector((state: RootState) => state.loading);
+  if (isLoading)
+    return (
+      <>
+        <NavbarDem />
+        <VillageSkeleton />
+      </>
+    );
 
-  return loading ? (
-    <>
-      <NavbarDem />
-      <VillageSkeleton />
-    </>
-  ) : (
-    <>
-      <NavbarDem />
-      <VillageWrapper>
-        <VillageInfoWrapper>
-          <ResourcesField />
-        </VillageInfoWrapper>
-      </VillageWrapper>
-    </>
-  );
+  if (isError) return <div>Error: {isError}</div>;
+
+  if (gameSettingsData && villageData)
+    return (
+      <>
+        <NavbarDem />
+
+        <VillageWrapper
+          villageData={villageData}
+          gameSettings={gameSettingsData}
+        >
+          <VillageInfoWrapper
+            villageData={villageData}
+            gsBuildings={gameSettingsData.buildingsResponse}
+            gsUnits={gameSettingsData.unitsResponse}
+          >
+            <ResourcesField
+              villageData={villageData}
+              gsBuildings={gameSettingsData.buildingsResponse}
+            />
+          </VillageInfoWrapper>
+        </VillageWrapper>
+      </>
+    );
 }
 
 export default ResourcesView;
@@ -52,6 +66,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   }
+
   return {
     props: {
       session,

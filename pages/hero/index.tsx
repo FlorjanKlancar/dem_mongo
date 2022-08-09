@@ -1,38 +1,42 @@
-import axios from "axios";
-import React, {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
+import React from "react";
 import HeroPageComponent from "../../components/Hero/HeroPageComponent";
 import NavbarDem from "../../components/Navbar/NavbarDem";
 import VillageWrapper from "../../components/Wrapper/VillageWrapper";
-import {RootState} from "../../types/storeModel";
+import { useGameSettings } from "../../hooks/useGameSettings";
+import { useNextAuth } from "../../hooks/useNextAuth";
+import { useUserVillage } from "../../hooks/useUserVillage";
 
 function HeroPage() {
-  const [players, setPlayers] = useState([]);
+  const { session }: any = useNextAuth();
+  const { data: gameSettingsData } = useGameSettings();
+  const {
+    data: villageData,
+    isLoading,
+    isError,
+  } = useUserVillage(session?.user?.uid);
 
-  const fetchStatistics = async () => {
-    const playersResponse: any = await axios.get("/api/statistics");
+  if (isLoading)
+    return (
+      <>
+        <NavbarDem />
+        Skeleton
+      </>
+    );
 
-    setPlayers(playersResponse.data);
-  };
+  if (isError) return <div>Error: {isError}</div>;
 
-  useEffect(() => {
-    fetchStatistics();
-  }, []);
-
-  const {loading} = useSelector((state: RootState) => state.loading);
-
-  return loading ? (
-    <>
-      <NavbarDem />
-    </>
-  ) : (
-    <>
-      <NavbarDem />
-      <VillageWrapper>
-        <HeroPageComponent />
-      </VillageWrapper>
-    </>
-  );
+  if (gameSettingsData && villageData)
+    return (
+      <>
+        <NavbarDem />
+        <VillageWrapper
+          villageData={villageData}
+          gameSettings={gameSettingsData}
+        >
+          <HeroPageComponent userId={session.user.uid} />
+        </VillageWrapper>
+      </>
+    );
 }
 
 export default HeroPage;

@@ -1,21 +1,20 @@
-import {ClockIcon} from "@heroicons/react/outline";
+import { ClockIcon } from "@heroicons/react/outline";
 import axios from "axios";
 import dayjs from "dayjs";
 import Image from "next/image";
 import React from "react";
-import Countdown, {zeroPad} from "react-countdown";
-import {buildingModel} from "../../types/buildingModel";
-import {troopsInputModel} from "../../types/troopsInputModel";
+import Countdown, { zeroPad } from "react-countdown";
+import { buildingModel } from "../../types/buildingModel";
+import { troopsInputModel } from "../../types/troopsInputModel";
 import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
 import WheatImg from "../../public/assets/Wheat.png";
 import UpkeepImg from "../../public/assets/upkeep.png";
 import toast from "react-hot-toast";
-import {useSession} from "next-auth/react";
-import {useDispatch} from "react-redux";
-import {villageActions} from "../../store/village-slice";
-import {initializeDataFetch} from "../../utils/utilFunctions";
+import { useDispatch } from "react-redux";
+import { villageActions } from "../../store/village-slice";
+import { useNextAuth } from "../../hooks/useNextAuth";
 
 type TroopsTrainProps = {
   building: buildingModel;
@@ -32,7 +31,7 @@ function TroopsTrain({
   gsUnits,
   village,
 }: TroopsTrainProps) {
-  const {data: session}: any = useSession();
+  const { session }: any = useNextAuth();
   const dispatch = useDispatch();
 
   const buildUnitsHandler = async (e: any) => {
@@ -48,24 +47,24 @@ function TroopsTrain({
 
       setTroops(
         troops.map((troop: troopsInputModel) => {
-          return {...troop, unitAmount: 0};
+          return { ...troop, unitAmount: 0 };
         })
       );
 
       dispatch(
         villageActions.addBuildUnitsNow({
-          unitTrainQueue: response.data.currentlyBuildingUnits,
-          resourcesStorage: response.data.resourcesStorageMinus,
+          unitTrainQueue: response.villageResponse.currentlyBuildingUnits,
+          resourcesStorage: response.villageResponse.resourcesStorageMinus,
         })
       );
 
-      toast.success("Training started successfully!", {id: trainToast});
+      toast.success("Training started successfully!", { id: trainToast });
     } catch (error: any) {
-      toast.error(error.response.data.msg, {id: trainToast});
+      toast.error(error.response.data.msg, { id: trainToast });
     }
   };
 
-  const renderer = ({hours, minutes, seconds}: any) => {
+  const renderer = ({ hours, minutes, seconds }: any) => {
     return (
       <span>
         {zeroPad(hours)}:{zeroPad(minutes)}:{zeroPad(seconds)}
@@ -77,7 +76,7 @@ function TroopsTrain({
     e.preventDefault();
 
     let data: any = [...troops];
-    data[index] = {unitName: e.target.name, unitAmount: +e.target.value};
+    data[index] = { unitName: e.target.name, unitAmount: +e.target.value };
 
     setTroops(data);
   };
@@ -268,13 +267,13 @@ function TroopsTrain({
                         date={unit.endThisBuild}
                         renderer={renderer}
                         zeroPadTime={2}
-                        onComplete={() =>
+                        /*  onComplete={() =>
                           setTimeout(
                             () =>
                               initializeDataFetch(session.user.uid, dispatch),
                             500
                           )
-                        }
+                        } */
                       />
                     </div>
                   </div>

@@ -1,9 +1,9 @@
 import { ArrowNarrowLeftIcon } from "@heroicons/react/outline";
 import dayjs from "dayjs";
-import { useSession } from "next-auth/react";
 import Link from "next/link";
 import React from "react";
 import { useSelector } from "react-redux";
+import { useNextAuth } from "../../hooks/useNextAuth";
 import { battleReportModel } from "../../types/battleReportModel";
 import { RootState } from "../../types/storeModel";
 import { unitModel } from "../../types/unitModel";
@@ -14,7 +14,7 @@ type BattleReportProps = {
 };
 
 function BattleReport({ singleBattle }: BattleReportProps) {
-  const { data: session }: any = useSession();
+  const { session }: any = useNextAuth();
   const { gsUnits }: any = useSelector((state: RootState) => state.gsUnits);
 
   const yourTroops =

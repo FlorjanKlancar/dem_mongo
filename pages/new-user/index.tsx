@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
 import Spinner from "../../components/Widgets/Spinner";
-import { initializeDataFetch } from "../../utils/utilFunctions";
 
 let firstLoad = true;
 
@@ -20,8 +19,6 @@ function NewUser() {
 
   const createNewVillage = async () => {
     const response = await axios.post(`/api/village/${session?.user?.uid}`);
-
-    initializeDataFetch(session.user.uid, dispatch, true);
 
     if (response.status === 201) {
       router.push("/resources");

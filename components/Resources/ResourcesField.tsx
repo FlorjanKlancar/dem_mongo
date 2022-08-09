@@ -1,31 +1,33 @@
 import axios from "axios";
 import Image from "next/image";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import toast from "react-hot-toast";
-import {useDispatch, useSelector} from "react-redux";
-import {MAX_LEVEL_RESOURCES} from "../../gsVariables";
-import {resourceField} from "../../types/resourceField";
-import {RootState} from "../../types/storeModel";
-import {CogIcon, LibraryIcon} from "@heroicons/react/outline";
+import { MAX_LEVEL_RESOURCES } from "../../gsVariables";
+import { resourceField } from "../../types/resourceField";
+import { CogIcon, LibraryIcon } from "@heroicons/react/outline";
 import ResourcesMaxLevelModal from "./ResourcesMaxLevelModal";
 import ResourcesModal from "./ResourcesModal";
 import Modal from "../Modal/Modal";
 import Link from "next/link";
-import {useSession} from "next-auth/react";
-import {villageActions} from "../../store/village-slice";
+import { villageModel } from "../../types/villageModel";
+import { useNextAuth } from "../../hooks/useNextAuth";
+import { buildingModel } from "../../types/buildingModel";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-function ResourcesField() {
-  const {data: session}: any = useSession();
-  const dispatch = useDispatch();
+type ResourcesFieldProps = {
+  villageData: villageModel;
+  gsBuildings: buildingModel[];
+};
 
-  const village: any = useSelector((state: RootState) => state.village);
-  const {gsBuildings} = useSelector((state: RootState) => state.gsBuildings);
+function ResourcesField({ villageData, gsBuildings }: ResourcesFieldProps) {
+  const { session }: any = useNextAuth();
+  const queryClient = useQueryClient();
 
   const [clickedResource, setClickedResource] = useState<any>({});
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const [open, setOpen] = useState<boolean>(false);
 
-  const onResourceClickHandler = (id: string, level: number, type: string) => {
+  const onResourceClickHandler = (id: number, level: number, type: string) => {
     const resourceNextLevelInfo: any = Object.values(gsBuildings).find(
       (val: any) => {
         if (val.type === type) return val;
@@ -52,7 +54,7 @@ function ResourcesField() {
   const upgradeHandler = async () => {
     setOpen(false);
     const upgradeToast = toast.loading("Upgrading...");
-    const response: any = await axios.post(`api/build/resources`, {
+    const response: any = await axios.post(`api/build/buildings`, {
       villageId: session.user.uid,
       buildingName: clickedResource.type,
       fieldId: clickedResource.id,
@@ -60,32 +62,39 @@ function ResourcesField() {
     });
 
     if (response.status === 200) {
-      dispatch(
-        villageActions.addBuildingNow({
-          currentlyBuilding: [response.data.currentlyBuilding],
-          resourcesStorage: response.data.resourcesStorageMinus,
-        })
-      );
-
-      toast.success("Upgrade started successfully!", {id: upgradeToast});
+      toast.success("Upgrade started successfully!", { id: upgradeToast });
     } else {
-      toast.error("Unable to upgrade...", {id: upgradeToast});
+      toast.error("Unable to upgrade...", { id: upgradeToast });
     }
   };
 
   const checkResources = async (resourceNextLevelInfo: any) => {
     if (
       resourceNextLevelInfo &&
-      (resourceNextLevelInfo.costWood > village.resourcesStorage.woodAmount ||
-        resourceNextLevelInfo.costClay > village.resourcesStorage.clayAmount ||
-        resourceNextLevelInfo.costIron > village.resourcesStorage.ironAmount ||
-        resourceNextLevelInfo.costWheat > village.resourcesStorage.wheatAmount)
+      (resourceNextLevelInfo.costWood >
+        villageData.resourcesStorage.woodAmount ||
+        resourceNextLevelInfo.costClay >
+          villageData.resourcesStorage.clayAmount ||
+        resourceNextLevelInfo.costIron >
+          villageData.resourcesStorage.ironAmount ||
+        resourceNextLevelInfo.costWheat >
+          villageData.resourcesStorage.wheatAmount)
     ) {
       setIsButtonDisabled(true);
     } else {
       setIsButtonDisabled(false);
     }
   };
+
+  const mutation = useMutation(upgradeHandler, {
+    onError: (error: any) => {
+      toast.error(error);
+    },
+    onSuccess: async () => {
+      /*   toast.success("Upgrade started successfully!"); */
+      await queryClient.invalidateQueries(["village"]);
+    },
+  });
 
   return (
     <>
@@ -119,14 +128,14 @@ function ResourcesField() {
             <div className="col-span-2">
               <button
                 className="primary_button"
-                onClick={upgradeHandler}
+                onClick={() => mutation.mutate()}
                 type="submit"
                 disabled={
                   clickedResource.level + 1 > MAX_LEVEL_RESOURCES
                     ? true
                     : false || isButtonDisabled
                     ? true
-                    : false || village.currentlyBuilding.length
+                    : false || villageData.currentlyBuilding.length
                     ? true
                     : false
                 }
@@ -135,7 +144,7 @@ function ResourcesField() {
                   ? "Building is max level!"
                   : isButtonDisabled
                   ? "Not enough resources!"
-                  : village.currentlyBuilding.length
+                  : villageData.currentlyBuilding.length
                   ? "Builders are unavailable!"
                   : "Upgrade"}
               </button>
@@ -145,7 +154,7 @@ function ResourcesField() {
       </Modal>
 
       <div className="grid max-h-[500px] w-full grid-cols-4 sm:grid-cols-4 md:w-9/12">
-        {village.resourceFields.map((resource: resourceField) => (
+        {villageData.resourceFields.map((resource: resourceField) => (
           <div key={resource.id}>
             <div
               className={`relative cursor-pointer rounded-xl  border-slate-800/10 hover:border-slate-800/40 ${
@@ -196,8 +205,8 @@ function ResourcesField() {
                 </div>
               )}
 
-              {village.currentlyBuilding.length &&
-              village.currentlyBuilding[0].fieldId === resource.id ? (
+              {villageData.currentlyBuilding.length &&
+              villageData.currentlyBuilding[0].fieldId === resource.id ? (
                 <div className="absolute top-2 left-2 animate-spin text-black">
                   <CogIcon className="h-6 w-6" />
                 </div>

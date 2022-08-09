@@ -1,32 +1,35 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { DatabaseIcon, CogIcon } from "@heroicons/react/outline";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../types/storeModel";
 import { MAX_LEVEL_BUILDINGS } from "../../gsVariables";
 import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
 import WheatImg from "../../public/assets/Wheat.png";
 import Image from "next/image";
-import { villageActions } from "../../store/village-slice";
+import { villageModel } from "../../types/villageModel";
 
 type VillageWrapperProps = {
   children: React.ReactNode;
+  villageData: villageModel;
+  gameSettings: any;
 };
 
-function VillageWrapper({ children }: VillageWrapperProps) {
-  const dispatch = useDispatch();
+function VillageWrapper({
+  children,
+  villageData,
+  gameSettings,
+}: VillageWrapperProps) {
+  const [currentResources, setCurrentResources] = useState({
+    resourcesStorage: villageData?.resourcesStorage,
+    currentlyBuilding: villageData?.currentlyBuilding,
+  });
 
-  const resourcesRedux = useSelector(
-    (state: RootState) => state.village.resourcesStorage
-  );
-
-  const buildersRedux = useSelector(
-    (state: RootState) => state.village.currentlyBuilding
-  );
-  const { gsBuildings }: any = useSelector(
-    (state: RootState) => state.gsBuildings
-  );
+  useEffect(() => {
+    setCurrentResources({
+      resourcesStorage: villageData?.resourcesStorage,
+      currentlyBuilding: villageData?.currentlyBuilding,
+    });
+  }, [villageData]);
 
   const resources = [
     {
@@ -35,7 +38,7 @@ function VillageWrapper({ children }: VillageWrapperProps) {
           <Image src={WoodImg} alt="WoodImg" layout="fill" />
         </div>
       ),
-      amount: Math.floor(resourcesRedux.woodAmount),
+      amount: Math.floor(currentResources?.resourcesStorage?.woodAmount ?? 0),
     },
     {
       icon: (
@@ -43,7 +46,7 @@ function VillageWrapper({ children }: VillageWrapperProps) {
           <Image src={ClayImg} alt="ClayImg" layout="fill" />
         </div>
       ),
-      amount: Math.floor(resourcesRedux.clayAmount),
+      amount: Math.floor(currentResources?.resourcesStorage?.clayAmount ?? 0),
     },
     {
       icon: (
@@ -51,7 +54,7 @@ function VillageWrapper({ children }: VillageWrapperProps) {
           <Image src={IronImg} alt="IronImg" layout="fill" />
         </div>
       ),
-      amount: Math.floor(resourcesRedux.ironAmount),
+      amount: Math.floor(currentResources?.resourcesStorage?.ironAmount ?? 0),
     },
   ];
 
@@ -61,43 +64,44 @@ function VillageWrapper({ children }: VillageWrapperProps) {
         <Image src={WheatImg} alt="WheatImg" layout="fill" />
       </div>
     ),
-    amount: Math.floor(resourcesRedux.wheatAmount),
+    amount: Math.floor(currentResources?.resourcesStorage?.wheatAmount ?? 0),
   };
 
-  const village = useSelector((state: RootState) => state.village);
-  const warehouseMaxStorage: any = village.villageBuildings.find(
+  const warehouseMaxStorage: any = villageData?.villageBuildings.find(
     (building: any) => building.type === "warehouse"
   );
-  const granaryLevel: any = village.villageBuildings.find(
+  const granaryLevel: any = villageData?.villageBuildings.find(
     (building: any) => building.type === "granary"
   );
 
-  const findWarehouse = gsBuildings.find(
+  const findWarehouse = gameSettings.buildingsResponse.find(
     (building: any) => building.type === "warehouse"
   );
-  const findGranary = gsBuildings.find(
+  const findGranary = gameSettings.buildingsResponse.find(
     (building: any) => building.type === "granary"
   );
 
   const resourcesMaxStorage =
-    findWarehouse?.levels[0][warehouseMaxStorage.level].warehouseResourceLimit;
+    findWarehouse?.levels[0][warehouseMaxStorage?.level]
+      ?.warehouseResourceLimit;
 
   const granaryMaxStorage =
-    findGranary?.levels[0][granaryLevel.level].granaryResourceLimit;
+    findGranary?.levels[0][granaryLevel?.level]?.granaryResourceLimit;
 
   const warehouseNextLevel =
     findWarehouse.levels[0][
-      warehouseMaxStorage.level + 1 < MAX_LEVEL_BUILDINGS
-        ? warehouseMaxStorage.level + 1
+      warehouseMaxStorage?.level + 1 < MAX_LEVEL_BUILDINGS
+        ? warehouseMaxStorage?.level + 1
         : MAX_LEVEL_BUILDINGS
     ].warehouseResourceLimit;
   const granaryNextLevel =
     findGranary.levels[0][
-      granaryLevel.level + 1 < MAX_LEVEL_BUILDINGS
-        ? granaryLevel.level + 1
+      granaryLevel?.level + 1 < MAX_LEVEL_BUILDINGS
+        ? granaryLevel?.level + 1
         : MAX_LEVEL_BUILDINGS
     ].granaryResourceLimit;
 
+  /*
   const countResourcesRealTime = (resourcesRedux: any) => {
     const updatedResourcesCalculation = {
       woodAmount:
@@ -129,7 +133,7 @@ function VillageWrapper({ children }: VillageWrapperProps) {
     return () => {
       clearInterval(id);
     };
-  }, [resourcesRedux]);
+  }, [resourcesRedux]); */
 
   return (
     <div className="mt-5 px-6 sm:px-12 md:px-20 ">
@@ -220,7 +224,7 @@ function VillageWrapper({ children }: VillageWrapperProps) {
         <div
           className="tooltip"
           data-tip={`Available builders ${
-            !buildersRedux.length ? "1/1" : "0/1"
+            currentResources.currentlyBuilding?.length ? "0/1" : "1/1"
           }`}
         >
           <div className="flex flex-col rounded-xl border-2 border-primary/60 bg-slate-800 p-3 lg:mr-3">
@@ -229,12 +233,16 @@ function VillageWrapper({ children }: VillageWrapperProps) {
                 <CogIcon className="mt-0.5 h-5 w-5" />
               </div>
               <div>
-                <p>{!buildersRedux.length ? "1/1" : "0/1"}</p>
+                <p>
+                  {currentResources.currentlyBuilding?.length ? "0/1" : "1/1"}
+                </p>
               </div>
             </div>
             <progress
               className={`progress mt-2 ${
-                buildersRedux.length ? "progress-error" : "progress-success"
+                currentResources.currentlyBuilding?.length
+                  ? "progress-error"
+                  : "progress-success"
               } w-full px-1`}
               value={1}
               max={1}

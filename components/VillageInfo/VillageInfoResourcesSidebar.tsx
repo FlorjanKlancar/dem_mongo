@@ -1,15 +1,11 @@
 import React from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "../../types/storeModel";
 import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
 import WheatImg from "../../public/assets/Wheat.png";
 import Image from "next/image";
 
-function VillageInfoResourcesSidebar() {
-  const village = useSelector((state: RootState) => state.village);
-
+function VillageInfoResourcesSidebar({ resourcesSidebar }: any) {
   const resources = [
     {
       icon: (
@@ -18,7 +14,7 @@ function VillageInfoResourcesSidebar() {
         </div>
       ),
       title: "Wood",
-      amount: village.woodProductionPerH,
+      amount: resourcesSidebar.woodProductionPerH,
     },
     {
       icon: (
@@ -27,7 +23,7 @@ function VillageInfoResourcesSidebar() {
         </div>
       ),
       title: "Clay",
-      amount: village.clayProductionPerH,
+      amount: resourcesSidebar.clayProductionPerH,
     },
     {
       icon: (
@@ -36,7 +32,7 @@ function VillageInfoResourcesSidebar() {
         </div>
       ),
       title: "Iron",
-      amount: village.ironProductionPerH,
+      amount: resourcesSidebar.ironProductionPerH,
     },
     {
       icon: (
@@ -45,7 +41,7 @@ function VillageInfoResourcesSidebar() {
         </div>
       ),
       title: "Wheat",
-      amount: village.wheatProductionPerH,
+      amount: resourcesSidebar.wheatProductionPerH,
     },
   ];
 

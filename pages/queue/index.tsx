@@ -1,29 +1,54 @@
 import { GetServerSideProps } from "next";
 import { getSession } from "next-auth/react";
 import React from "react";
-import { useSelector } from "react-redux";
 import NavbarDem from "../../components/Navbar/NavbarDem";
 import QueuePage from "../../components/Queue/QueuePage";
 import VillageWrapper from "../../components/Wrapper/VillageWrapper";
-import { RootState } from "../../types/storeModel";
+import { useGameSettings } from "../../hooks/useGameSettings";
+import { useNextAuth } from "../../hooks/useNextAuth";
+import { useQueue } from "../../hooks/useQueue";
+import { useUserVillage } from "../../hooks/useUserVillage";
 
 function QueueView() {
-  const { loading } = useSelector((state: RootState) => state.loading);
-
-  return (
-    <>
-      <NavbarDem />
-      {loading ? (
-        <>Loading</>
-      ) : (
-        <>
-          <VillageWrapper>
-            <QueuePage />
-          </VillageWrapper>
-        </>
-      )}
-    </>
+  const { session }: any = useNextAuth();
+  const { data: gameSettingsData } = useGameSettings();
+  const {
+    data: villageData,
+    isLoading,
+    isError,
+  } = useUserVillage(session.user.uid);
+  const { data: queueData, isLoading: queueIsLoading } = useQueue(
+    session?.user?.uid
   );
+
+  if (isLoading && queueIsLoading)
+    return (
+      <>
+        <NavbarDem />
+        Skeleton
+      </>
+    );
+
+  if (isError) return <div>Error: {isError}</div>;
+
+  if (villageData && gameSettingsData && !queueIsLoading)
+    return (
+      <>
+        <NavbarDem />
+
+        <VillageWrapper
+          villageData={villageData}
+          gameSettings={gameSettingsData}
+        >
+          <QueuePage
+            villageUnits={villageData.units}
+            gsUnits={gameSettingsData.unitsResponse}
+            userId={session.user.uid}
+            queueData={queueData}
+          />
+        </VillageWrapper>
+      </>
+    );
 }
 
 export default QueueView;

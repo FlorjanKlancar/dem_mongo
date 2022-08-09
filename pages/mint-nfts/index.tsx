@@ -75,7 +75,6 @@ function MintNfts() {
   }
 
   function MintYourNft(mintAddress: any) {
-    console.log("car");
     subscribeToEvents();
     debugger;
     const mintContract = window.zilPay.contracts.at(contractAddress);

@@ -1,12 +1,12 @@
 import {
-  ArrowNarrowDownIcon,
   ArrowNarrowRightIcon,
+  ArrowUpIcon,
   ClockIcon,
   PlusIcon,
 } from "@heroicons/react/outline";
 import Image from "next/image";
 import React from "react";
-import { BASE_PRODUCTION_NUMBER } from "../../gsVariables";
+
 import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
@@ -24,7 +24,7 @@ type ResourcesModalProps = {
   };
 };
 
-function ResourcesModal({ clickedResource }: ResourcesModalProps) {
+function ResourcesModal({clickedResource}: ResourcesModalProps) {
   return (
     <>
       <div className="flex flex-row items-center justify-center space-x-3 py-8 sm:justify-between sm:space-y-0 sm:px-8">
@@ -47,7 +47,10 @@ function ResourcesModal({ clickedResource }: ResourcesModalProps) {
         <div className="relative h-20 w-24 sm:h-32 sm:w-32">
           {clickedResource.image && (
             <Image
-              src={clickedResource.image}
+              src={
+                clickedResource.levels[0][clickedResource.level + 1].image ??
+                clickedResource.image
+              }
               alt={clickedResource.type}
               layout="fill"
             />
@@ -59,19 +62,17 @@ function ResourcesModal({ clickedResource }: ResourcesModalProps) {
         </div>
       </div>
 
-      <div className="text-xl sm:text-2xl">Production</div>
-      <div className="flex justify-between px-8 sm:px-14">
-        <div>
-          From:{" "}
-          {clickedResource.levels &&
-            clickedResource.levels[0][clickedResource.level].productionAdd +
-              BASE_PRODUCTION_NUMBER}
-        </div>
-        <div>
-          To:{" "}
-          {clickedResource.levels &&
-            clickedResource.levels[0][clickedResource.level + 1].productionAdd +
-              BASE_PRODUCTION_NUMBER}
+      <div className="flex justify-between space-x-1  text-xl sm:text-2xl">
+        <div>Production bonus</div>{" "}
+        <div className="flex items-center space-x-2">
+          <div>
+            <ArrowUpIcon className="h-5 w-5 " />
+          </div>
+          <div>
+            {clickedResource.levels &&
+              clickedResource.levels[0][clickedResource.level + 1]
+                .productionAdd}
+          </div>
         </div>
       </div>
 

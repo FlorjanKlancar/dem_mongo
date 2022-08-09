@@ -1,49 +1,44 @@
-import axios from "axios";
-import {GetServerSideProps} from "next";
-import {getSession} from "next-auth/react";
-import React, {useEffect, useState} from "react";
-import {useSelector} from "react-redux";
+import { GetServerSideProps } from "next";
+import { getSession } from "next-auth/react";
+import React from "react";
 import NavbarDem from "../../components/Navbar/NavbarDem";
 import StatisticsTableSkeleton from "../../components/skeletons/StatisticsTableSkeleton";
 import StatististicsTable from "../../components/Statistics/StatististicsTable";
 import VillageWrapper from "../../components/Wrapper/VillageWrapper";
-import {RootState} from "../../types/storeModel";
+import { useGameSettings } from "../../hooks/useGameSettings";
+import { useNextAuth } from "../../hooks/useNextAuth";
+import { useStatistics } from "../../hooks/useStatistics";
+import { useUserVillage } from "../../hooks/useUserVillage";
 
 function StatisticsView() {
-  const [players, setPlayers] = useState([]);
-  /* const [ranks, setRanks] = useState([]); */
+  const { session }: any = useNextAuth();
+  const { data: gameSettingsData } = useGameSettings();
+  const { data: villageData } = useUserVillage(session.user.uid);
+  const { data: statistics, isLoading, isError } = useStatistics();
 
-  const fetchStatistics = async () => {
-    const playersResponse: any = await axios.get("/api/statistics");
+  if (isLoading)
+    return (
+      <>
+        <NavbarDem />
+        <StatisticsTableSkeleton />
+      </>
+    );
 
-    setPlayers(playersResponse.data);
+  if (isError) return <div>Error: {isError}</div>;
 
-    /* const ranksResponse = await axios.get("api/ranks");
-    setRanks(ranksResponse.data); */
-  };
+  if (statistics && villageData && gameSettingsData)
+    return (
+      <>
+        <NavbarDem />
 
-  useEffect(() => {
-    fetchStatistics();
-  }, []);
-
-  const {loading} = useSelector((state: RootState) => state.loading);
-
-  return (
-    <>
-      <NavbarDem />
-      {loading ? (
-        <>
-          <StatisticsTableSkeleton />
-        </>
-      ) : (
-        <>
-          <VillageWrapper>
-            {players.length && <StatististicsTable players={players} />}
-          </VillageWrapper>
-        </>
-      )}
-    </>
-  );
+        <VillageWrapper
+          villageData={villageData}
+          gameSettings={gameSettingsData}
+        >
+          <StatististicsTable players={statistics} />
+        </VillageWrapper>
+      </>
+    );
 }
 
 export default StatisticsView;

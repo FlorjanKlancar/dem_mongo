@@ -1,76 +1,67 @@
 import axios from "axios";
 import Image from "next/image";
-import React, {useEffect, useState} from "react";
-import {buildingModel} from "../../types/buildingModel";
+import React, { useEffect, useState } from "react";
+import { buildingModel } from "../../types/buildingModel";
 import WoodImg from "../../public/assets/Wood.png";
 import ClayImg from "../../public/assets/Clay.png";
 import IronImg from "../../public/assets/Iron.png";
 import WheatImg from "../../public/assets/Wheat.png";
-import {ClockIcon, PlusIcon} from "@heroicons/react/outline";
-import {useDispatch, useSelector} from "react-redux";
-import {RootState} from "../../types/storeModel";
+import { ClockIcon, PlusIcon } from "@heroicons/react/outline";
 import toast from "react-hot-toast";
-import {useRouter} from "next/router";
-import {MAX_LEVEL_BUILDINGS} from "../../gsVariables";
-import {troopsInputModel} from "../../types/troopsInputModel";
+import { useRouter } from "next/router";
+import { MAX_LEVEL_BUILDINGS } from "../../gsVariables";
 import TroopsTrain from "../../components/Village/TroopsTrain";
-import {useSession} from "next-auth/react";
-import {villageActions} from "../../store/village-slice";
+import { unitModel } from "../../types/unitModel";
+import { villageModel } from "../../types/villageModel";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useNextAuth } from "../../hooks/useNextAuth";
 
 type VillageTypeProps = {
   building: buildingModel;
+  gsUnits: unitModel[];
+  villageData: villageModel;
 };
 
-function UpgradeBuildingPage({building}: VillageTypeProps) {
+function UpgradeBuildingPage({
+  building,
+  gsUnits,
+  villageData,
+}: VillageTypeProps) {
   const router = useRouter();
-  const {data: session}: any = useSession();
-  const dispatch = useDispatch();
-
-  const village = useSelector((state: RootState) => state.village);
-  const {gsUnits}: any = useSelector((state: RootState) => state.gsUnits);
+  const { session }: any = useNextAuth();
+  const queryClient = useQueryClient();
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-  const [troops, setTroops] = useState<troopsInputModel[]>(
+  const [troops, setTroops] = useState<any>(
     building.group === "Offense" && gsUnits.map((val: any) => val)
   );
 
-  const selectedBuilding: any = Object.values(village.villageBuildings).find(
-    (val: any) => {
-      if (val.type === building.type) return val;
-    }
-  );
+  const selectedBuilding: any = Object.values(
+    villageData.villageBuildings
+  ).find((val: any) => {
+    if (val.type === building.type) return val;
+  });
 
   const upgradeHandler = async () => {
-    router.push("/village");
-    const upgradeToast = toast.loading("Upgrading...");
-    const response: any = await axios.post(`/api/build/resources`, {
+    await axios.post(`/api/build/buildings`, {
       villageId: session.user.uid,
       buildingName: building.type,
       fieldId: selectedBuilding.id,
       isBuilding: true,
     });
-
-    if (response.status === 200) {
-      dispatch(
-        villageActions.addBuildingNow({
-          currentlyBuilding: [response.data.currentlyBuilding],
-          resourcesStorage: response.data.resourcesStorageMinus,
-        })
-      );
-
-      toast.success("Upgrade started successfully!", {id: upgradeToast});
-    } else {
-      toast.error("Unable to upgrade...", {id: upgradeToast});
-    }
   };
 
   const checkResources = async (resourceNextLevelInfo: any) => {
     if (
       resourceNextLevelInfo &&
-      (resourceNextLevelInfo.costWood > village.resourcesStorage.woodAmount ||
-        resourceNextLevelInfo.costClay > village.resourcesStorage.clayAmount ||
-        resourceNextLevelInfo.costIron > village.resourcesStorage.ironAmount ||
-        resourceNextLevelInfo.costWheat > village.resourcesStorage.wheatAmount)
+      (resourceNextLevelInfo.costWood >
+        villageData.resourcesStorage.woodAmount ||
+        resourceNextLevelInfo.costClay >
+          villageData.resourcesStorage.clayAmount ||
+        resourceNextLevelInfo.costIron >
+          villageData.resourcesStorage.ironAmount ||
+        resourceNextLevelInfo.costWheat >
+          villageData.resourcesStorage.wheatAmount)
     ) {
       setIsButtonDisabled(true);
     } else {
@@ -81,6 +72,18 @@ function UpgradeBuildingPage({building}: VillageTypeProps) {
   useEffect(() => {
     checkResources(building.levels[0][selectedBuilding.level + 1]);
   }, []);
+
+  const mutation = useMutation(upgradeHandler, {
+    onError: (error: any) => {
+      toast.error(error);
+    },
+    onSuccess: async () => {
+      router.push("/village");
+      toast.success("Upgrade started successfully!");
+      await queryClient.invalidateQueries(["village"]);
+    },
+  });
+
   return (
     <div className="mb-12 flex flex-col space-y-4 rounded-lg border-2 border-primary/80 bg-slate-800 px-6 py-4">
       <div>
@@ -181,21 +184,21 @@ function UpgradeBuildingPage({building}: VillageTypeProps) {
                         </div>
                       </div>
 
-                      <div className="col-span-2 ">
+                      <div className="col-span-2">
                         <button
-                          onClick={upgradeHandler}
+                          onClick={() => mutation.mutate()}
                           className="mt-1  rounded-lg bg-primary py-2 px-4 font-bold text-slate-800 hover:bg-primary hover:text-slate-600 disabled:bg-gray-500 disabled:hover:text-slate-800"
                           disabled={
                             isButtonDisabled
                               ? true
-                              : false || village.currentlyBuilding.length
+                              : false || villageData.currentlyBuilding.length
                               ? true
                               : false
                           }
                         >
                           {isButtonDisabled
                             ? "Not enough resources!"
-                            : village.currentlyBuilding.length
+                            : villageData.currentlyBuilding.length
                             ? "Builders are unavailable!"
                             : `Upgrade to level ${selectedBuilding.level + 1}`}
                         </button>
@@ -218,7 +221,7 @@ function UpgradeBuildingPage({building}: VillageTypeProps) {
 
       {building.group === "Offense" && (
         <TroopsTrain
-          village={village}
+          village={villageData}
           troops={troops}
           gsUnits={gsUnits}
           setTroops={setTroops}

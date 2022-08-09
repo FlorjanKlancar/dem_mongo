@@ -1,5 +1,6 @@
 import axios from "axios";
 import {NextApiRequest, NextApiResponse} from "next";
+import {getAllStatistics} from "../../../utils/statisticsFunctions";
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,11 +11,9 @@ export default async function handler(
     case "GET": {
       {
         try {
-          const response: any = await axios.get(
-            `${process.env.NODE_JS_URI}/statistics`
-          );
+          const statistics = await getAllStatistics();
 
-          res.status(200).json(response.data);
+          res.status(200).json(statistics);
         } catch (error) {
           console.log("error", error);
         }
