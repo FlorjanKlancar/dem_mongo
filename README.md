@@ -1,6 +1,6 @@
 <div id="top"></div>
 
-<h3 align="center">NFT Mint</h3>
+<h3 align="center">Deus Ex Machina</h3>
   <p align="center">
     This app is demo of browser strategy P2E game set in roman times. </br>
     Discord contacts: Klančar#5359, Floky Huan#2876
