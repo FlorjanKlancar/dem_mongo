@@ -120,6 +120,7 @@ function NewLogin({ providers, isRegisterPage }: LoginComponentProps) {
                   placeholder="your@email.com"
                   required
                   className="focus:shadow-outline mt-1 w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+                  disabled
                 />
               </div>
 
@@ -134,6 +135,7 @@ function NewLogin({ providers, isRegisterPage }: LoginComponentProps) {
                   required
                   placeholder="Password"
                   className="focus:shadow-outline mt-1 w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+                  disabled
                 />
               </div>
 
@@ -149,6 +151,7 @@ function NewLogin({ providers, isRegisterPage }: LoginComponentProps) {
                     onChange={(e) => setPasswordTwo(e.target.value)}
                     placeholder="Password"
                     className="focus:shadow-outline mt-1 w-full appearance-none rounded border py-2 px-3 leading-tight text-gray-700 shadow focus:outline-none"
+                    disabled
                   />
                 </div>
               )}
@@ -179,12 +182,12 @@ function NewLogin({ providers, isRegisterPage }: LoginComponentProps) {
               <div className="mt-5 flex w-full flex-col items-center">
                 {providers ? (
                   <>
-                    <div className="mt-2">
+                    {/*   <div className="mt-2">
                       <ProviderButton
                         provider={providers.credentials}
                         onSubmit={() => {}}
                       />
-                    </div>
+                    </div> */}
                     <div className="mt-4">
                       <ProviderButton
                         provider={providers.google}
