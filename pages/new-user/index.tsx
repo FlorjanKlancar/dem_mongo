@@ -17,8 +17,8 @@ function NewUser() {
     },
   });
 
-  const createNewVillage = async () => {
-    const response = await axios.post(`/api/village/${session?.user?.uid}`);
+  const createNewVillage = async (id: string) => {
+    const response = await axios.post(`/api/village/${id}`);
 
     if (response.status === 201) {
       router.push("/resources");
@@ -27,9 +27,10 @@ function NewUser() {
 
   useEffect(() => {
     if (!session) return;
+    console.log({ session });
 
-    if (firstLoad && session.user.uid) {
-      createNewVillage();
+    if (firstLoad && session.user.id) {
+      createNewVillage(session.user.id);
       firstLoad = false;
     }
   }, [session]);

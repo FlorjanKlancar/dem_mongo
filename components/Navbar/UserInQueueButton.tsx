@@ -21,7 +21,7 @@ function UserInQueueButton({ queueData }: any) {
   const cancelQueueHandler = () => {
     const queueToast = toast.loading("Removing from queue...");
 
-    socket.emit("cancelUserFromQueue", { userId: session.user.uid });
+    socket.emit("cancelUserFromQueue", { userId: session.user.id });
 
     socket.on("cancelResponse", async ({ response }) => {
       if (response.status === 200) {

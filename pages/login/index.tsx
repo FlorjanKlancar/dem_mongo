@@ -1,34 +1,19 @@
-import Head from "next/head";
-import { getProviders } from "next-auth/react";
-import { GetServerSideProps } from "next";
-import { providerModel } from "../../types/providerModel";
-import NewLogin from "../../components/Auth/NewLogin";
+import { signIn, signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
+import React from "react";
 
-type LoginProps = {
-  providers: providerModel[];
-};
-
-function Login({ providers }: LoginProps) {
+function LoginPage() {
+  const { data: session } = useSession();
+  const router = useRouter();
+  if (session) {
+    router.push("/resources");
+  }
   return (
-    <div className="relative space-y-10">
-      <Head>
-        <title>DEM Login</title>
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-
-      <NewLogin providers={providers} isRegisterPage={false} />
-    </div>
+    <>
+      Not signed in <br />
+      <button onClick={() => signIn()}>Sign in</button>
+    </>
   );
 }
 
-export default Login;
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const providers = await getProviders();
-
-  return {
-    props: {
-      providers,
-    },
-  };
-};
+export default LoginPage;

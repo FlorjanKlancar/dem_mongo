@@ -55,7 +55,7 @@ function ResourcesField({ villageData, gsBuildings }: ResourcesFieldProps) {
     setOpen(false);
     const upgradeToast = toast.loading("Upgrading...");
     const response: any = await axios.post(`api/build/buildings`, {
-      villageId: session.user.uid,
+      villageId: session.user.id,
       buildingName: clickedResource.type,
       fieldId: clickedResource.id,
       isBuilding: false,

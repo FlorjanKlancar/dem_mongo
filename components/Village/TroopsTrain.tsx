@@ -270,7 +270,7 @@ function TroopsTrain({
                         /*  onComplete={() =>
                           setTimeout(
                             () =>
-                              initializeDataFetch(session.user.uid, dispatch),
+                              initializeDataFetch(session.user.id, dispatch),
                             500
                           )
                         } */

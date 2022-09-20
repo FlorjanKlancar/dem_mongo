@@ -10,7 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useNextAuth } from "../hooks/useNextAuth";
 
 function MyApp({ Component, pageProps }: any) {
-  const dispatch = useDispatch();
+  /*  const dispatch = useDispatch();
 
   const { session }: any = useNextAuth();
 
@@ -25,7 +25,7 @@ function MyApp({ Component, pageProps }: any) {
         dispatch(queueActions.setUserInQueue(false));
       }
     });
-  }, [socket]);
+  }, [socket]); */
 
   return (
     <div className="relative">

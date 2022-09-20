@@ -37,7 +37,7 @@ function NewBuildingModal({
     setOpen(false);
     const upgradeToast = toast.loading("Upgrading...");
     const response: any = await axios.post(`api/build/resources`, {
-      villageId: session.user.uid,
+      villageId: session.user.id,
       buildingName: type,
       fieldId: clickedResourceId,
       isBuilding: true,
@@ -66,7 +66,7 @@ function NewBuildingModal({
       </div>
       <div className="tabs flex items-center justify-items-center">
         <a className="tab tab-bordered tab-lg  w-1/3">Tab 1</a>
-        <a className="tab tab-bordered tab-active tab-lg">Tab 2</a>
+        <a className="tab tab-active tab-bordered tab-lg">Tab 2</a>
         <a className="tab tab-bordered tab-lg">Tab 3</a>
       </div>
 

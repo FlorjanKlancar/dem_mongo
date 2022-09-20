@@ -16,7 +16,7 @@ function QueueView() {
     data: villageData,
     isLoading,
     isError,
-  } = useUserVillage(session.user.uid);
+  } = useUserVillage(session.user.id);
   const { data: queueData, isLoading: queueIsLoading } = useQueue(
     session?.user?.uid
   );
@@ -43,7 +43,7 @@ function QueueView() {
           <QueuePage
             villageUnits={villageData.units}
             gsUnits={gameSettingsData.unitsResponse}
-            userId={session.user.uid}
+            userId={session.user.id}
             queueData={queueData}
           />
         </VillageWrapper>

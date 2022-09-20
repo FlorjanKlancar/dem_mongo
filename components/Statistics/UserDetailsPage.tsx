@@ -23,11 +23,11 @@ function UserDetailsPage({
 
   const [open, setOpen] = useState(false);
   const [displayName, setDisplayName] = useState(
-    user.displayName ?? session.user.uid
+    user.displayName ?? session.user.id
   );
 
   const submitHandler = async () => {
-    const response = await axios.put(`/api/user/${session.user.uid}`, {
+    const response = await axios.put(`/api/user/${session.user.id}`, {
       displayName,
     });
 
@@ -84,7 +84,7 @@ function UserDetailsPage({
                   {displayName}
                 </h1>
               </div>
-              {session.user.uid === user._id && (
+              {session.user.id === user._id && (
                 <div>
                   <div
                     className="tooltip  cursor-pointer hover:text-primary"

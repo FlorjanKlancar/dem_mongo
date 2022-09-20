@@ -18,11 +18,11 @@ function BattleReport({ singleBattle }: BattleReportProps) {
   const { gsUnits }: any = useSelector((state: RootState) => state.gsUnits);
 
   const yourTroops =
-    session.user.uid === singleBattle.playerOne
+    session.user.id === singleBattle.playerOne
       ? singleBattle.unitsPlayerOne
       : singleBattle.unitsPlayerTwo;
   const opponentTroops =
-    session.user.uid !== singleBattle.playerOne
+    session.user.id !== singleBattle.playerOne
       ? singleBattle.unitsPlayerOne
       : singleBattle.unitsPlayerTwo;
 

@@ -1,30 +1,41 @@
 import NextAuth from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
+import Auth0Provider from "next-auth/providers/auth0";
 import { MongoDBAdapter } from "@next-auth/mongodb-adapter";
 import clientPromise from "../../../lib/mongodb";
 
 export default NextAuth({
-  // Configure one or more authentication providers
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+    Auth0Provider({
+      clientId: process.env.AUTH0_CLIENT_ID!,
+      clientSecret: process.env.AUTH0_CLIENT_SECRET!,
+      issuer: process.env.AUTH0_ISSUER,
     }),
   ],
   secret: process.env.JWT_SECRET,
+
   adapter: MongoDBAdapter(clientPromise),
-  pages: {
-    signIn: "/login",
-    newUser: "/new-user",
+
+  callbacks: {
+    session: async ({ session, token }: any) => {
+      console.log({ session, token });
+      if (session?.user) {
+        session.user.id = token.uid;
+      }
+      return session;
+    },
+    jwt: async ({ user, token, isNewUser }) => {
+      console.log({ user, token, isNewUser });
+      if (user) {
+        token.uid = user.id;
+      }
+      return token;
+    },
   },
   session: {
     strategy: "jwt",
   },
-  callbacks: {
-    async session({ session, token, user }: any) {
-      session.user.uid = token.sub;
-
-      return session;
-    },
+  pages: {
+    /*  signIn: "/login", */
+    newUser: "/new-user",
   },
 });

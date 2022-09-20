@@ -29,7 +29,7 @@ function StatististicsTable({ players, ranks }: StatististicsTableProps) {
             <tr key={player._id}>
               <td>
                 <div className="flex items-center space-x-3">
-                  {player.userId == session.user.uid && (
+                  {player.userId == session.user.id && (
                     <div>
                       <ChevronDoubleRightIcon className="h-5 w-5 text-primary" />
                     </div>

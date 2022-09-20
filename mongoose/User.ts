@@ -1,4 +1,4 @@
-import mongoose from "mongoose";
+/* import mongoose from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
@@ -50,7 +50,7 @@ UserSchema.pre("save", async function () {
       expiresIn: process.env.JWT_LIFETIME,
     }
   );
-}; */
+}; 
 
 UserSchema.methods.comparePassword = async function (
   candidatePassword: string
@@ -60,3 +60,4 @@ UserSchema.methods.comparePassword = async function (
 };
 
 export default mongoose?.models?.User || mongoose.model("User", UserSchema);
+ */

@@ -12,12 +12,8 @@ import { useUserVillage } from "../../hooks/useUserVillage";
 function Reports() {
   const { session }: any = useNextAuth();
   const { data: gameSettingsData } = useGameSettings();
-  const { data: villageData } = useUserVillage(session.user.uid);
-  const {
-    data: reportsData,
-    isLoading,
-    isError,
-  } = useReports(session.user.uid);
+  const { data: villageData } = useUserVillage(session.user.id);
+  const { data: reportsData, isLoading, isError } = useReports(session.user.id);
 
   if (isLoading)
     return (

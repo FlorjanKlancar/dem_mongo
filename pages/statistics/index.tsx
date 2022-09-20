@@ -13,7 +13,7 @@ import { useUserVillage } from "../../hooks/useUserVillage";
 function StatisticsView() {
   const { session }: any = useNextAuth();
   const { data: gameSettingsData } = useGameSettings();
-  const { data: villageData } = useUserVillage(session.user.uid);
+  const { data: villageData } = useUserVillage(session.user.id);
   const { data: statistics, isLoading, isError } = useStatistics();
 
   if (isLoading)

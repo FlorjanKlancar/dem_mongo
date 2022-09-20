@@ -39,7 +39,7 @@ function VillageInfoCurrentlyBuilding({
     );
 
     await axios.post(`api/build/buildings`, {
-      villageId: session.user.uid,
+      villageId: session.user.id,
       buildingName: getCanceledBuilding!.buildingId,
       fieldId: getCanceledBuilding!.fieldId,
       cancleJob: true,
@@ -111,7 +111,7 @@ function VillageInfoCurrentlyBuilding({
         );
 
         await axios.post(`api/build/buildings`, {
-          villageId: session.user.uid,
+          villageId: session.user.id,
           buildingName: getCompletedBuilding!.buildingId,
           fieldId: getCompletedBuilding!.fieldId,
           isBuilding: getCompletedBuilding!.isBuilding,

@@ -44,7 +44,7 @@ function UpgradeBuildingPage({
 
   const upgradeHandler = async () => {
     await axios.post(`/api/build/buildings`, {
-      villageId: session.user.uid,
+      villageId: session.user.id,
       buildingName: building.type,
       fieldId: selectedBuilding.id,
       isBuilding: true,

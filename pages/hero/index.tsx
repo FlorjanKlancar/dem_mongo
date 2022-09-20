@@ -33,7 +33,7 @@ function HeroPage() {
           villageData={villageData}
           gameSettings={gameSettingsData}
         >
-          <HeroPageComponent userId={session.user.uid} />
+          <HeroPageComponent userId={session.user.id} />
         </VillageWrapper>
       </>
     );
