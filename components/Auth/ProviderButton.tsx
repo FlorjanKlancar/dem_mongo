@@ -1,15 +1,15 @@
 import Image from "next/image";
 import React from "react";
+import { signIn } from "next-auth/react";
 
-function ProviderButton({ provider, onSubmitHandler, buttonImage }: any) {
+function ProviderButton({ provider }: any) {
   return (
     <div className="w-full">
       <button
         className="login_button"
-        type={provider.name === "Credentials" ? "submit" : "button"}
-        onClick={onSubmitHandler}
+        type="button"
+        onClick={() => signIn(provider.id, { callbackUrl: "/resources" })}
       >
-        {buttonImage && <Image src={buttonImage} />}
         <span className="pl-2">Sign in with {provider.name}</span>
       </button>
     </div>
