@@ -20,7 +20,7 @@ function UserDetails({
     data: villageData,
     isLoading,
     isError,
-  } = useUserVillage(session?.user?.uid);
+  } = useUserVillage(session?.user?.id);
 
   if (isLoading)
     return (

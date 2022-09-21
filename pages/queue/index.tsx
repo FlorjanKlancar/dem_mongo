@@ -18,14 +18,14 @@ function QueueView() {
     isError,
   } = useUserVillage(session.user.id);
   const { data: queueData, isLoading: queueIsLoading } = useQueue(
-    session?.user?.uid
+    session?.user?.id
   );
 
-  if (isLoading && queueIsLoading)
+  if (isLoading || queueIsLoading)
     return (
       <>
         <NavbarDem />
-        Skeleton
+        Loading skeleton
       </>
     );
 

@@ -21,7 +21,7 @@ function VillageType({ building }: VillageTypeProps) {
     data: villageData,
     isLoading,
     isError,
-  } = useUserVillage(session?.user?.uid ?? null);
+  } = useUserVillage(session?.user?.id ?? null);
 
   if (isLoading)
     return (

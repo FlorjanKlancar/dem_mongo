@@ -26,7 +26,7 @@ function NavbarDem() {
     await signOut();
   };
 
-  const { data: queueData } = useQueue(session?.user?.uid);
+  const { data: queueData } = useQueue(session?.user?.id);
 
   return (
     <>
