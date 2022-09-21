@@ -9,7 +9,7 @@ import { RootState } from "../../types/storeModel";
 import HeroCircle from "../Hero/HeroCircle";
 import { queueActions } from "../../store/queue-slice";
 import { XIcon } from "@heroicons/react/outline";
-import socket from "../../lib/socket";
+/* import socket from "../../lib/socket"; */
 import toast from "react-hot-toast";
 import { villageActions } from "../../store/village-slice";
 import { useNextAuth } from "../../hooks/useNextAuth";

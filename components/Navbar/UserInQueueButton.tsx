@@ -4,7 +4,7 @@ import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNextAuth } from "../../hooks/useNextAuth";
-import socket from "../../lib/socket";
+import { socket } from "../../lib/socket";
 
 function UserInQueueButton({ queueData }: any) {
   const { session }: any = useNextAuth();

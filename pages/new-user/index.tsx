@@ -27,7 +27,6 @@ function NewUser() {
 
   useEffect(() => {
     if (!session) return;
-    console.log({ session });
 
     if (firstLoad && session.user.id) {
       createNewVillage(session.user.id);

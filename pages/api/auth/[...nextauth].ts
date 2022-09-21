@@ -17,14 +17,12 @@ export default NextAuth({
 
   callbacks: {
     session: async ({ session, token }: any) => {
-      console.log({ session, token });
       if (session?.user) {
         session.user.id = token.uid;
       }
       return session;
     },
     jwt: async ({ user, token, isNewUser }) => {
-      console.log({ user, token, isNewUser });
       if (user) {
         token.uid = user.id;
       }

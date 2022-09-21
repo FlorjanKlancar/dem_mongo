@@ -4,28 +4,24 @@ import { Provider, useDispatch } from "react-redux";
 import store from "../store";
 import { Toaster } from "react-hot-toast";
 import { SessionProvider } from "next-auth/react";
-import socket from "../lib/socket";
 import { queueActions } from "../store/queue-slice";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useNextAuth } from "../hooks/useNextAuth";
+import { socket } from "../lib/socket";
 
 function MyApp({ Component, pageProps }: any) {
-  const dispatch = useDispatch();
-
   const { session }: any = useNextAuth();
 
   useEffect(() => {
     if (!session) return;
-  }, [session]);
+    socket.on("connect", () => console.log("socket_id", socket.id));
+    console.log("app.ts");
 
-  useEffect(() => {
-    if (!session) return;
-    socket.on("battleResponse", (data) => {
-      if (data.response) {
-        dispatch(queueActions.setUserInQueue(false));
-      }
-    });
-  }, [socket]);
+    return () => {
+      socket.off("connect");
+      socket.off("disconnect");
+    };
+  }, []);
 
   return (
     <div className="relative">

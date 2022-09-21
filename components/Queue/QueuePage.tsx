@@ -6,10 +6,10 @@ import { RootState } from "../../types/storeModel";
 import { unitModel } from "../../types/unitModel";
 import SelectUnitCard from "./SelectUnitCard";
 import SelectedUnitCard from "./SelectedUnitCard";
-import socket from "../../lib/socket";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { userInQueueModel } from "../../types/userInQueueModel";
+import { socket } from "../../lib/socket";
 
 type QueuePageProps = {
   gsUnits: unitModel[];
