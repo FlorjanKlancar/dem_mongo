@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Provider, useDispatch } from "react-redux";
 import store from "../store";
 import { Toaster } from "react-hot-toast";
@@ -8,14 +8,23 @@ import { queueActions } from "../store/queue-slice";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useNextAuth } from "../hooks/useNextAuth";
 import { socket } from "../lib/socket";
+import Modal from "../components/Modal/Modal";
+import MatchFoundModal from "../components/Queue/MatchFoundModal";
+import { battleReportModel } from "../types/battleReportModel";
 
 function MyApp({ Component, pageProps }: any) {
   const { session }: any = useNextAuth();
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
+  const [battleInfo, setBattleInfo] = useState<battleReportModel | {}>({});
 
   useEffect(() => {
     if (!session) return;
     socket.on("connect", () => console.log("socket_id", socket.id));
-    console.log("app.ts");
+    socket.on("matchFoundWaitingForAccept", ({ response }) => {
+      console.log("response useef", response);
+      setIsModalOpen(true);
+      setBattleInfo(response);
+    });
 
     return () => {
       socket.off("connect");
@@ -26,6 +35,15 @@ function MyApp({ Component, pageProps }: any) {
   return (
     <div className="relative">
       <Component {...pageProps} />
+      {session && (
+        <Modal open={isModalOpen} setOpen={setIsModalOpen}>
+          <MatchFoundModal
+            setOpen={setIsModalOpen}
+            battleInfo={battleInfo}
+            sessionId={session.user.id}
+          />
+        </Modal>
+      )}
       <Toaster position="top-center" reverseOrder={false} />
     </div>
   );

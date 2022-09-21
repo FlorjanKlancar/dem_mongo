@@ -7,7 +7,6 @@ export const useQueue = (userId: string) => {
     ["queue", userId],
     async () => {
       const response: AxiosResponse = await axios.get(`/api/queue/${userId}`);
-      console.log("response", response);
 
       return response.data;
     },
