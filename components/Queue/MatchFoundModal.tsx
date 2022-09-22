@@ -13,8 +13,8 @@ function MatchFoundModal({
   battleInfo,
   sessionId,
 }: MatchFoundModalProps) {
-  console.log({ battleInfo });
   const [countdown, setCountdown] = useState<number>(60);
+  const [matchStatus, setMatchStatus] = useState<string>("");
 
   useEffect(() => {
     if (countdown < 0) {
@@ -29,9 +29,22 @@ function MatchFoundModal({
     };
   }, [countdown]);
 
+  useEffect(() => {
+    socket.on("matchAcceptedByUser", ({ response }) => {
+      console.log({ response });
+      setMatchStatus(response);
+    });
+    socket.on("matchCreated", ({ response }) => {
+      console.log({ response });
+      setMatchStatus(response);
+    });
+  }, []);
+
   const acceptHandler = async () => {
-    await socket.emit("matchAccepted", { sessionId, battleInfo });
-    setOpen(false);
+    await socket.emit("matchAccepted", {
+      sessionId,
+      battleInfo,
+    });
   };
 
   return (
@@ -48,11 +61,20 @@ function MatchFoundModal({
         </span>
       </div>
 
+      {matchStatus.length ? (
+        <div>
+          <p>{matchStatus}</p>
+        </div>
+      ) : (
+        <></>
+      )}
+
       <div className="grid w-full grid-cols-3 space-x-3">
         <div>
           <button
-            className="mt-5 w-full rounded-lg bg-slate-500 py-2 text-center font-bold text-white hover:bg-slate-600 hover:text-slate-200 "
+            className="mt-5 w-full rounded-lg bg-slate-500 py-2 text-center font-bold text-white hover:bg-slate-600 hover:text-slate-200"
             onClick={() => setOpen(false)}
+            disabled={matchStatus.length ? true : false}
           >
             Decline
           </button>
@@ -62,6 +84,7 @@ function MatchFoundModal({
             className="primary_button"
             type="button"
             onClick={acceptHandler}
+            disabled={matchStatus.length ? true : false}
           >
             Accept
           </button>

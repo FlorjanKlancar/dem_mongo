@@ -14,7 +14,7 @@ import { battleReportModel } from "../types/battleReportModel";
 
 function MyApp({ Component, pageProps }: any) {
   const { session }: any = useNextAuth();
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(true);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [battleInfo, setBattleInfo] = useState<battleReportModel | {}>({});
 
   useEffect(() => {
@@ -36,7 +36,11 @@ function MyApp({ Component, pageProps }: any) {
     <div className="relative">
       <Component {...pageProps} />
       {session && (
-        <Modal open={isModalOpen} setOpen={setIsModalOpen}>
+        <Modal
+          open={isModalOpen}
+          setOpen={setIsModalOpen}
+          dialogClickClose={false}
+        >
           <MatchFoundModal
             setOpen={setIsModalOpen}
             battleInfo={battleInfo}

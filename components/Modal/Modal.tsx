@@ -1,19 +1,28 @@
 /* This example requires Tailwind CSS v2.0+ */
-import {Fragment, useRef, useState} from "react";
-import {Dialog, Transition} from "@headlessui/react";
-import {ExclamationIcon} from "@heroicons/react/outline";
+import { Fragment, useRef, useState } from "react";
+import { Dialog, Transition } from "@headlessui/react";
 
 type ModalProps = {
   open: boolean;
   setOpen: (open: boolean) => void;
   children: React.ReactNode;
+  dialogClickClose: boolean;
 };
 
-export default function Modal({open, setOpen, children}: ModalProps) {
+export default function Modal({
+  open,
+  setOpen,
+  children,
+  dialogClickClose,
+}: ModalProps) {
   return (
     <>
       <Transition.Root show={open} as={Fragment}>
-        <Dialog as="div" className="relative z-10" onClose={setOpen}>
+        <Dialog
+          as="div"
+          className="relative z-10"
+          onClose={dialogClickClose ? setOpen : () => {}}
+        >
           <Transition.Child
             as={Fragment}
             enter="ease-out duration-300"

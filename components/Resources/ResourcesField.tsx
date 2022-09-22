@@ -98,7 +98,7 @@ function ResourcesField({ villageData, gsBuildings }: ResourcesFieldProps) {
 
   return (
     <>
-      <Modal open={open} setOpen={setOpen}>
+      <Modal open={open} setOpen={setOpen} dialogClickClose={true}>
         <div className="space-y-2 sm:px-4">
           <div>
             <h3 className="text-center text-lg font-bold text-primary sm:text-left">
