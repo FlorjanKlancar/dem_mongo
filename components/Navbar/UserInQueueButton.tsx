@@ -4,11 +4,12 @@ import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useNextAuth } from "../../hooks/useNextAuth";
-import { socket } from "../../lib/socket";
+import { useWebSocket } from "../../hooks/useWebSocket";
 
 function UserInQueueButton({ queueData }: any) {
   const { session }: any = useNextAuth();
   const queryClient = useQueryClient();
+  const socket = useWebSocket();
 
   const getSecondsDifference = (timeInQueue: Date) => {
     return dayjs().diff(timeInQueue, "seconds");

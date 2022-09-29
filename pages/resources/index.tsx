@@ -9,6 +9,7 @@ import VillageWrapper from "../../components/Wrapper/VillageWrapper";
 import { useGameSettings } from "../../hooks/useGameSettings";
 import { useNextAuth } from "../../hooks/useNextAuth";
 import { useUserVillage } from "../../hooks/useUserVillage";
+import { useWebSocket } from "../../hooks/useWebSocket";
 
 function ResourcesView() {
   const { session }: any = useNextAuth();
@@ -18,6 +19,8 @@ function ResourcesView() {
     isLoading,
     isError,
   } = useUserVillage(session.user.id);
+
+  const socket = useWebSocket();
 
   if (isLoading)
     return (

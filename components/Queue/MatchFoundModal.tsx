@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { socket } from "../../lib/socket";
+/* import { socket } from "../../lib/socket"; */
 import { battleReportModel } from "../../types/battleReportModel";
 
 type MatchFoundModalProps = {
@@ -29,7 +29,7 @@ function MatchFoundModal({
     };
   }, [countdown]);
 
-  useEffect(() => {
+  /*   useEffect(() => {
     socket.on("matchAcceptedByUser", ({ response }) => {
       console.log({ response });
       setMatchStatus(response);
@@ -45,7 +45,7 @@ function MatchFoundModal({
       sessionId,
       battleInfo,
     });
-  };
+  }; */
 
   return (
     <div className="flex flex-col items-center space-y-2 sm:px-4">
@@ -83,7 +83,7 @@ function MatchFoundModal({
           <button
             className="primary_button"
             type="button"
-            onClick={acceptHandler}
+            /*  onClick={acceptHandler} */
             disabled={matchStatus.length ? true : false}
           >
             Accept

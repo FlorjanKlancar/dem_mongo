@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { villageActions } from "../../store/village-slice";
 import { RootState } from "../../types/storeModel";
@@ -9,7 +9,6 @@ import SelectedUnitCard from "./SelectedUnitCard";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { userInQueueModel } from "../../types/userInQueueModel";
-import { socket } from "../../lib/socket";
 
 type QueuePageProps = {
   gsUnits: unitModel[];
@@ -69,7 +68,7 @@ function QueuePage({
   const queueUpHandler = () => {
     const queueToast = toast.loading("Adding to queue...");
 
-    socket.emit("addUserToQueue", { userId, selectedSquad });
+    /*     socket.emit("addUserToQueue", { userId, selectedSquad });
     socket.on("queueResponse", ({ response }) => {
       if (response.status === 200) {
         router.push("/resources");
@@ -77,7 +76,7 @@ function QueuePage({
       } else {
         toast.error(response.msg, { id: queueToast });
       }
-    });
+    }); */
   };
 
   return (
@@ -173,7 +172,7 @@ function QueuePage({
                 <div className="px-12">
                   <button
                     className="secondary_button w-full"
-                    onClick={queueUpHandler}
+                    /* onClick={queueUpHandler} */
                   >
                     Queue up!
                   </button>
