@@ -18,7 +18,7 @@ function ResourcesView() {
     data: villageData,
     isLoading,
     isError,
-  } = useUserVillage(session.user.id);
+  } = useUserVillage(session?.user.id);
 
   const socket = useWebSocket();
 

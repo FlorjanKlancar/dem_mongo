@@ -23,6 +23,7 @@
     "bcryptjs": "^2.4.3",
     "daisyui": "^2.15.1",
     "dayjs": "^1.11.2",
+    "framer-motion": "^7.5.0",
     "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.10.0",
     "mongoose": "^6.6.1",
