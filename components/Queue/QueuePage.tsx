@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { villageActions } from "../../store/village-slice";
 import { RootState } from "../../types/storeModel";
@@ -29,6 +29,8 @@ function QueuePage({
   const [villageCurrentUnits, setVillageCurrentUnits] =
     useState<unitModel[]>(villageUnits);
   const [selectedSquad, setSelectedSquad] = useState<any>([]);
+
+  const [battleRoom, setBattleRoom] = useState(false);
 
   const handleChange = (e: any, i: number) => {
     let data: any = [...villageCurrentUnits];
@@ -66,19 +68,64 @@ function QueuePage({
     );
   };
 
+  let clientRoom;
+
   const queueUpHandler = () => {
     const queueToast = toast.loading("Adding to queue...");
+    socket.on("connection", (responseSocket) => {
+      console.log("private soba z serverjem" + responseSocket.id);
+      //Client joins the private room with server
+    });
+
+    socket.on("battleRoomName", (data: any) => {
+      debugger;
+      alert(data);
+      setBattleRoom(data);
+    });
+
+    //na ta event se nardi popup
+    socket.on("acceptMatch", (data) => {
+      console.log("Treba bo acceptat " + data);
+      clientRoom = data;
+    });
+
+    //ta event pomen da nekdo od igralcev ni acceptov matcha
+    socket.on("matchNotAccepted", (data) => {
+      console.log("En je zamudu " + data);
+      clientRoom = data;
+    });
 
     socket.emit("addUserToQueue", { userId, selectedSquad });
-    socket.on("queueResponse", ({ response }) => {
-      if (response.status === 200) {
-        router.push("/resources");
-        toast.success(response.msg, { id: queueToast });
-      } else {
-        toast.error(response.msg, { id: queueToast });
-      }
-    });
   };
+
+  function matchAccept() {
+    socket.emit("matchAccepted", { userId, selectedSquad });
+  }
+
+  socket.on("joinRoom", ({ room, userID }) => {
+    setBattleRoom(room);
+  });
+
+  function greenButton() {
+    debugger;
+    console.log(battleRoom);
+    socket.emit("greenButton", { userId, battleRoom });
+  }
+
+  function redButton() {
+    debugger;
+    socket.emit("redButton", { userId, battleRoom });
+  }
+
+  useEffect(() => {
+    socket.on("serverResponseGreen", (data) => {
+      alert("tale user je pritisnu zelen gumb: " + data);
+    });
+
+    socket.on("serverResponseRed", (data) => {
+      alert("tale user je pritisnu rdec gumb: " + data);
+    });
+  }, []);
 
   return (
     <div className="mb-12 flex flex-col rounded-lg border-2 border-primary/80 bg-slate-800 ">
@@ -169,6 +216,30 @@ function QueuePage({
                   </div>
                 ))
               )}
+              <div className="px-12">
+                <button
+                  className="secondary_button w-full"
+                  onClick={matchAccept}
+                >
+                  Accept match!
+                </button>
+              </div>
+              <div className="px-12">
+                <button
+                  className="secondary_button w-full bg-red-600"
+                  onClick={redButton}
+                >
+                  red button
+                </button>
+              </div>
+              <div className="px-12">
+                <button
+                  className="secondary_button w-full bg-green-600"
+                  onClick={greenButton}
+                >
+                  green button
+                </button>
+              </div>
               {selectedSquad.length ? (
                 <div className="px-12">
                   <button
