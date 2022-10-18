@@ -1,21 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import NavbarMobile from "./NavbarMobile";
 import Menu from "./Menu";
 import { signOut } from "next-auth/react";
-import ConnectWalletButton from "../NFTMint/ConnectWalletButton";
-import DisconnectWalletButton from "../NFTMint/DisconnectWalletButton";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../types/storeModel";
 import HeroCircle from "../Hero/HeroCircle";
-import { queueActions } from "../../store/queue-slice";
-import { XIcon } from "@heroicons/react/outline";
-/* import socket from "../../lib/socket"; */
-import toast from "react-hot-toast";
-import { villageActions } from "../../store/village-slice";
 import { useNextAuth } from "../../hooks/useNextAuth";
-import { userInQueueModel } from "../../types/userInQueueModel";
-import dayjs from "dayjs";
-import { useQueryClient } from "@tanstack/react-query";
 import UserInQueueButton from "./UserInQueueButton";
 import { useQueue } from "../../hooks/useQueue";
 

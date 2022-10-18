@@ -16,7 +16,7 @@ function QueueView() {
     data: villageData,
     isLoading,
     isError,
-  } = useUserVillage(session.user.id);
+  } = useUserVillage(session?.user.id);
   const { data: queueData, isLoading: queueIsLoading } = useQueue(
     session?.user?.id
   );

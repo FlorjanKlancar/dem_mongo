@@ -1,20 +1,25 @@
 import "../styles/globals.css";
-import { useEffect, useState } from "react";
-import { Provider, useDispatch } from "react-redux";
+import { useState, useEffect } from "react";
+import { Provider } from "react-redux";
 import store from "../store";
 import { Toaster } from "react-hot-toast";
 import { SessionProvider } from "next-auth/react";
-import { queueActions } from "../store/queue-slice";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useNextAuth } from "../hooks/useNextAuth";
-import { socket } from "../lib/socket";
 import Modal from "../components/Modal/Modal";
+import MatchFoundModal from "../components/Queue/MatchFoundModal";
+import { battleReportModel } from "../types/battleReportModel";
+import { io } from "socket.io-client";
+import { useWebSocket } from "../hooks/useWebSocket";
 
 function MyApp({ Component, pageProps }: any) {
   const { session }: any = useNextAuth();
-  const [open, setOpen] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [battleInfo, setBattleInfo] = useState<battleReportModel | {}>({});
+  const socket = useWebSocket();
   useEffect(() => {
     if (!session) return;
+
     socket.on("connect", () => console.log("socket_id", socket.id));
 
     //na ta event se nardi popup
@@ -40,10 +45,20 @@ function MyApp({ Component, pageProps }: any) {
   return (
     <div className="relative">
       <Component {...pageProps} />
+      {session && (
+        <Modal
+          open={isModalOpen}
+          setOpen={setIsModalOpen}
+          dialogClickClose={false}
+        >
+          <MatchFoundModal
+            setOpen={setIsModalOpen}
+            battleInfo={battleInfo}
+            sessionId={session.user.id}
+          />
+        </Modal>
+      )}
       <Toaster position="top-center" reverseOrder={false} />
-      <Modal open={open} setOpen={setOpen}>
-        <div>helo</div>
-      </Modal>
     </div>
   );
 }

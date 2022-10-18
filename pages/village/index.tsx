@@ -17,7 +17,7 @@ function VillageView() {
     data: villageData,
     isLoading,
     isError,
-  } = useUserVillage(session.user.id);
+  } = useUserVillage(session?.user.id);
 
   if (isLoading)
     return (

@@ -9,7 +9,7 @@ import SelectedUnitCard from "./SelectedUnitCard";
 import toast from "react-hot-toast";
 import { useRouter } from "next/router";
 import { userInQueueModel } from "../../types/userInQueueModel";
-import { socket } from "../../lib/socket";
+import { useWebSocket } from "../../hooks/useWebSocket";
 
 type QueuePageProps = {
   gsUnits: unitModel[];
@@ -69,6 +69,7 @@ function QueuePage({
   };
 
   let clientRoom;
+  const socket = useWebSocket();
 
   const queueUpHandler = () => {
     const queueToast = toast.loading("Adding to queue...");
@@ -106,6 +107,7 @@ function QueuePage({
       <div>
         <div className="relative flex h-56 w-full items-center justify-center">
           <Image
+            alt="backgroundImage"
             src={"https://wallpaperaccess.com/full/52990.jpg"}
             layout="fill"
             className="rounded-lg "

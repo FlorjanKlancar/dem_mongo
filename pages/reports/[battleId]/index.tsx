@@ -20,7 +20,7 @@ function BattleIdPage({ battleReport }: BattleIdPageProps) {
     data: villageData,
     isLoading,
     isError,
-  } = useUserVillage(session.user.id);
+  } = useUserVillage(session?.user.id);
 
   if (isLoading)
     return (

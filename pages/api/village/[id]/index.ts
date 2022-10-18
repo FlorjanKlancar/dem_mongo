@@ -1,4 +1,4 @@
-import {NextApiRequest, NextApiResponse} from "next";
+import { NextApiRequest, NextApiResponse } from "next";
 import {
   createVillage,
   getVillageById,
@@ -12,7 +12,7 @@ export default async function handler(
     default:
     case "GET":
       {
-        let {id} = req.query;
+        let { id } = req.query;
 
         if (!id) {
           return res.status(500).send("Missing id");
@@ -21,13 +21,13 @@ export default async function handler(
         try {
           const response = await getVillageById(id.toString());
 
-          if (response.status === 200) {
-            return res.status(response.status).json(response.villageResponse);
-          } else {
-            return res.status(response.status).send(response.msg);
+          if (response.status !== 200) {
+            res.status(response.status).send(response.msg);
           }
+
+          res.status(response.status).json(response.villageResponse);
         } catch (error) {
-          res.status(500).send({error: "failed to fetch data"});
+          res.status(500).send({ error: "failed to fetch data" });
 
           throw new Error("Internal Server Error");
         }
@@ -36,7 +36,7 @@ export default async function handler(
 
     case "POST":
       {
-        const {id} = req.query;
+        const { id } = req.query;
 
         if (!id) {
           return res.status(500).send("Missing id");
@@ -51,7 +51,7 @@ export default async function handler(
             res.status(response.status).json(response.msg);
           }
         } catch (e: any) {
-          res.status(500).send({error: "failed to fetch data"});
+          res.status(500).send({ error: "failed to fetch data" });
 
           throw new Error("Internal Server Error");
         }

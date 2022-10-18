@@ -141,7 +141,7 @@ function UserDetailsPage({
           </div>
         </div>
       </div>
-      <Modal open={open} setOpen={setOpen}>
+      <Modal open={open} setOpen={setOpen} dialogClickClose={true}>
         <ChangeDisplayNameModal
           setOpen={setOpen}
           displayName={displayName}

@@ -74,7 +74,7 @@ function VillageField({ villageData, gsBuildings }: VillageFieldProps) {
         </div>
       ))}
 
-      <Modal open={open} setOpen={setOpen}>
+      <Modal open={open} setOpen={setOpen} dialogClickClose={true}>
         <NewBuildingModal
           gsBuildings={gsBuildings}
           clickedResourceId={clickedResourceId}
