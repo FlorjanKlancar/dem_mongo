@@ -72,28 +72,6 @@ function QueuePage({
 
   const queueUpHandler = () => {
     const queueToast = toast.loading("Adding to queue...");
-    socket.on("connection", (responseSocket) => {
-      console.log("private soba z serverjem" + responseSocket.id);
-      //Client joins the private room with server
-    });
-
-    socket.on("battleRoomName", (data: any) => {
-      debugger;
-      alert(data);
-      setBattleRoom(data);
-    });
-
-    //na ta event se nardi popup
-    socket.on("acceptMatch", (data) => {
-      console.log("Treba bo acceptat " + data);
-      clientRoom = data;
-    });
-
-    //ta event pomen da nekdo od igralcev ni acceptov matcha
-    socket.on("matchNotAccepted", (data) => {
-      console.log("En je zamudu " + data);
-      clientRoom = data;
-    });
 
     socket.emit("addUserToQueue", { userId, selectedSquad });
   };
@@ -101,10 +79,6 @@ function QueuePage({
   function matchAccept() {
     socket.emit("matchAccepted", { userId, selectedSquad });
   }
-
-  socket.on("joinRoom", ({ room, userID }) => {
-    setBattleRoom(room);
-  });
 
   function greenButton() {
     debugger;

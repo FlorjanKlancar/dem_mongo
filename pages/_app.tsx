@@ -1,5 +1,5 @@
 import "../styles/globals.css";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Provider, useDispatch } from "react-redux";
 import store from "../store";
 import { Toaster } from "react-hot-toast";
@@ -8,13 +8,27 @@ import { queueActions } from "../store/queue-slice";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useNextAuth } from "../hooks/useNextAuth";
 import { socket } from "../lib/socket";
+import Modal from "../components/Modal/Modal";
 
 function MyApp({ Component, pageProps }: any) {
   const { session }: any = useNextAuth();
-
+  const [open, setOpen] = useState(true);
   useEffect(() => {
     if (!session) return;
     socket.on("connect", () => console.log("socket_id", socket.id));
+
+    //na ta event se nardi popup
+    socket.on("acceptMatch", (data) => {
+      console.log("Treba bo acceptat " + data);
+      //spremeni state za popup
+    });
+
+    //ta event pomen da nekdo od igralcev ni acceptov matcha
+    socket.on("matchNotAccepted", (data) => {
+      console.log("En je zamudu " + data);
+      // clientRoom = data;
+    });
+
     console.log("app.ts");
 
     return () => {
@@ -27,6 +41,9 @@ function MyApp({ Component, pageProps }: any) {
     <div className="relative">
       <Component {...pageProps} />
       <Toaster position="top-center" reverseOrder={false} />
+      <Modal open={open} setOpen={setOpen}>
+        <div>helo</div>
+      </Modal>
     </div>
   );
 }
